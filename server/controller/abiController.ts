@@ -1,0 +1,23 @@
+import { Request, Response } from "express";
+import config from "../utils/config";
+
+const getAbi = async (req: Request, res: Response) => {
+	const chainId = req.params.chainId;
+	const address = req.params.address;
+
+	const options = { method: "GET" };
+	try {
+		const response = await fetch(
+			`https://api.etherscan.io/v2/api?apikey=${config.ETHERSCAN_SECRET_KEY}&chainid=${chainId}&address=${address}&module=contract&action=getabi`,
+			options,
+		);
+		const data = await response.json();
+		console.log(JSON.parse(data.result));
+		console.log(typeof JSON.parse(data.result));
+		res.json(JSON.parse(data.result));
+	} catch (err) {
+		console.error(err);
+	}
+};
+
+export { getAbi };
