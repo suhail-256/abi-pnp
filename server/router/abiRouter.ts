@@ -3,10 +3,6 @@ import { getAbi } from "../controller/abiController";
 
 const abiRouter = express.Router();
 
-abiRouter.get("/", (req, res) => {
-	res.json("init");
-});
-
-abiRouter.get("/:address/:chainId", (req, res) => getAbi(req, res));
+abiRouter.get("/:address/:chainId", (req, res, next) => getAbi(req, res, next));
 
 export default abiRouter;

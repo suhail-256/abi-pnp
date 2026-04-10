@@ -1,8 +1,12 @@
-import { Request, Response } from "express";
+import express from "express";
 import config from "../utils/config";
 import logger from "../utils/logger";
 
-const getAbi = async (req: Request, res: Response) => {
+const getAbi = async (
+	req: express.Request,
+	res: express.Response,
+	next: express.NextFunction,
+) => {
 	const chainId = req.params.chainId;
 	const address = req.params.address;
 
@@ -14,12 +18,16 @@ const getAbi = async (req: Request, res: Response) => {
 		);
 		const data = await response.json();
 
-		logger.info(JSON.parse(data.result));
-
+		logger.info(data);
+		// Check if the API returned an error
+		if (data.status === "0") {
+			return res.status(400).json({ error: data.result });
+		}
+		
 		res.json(JSON.parse(data.result));
 	} catch (err) {
 		logger.error(err);
-		throw new Error("Failed to fetch ABI!");
+		next(err);
 	}
 };
 
