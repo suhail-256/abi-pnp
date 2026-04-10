@@ -15,7 +15,7 @@ const errorHandler = (
 	res: express.Response,
 	next: express.NextFunction,
 ) => {
-	if (err.name == "SyntaxError") {
+	if (err.name === "SyntaxError") {
 		return res.status(400).json({ error: "Error: Invalid JSON" });
 	}
 	res.status(500).json({ error: "Internal Server Error" });
