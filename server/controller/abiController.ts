@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import config from "../utils/config";
+import logger from "../utils/logger";
 
 const getAbi = async (req: Request, res: Response) => {
 	const chainId = req.params.chainId;
@@ -12,11 +13,13 @@ const getAbi = async (req: Request, res: Response) => {
 			options,
 		);
 		const data = await response.json();
-		console.log(JSON.parse(data.result));
-		console.log(typeof JSON.parse(data.result));
+
+		logger.info(JSON.parse(data.result));
+
 		res.json(JSON.parse(data.result));
 	} catch (err) {
-		console.error(err);
+		logger.error(err);
+		throw new Error("Failed to fetch ABI!");
 	}
 };
 
