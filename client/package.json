@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "latest",
+    "axios": "^1.14.0",
     "react": "latest",
     "react-dom": "latest",
     "viem": "latest",

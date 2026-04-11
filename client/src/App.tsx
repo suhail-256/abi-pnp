@@ -1,10 +1,14 @@
 import { useConnect, useConnection, useConnectors, useDisconnect } from 'wagmi'
+import SearchField from './components/SearchField'
+import { useState } from 'react'
 
 function App() {
   const connection = useConnection()
   const { connect, status, error } = useConnect()
   const connectors = useConnectors()
   const { disconnect } = useDisconnect()
+
+  const [abi, setAbi] = useState<JSON>()
 
   return (
     <>
@@ -40,6 +44,7 @@ function App() {
         <div>{status}</div>
         <div>{error?.message}</div>
       </div>
+      <SearchField setAbi={setAbi} />
     </>
   )
 }
