@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = `http://localhost:3001/api/abi`
+const baseUrl = '/api/abi'
 
 const handleApiError = (error: unknown) => {
 	if (axios.isAxiosError(error)) {
