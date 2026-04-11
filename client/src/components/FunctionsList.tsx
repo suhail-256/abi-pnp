@@ -11,7 +11,6 @@ function FunctionsList() {
 			{functions?.map((func, index) => (
 				<FunctionCard key={index} func={func} />
 			))}
-      
 		</div>
 	);
 }
