@@ -3,6 +3,7 @@ import SearchField from './components/SearchField'
 import { useEffect, useState } from 'react'
 import { Abi } from './schemas/abi'
 import { FunctionSchema, type FunctionType } from './schemas/function'
+import FunctionsList from './components/FunctionsList'
 
 function App() {
 	const connection = useConnection()
@@ -64,7 +65,7 @@ function App() {
 				<div>{error?.message}</div>
 			</div>
 			<SearchField setContractAddress={setContractAddress} setAbi={setAbi} />
-			{/* <FunctionsList /> */}
+			<FunctionsList functions={functions} />
 		</>
 	)
 }

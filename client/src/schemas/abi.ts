@@ -16,6 +16,7 @@ export const AbiSchema = z.array(
         type: z.string(),
       }),
     ).optional(),
+    stateMutability: z.string().optional(),
   }),
 );
 

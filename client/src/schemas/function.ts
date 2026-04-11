@@ -15,6 +15,7 @@ export const FunctionSchema = z.object({
       type: z.string(),
     })
   ).optional(),
+  stateMutability: z.string()
 });
 
 export type FunctionType = z.infer<typeof FunctionSchema>;
