@@ -1,19 +1,23 @@
 import { useRef } from 'react'
 import { useChainId } from 'wagmi'
 import { getAbi } from '../services/abiService'
+import { AbiSchema, type Abi } from '../schemas/abi'
 
 interface SearchFieldProps {
-	setAbi: (abi: JSON) => void
+  setContractAddress: (address: string) => void;
+	setAbi: (abi: Abi) => void
 }
 
-function SearchField({ setAbi }: SearchFieldProps) {
+function SearchField({ setContractAddress: setAddress, setAbi }: SearchFieldProps) {
 	const chainId = useChainId()
 
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
+    
 		const address = inputRef.current?.value
+    setAddress(address!)
 
 		console.log(address)
 		console.log(chainId)
@@ -21,7 +25,13 @@ function SearchField({ setAbi }: SearchFieldProps) {
 		const abi = await getAbi(chainId, address!)
 		console.log(abi)
 
-		setAbi(abi)
+    // validate abi using zod
+    const parsedAbi = AbiSchema.safeParse(abi)
+    if (!parsedAbi.success) {
+      console.error('Invalid ABI:', parsedAbi.error)
+      return
+    }
+		setAbi(parsedAbi.data)
 	}
 
 	return (

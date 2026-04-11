@@ -1,52 +1,72 @@
 import { useConnect, useConnection, useConnectors, useDisconnect } from 'wagmi'
 import SearchField from './components/SearchField'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Abi } from './schemas/abi'
+import { FunctionSchema, type FunctionType } from './schemas/function'
 
 function App() {
-  const connection = useConnection()
-  const { connect, status, error } = useConnect()
-  const connectors = useConnectors()
-  const { disconnect } = useDisconnect()
+	const connection = useConnection()
+	const { connect, status, error } = useConnect()
+	const connectors = useConnectors()
+	const { disconnect } = useDisconnect()
 
-  const [abi, setAbi] = useState<JSON>()
+	const [abi, setAbi] = useState<Abi>()
+	const [contractAddress, setContractAddress] = useState<string>()
+	const [functions, setFunctions] = useState<FunctionType[]>()
 
-  return (
-    <>
-      <div>
-        <h2>Connection</h2>
+	useEffect(() => {
+		if (!abi) return
 
-        <div>
-          status: {connection.status}
-          <br />
-          addresses: {JSON.stringify(connection.addresses)}
-          <br />
-          chainId: {connection.chainId}
-        </div>
+		const parsedFunctions = FunctionSchema.array().safeParse(extractFunctions(abi))
+		if (!parsedFunctions.success) {
+			console.error('Error parsing functions:', parsedFunctions.error)
+			return
+		}
+		setFunctions(parsedFunctions.data)
+		console.log(parsedFunctions.data)
+	}, [abi])
 
-        {connection.status === 'connected' && (
-          <button type="button" onClick={() => disconnect()}>
-            Disconnect
-          </button>
-        )}
-      </div>
+	const extractFunctions = (abi: Abi) => {
+		const extractedFunctions = abi.filter(item => {
+			return item.type === 'function'
+		})
+		return extractedFunctions
+	}
 
-      <div>
-        <h2>Connect</h2>
-        {connectors.map((connector) => (
-          <button
-            key={connector.uid}
-            onClick={() => connect({ connector })}
-            type="button"
-          >
-            {connector.name}
-          </button>
-        ))}
-        <div>{status}</div>
-        <div>{error?.message}</div>
-      </div>
-      <SearchField setAbi={setAbi} />
-    </>
-  )
+	return (
+		<>
+			<div>
+				<h2>Connection</h2>
+
+				<div>
+					status: {connection.status}
+					<br />
+					addresses: {JSON.stringify(connection.addresses)}
+					<br />
+					chainId: {connection.chainId}
+				</div>
+
+				{connection.status === 'connected' && (
+					<button type="button" onClick={() => disconnect()}>
+						Disconnect
+					</button>
+				)}
+			</div>
+
+			<div>
+				<h2>Connect</h2>
+				{connectors.map(connector => (
+					<button key={connector.uid} onClick={() => connect({ connector })} type="button">
+						{connector.name}
+					</button>
+				))}
+				<div>{status}</div>
+				<div>{error?.message}</div>
+			</div>
+			<SearchField setContractAddress={setContractAddress} setAbi={setAbi} />
+			{/* <FunctionsList /> */}
+		</>
+	)
 }
 
 export default App
