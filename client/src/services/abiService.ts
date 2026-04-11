@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Abi } from '../schemas/abi'
 
 const baseUrl = '/api/abi'
 
@@ -22,7 +23,7 @@ const handleApiError = (error: unknown) => {
 	}
 }
 
-const getAbi = async (chainId: string, address: string) => {
+const getAbi = async (chainId: number, address: string): Promise<Abi> => {
 	try {
 		const req = await axios.get(`${baseUrl}/${chainId}/${address}`)
 		return req.data
@@ -31,4 +32,4 @@ const getAbi = async (chainId: string, address: string) => {
 	}
 }
 
-export { getAbi }
+export default { getAbi }
