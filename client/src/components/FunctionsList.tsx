@@ -3,8 +3,8 @@ import FunctionCard  from './FunctionCard';
 
 
 function FunctionsList() {
-	const { showFunctions } = useContract();
-  const { functions } = useContract();
+	const { showFunctions, functions } = useContract();
+
 	return (
 		<div>
 			<h2>Functions</h2>

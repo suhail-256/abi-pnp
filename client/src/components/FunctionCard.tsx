@@ -40,6 +40,7 @@ function FunctionCard({ func }: FunctionCardProps) {
 				{hasInputs && <ParamsInput inputs={inputs as any} args={args} setArgs={setArgs} />}
 				<br />
 				{functState === State.READ && <ReadButton func={func} args={args} />}
+				{functState === State.WRITE && <ReadButton func={func} args={args} />}
 				{/* {functState === State.WRITE && <WriteButton func={func} args={args} />} */}
 			</fieldset>
 		</div>
