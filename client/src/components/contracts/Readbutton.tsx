@@ -1,5 +1,9 @@
 import { useContract } from '../../context/ContractContext';
-import { type AbiFunction } from '../../types/contract';
+import {
+	type AbiFunction,
+	AbiSchema,
+	AbiParameterSchema,
+} from '../../types/contract';
 import { useReadContract } from 'wagmi';
 import errorHandler from '../../utils/errorUtils';
 
@@ -37,8 +41,11 @@ function ReadButton({ func, args }: ReadButtonProps) {
 	});
 
 	const handleQuery = async () => {
+
+
+
 		try {
-			console.log(parseArgs(args))
+			console.log(parseArgs(args));
 			await result.refetch({
 				throwOnError: true,
 				cancelRefetch: false,

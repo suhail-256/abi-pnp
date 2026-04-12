@@ -24,12 +24,14 @@ const getAbi = async (
 		logger.info(data);
 		// Check if the API returned an error
 		if (data.status === "0") {
+			logger.info('hello')
 			return res.status(400).json({ error: data.result });
+			// throw new Error(data.result);
 		}
 
 		res.json(JSON.parse(data.result));
 	} catch (err) {
-		logger.error(err);
+		// logger.error(err);
 		next(err);
 	}
 };

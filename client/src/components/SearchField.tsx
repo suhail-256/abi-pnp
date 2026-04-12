@@ -1,44 +1,39 @@
-import { useRef } from 'react';
+// import { useRef } from 'react';
 import { useChainId } from 'wagmi';
 import abiService from '../services/abiService';
-import { AbiSchema, type Abi, type SolidityAddress } from '../types/contract';
+import { AbiSchema, AddressSchema, type Abi, type Address } from '../types/contract';
 import { useContract } from '../context/ContractContext';
-
-interface SearchFieldProps {
-	setContractAddress: (address: SolidityAddress) => void;
-	setAbi: (abi: Abi) => void;
-}
+import { isAddress } from 'viem';
+import { type ChangeEvent, useState } from 'react';
 
 function SearchField() {
-	const { setContractAddress } = useContract();
-	const chainId = useChainId();
+	const [inputValue, setInputValue] = useState('');
+	const { setContractAddress, showFunctions, setShowFunctions } = useContract();
 
-	const inputRef = useRef<HTMLInputElement>(null);
-
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
+		const address = e.target.value as Address;
+		setInputValue(address);
 
-		const address = inputRef.current?.value as SolidityAddress | undefined;
-		setContractAddress(address!);
-
-		console.log(address);
-		console.log(chainId);
-
-		const fetchedAbi = await abiService.getAbi(chainId, address!);
-		console.log(fetchedAbi);
-
-		// validate abi using zod
-		const parsedAbi = AbiSchema.safeParse(fetchedAbi);
-		if (!parsedAbi.success) {
-			console.error('Invalid ABI:', parsedAbi.error);
-			return;
+		if (address.length !== 42) return;
+		if (!isAddress(address)) {
+			throw new Error('Invalid address format');
 		}
 
+		if (!showFunctions) {
+			setContractAddress(address);
+		}
+	};
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setContractAddress(inputValue as Address);
+		setShowFunctions(true);
 	};
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<input ref={inputRef} type="text" placeholder="0x45586..." />
+			<input value={inputValue} onChange={handleChange} type="text" placeholder="0x45586..." />
 			<button type="submit">Submit</button>
 		</form>
 	);
