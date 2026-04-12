@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { type FunctionType } from '../schemas/function';
 import ReadButton from './contracts/Readbutton';
+import ParamsInput from './ParamsInput';
 
 // list of stateMutabilities that doesn't modify the state (view, pure)
 const readStates = ['view', 'pure'];
@@ -9,34 +10,7 @@ enum State {
 	READ = 'read',
 	WRITE = 'write',
 }
-interface ParamsInputProps {
-	inputs?: FunctionType['inputs'];
-	args: string[];
-	setArgs: React.Dispatch<React.SetStateAction<string[]>>;
-}
 
-function ParamsInput({ inputs, args, setArgs }: ParamsInputProps) {
-	const handleChange = (index: number, value: string) => {
-		const newArgs = [...args];
-		newArgs[index] = value;
-		setArgs(newArgs);
-	};
-
-	return inputs?.map((input, index) => {
-		const paramName = input.name || `input`;
-		return (
-			<span key={index}>
-				<br />
-				<input
-					type="text"
-					placeholder={`${paramName} (${input.type})`}
-					value={args[index] || ''}
-					onChange={e => handleChange(index, e.target.value)}
-				/>
-			</span>
-		);
-	});
-}
 
 interface FunctionCardProps {
 	func: FunctionType;

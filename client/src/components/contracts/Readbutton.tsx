@@ -34,7 +34,13 @@ function ReadButton({ func, args }: ReadButtonProps) {
 		<>
 			<button onClick={handleQuery}> Query </button>
 			<fieldset>
-				{result.isSuccess && <div>{JSON.stringify(result.data)}</div>}
+				{result.isSuccess && (
+					<div>
+						{JSON.stringify(result.data, (_, v) =>
+							typeof v === 'bigint' ? v.toString() : v,
+						).replace(/"/g, '')}
+					</div>
+				)}
 				{result.isError && <div>{`Error: ${errorHandler.getErrorMessage(result.error)}`}</div>}
 			</fieldset>
 		</>
