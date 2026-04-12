@@ -1,5 +1,5 @@
 import { useContract } from '../../context/ContractContext';
-import { type AbiFunction, AbiSchema, AbiParameterSchema } from '../../types/contract';
+import { type AbiFunction } from '../../types/contract';
 import { useReadContract } from 'wagmi';
 import errorHandler from '../../utils/errorUtils';
 
@@ -38,7 +38,7 @@ function ReadButton({ func, args }: ReadButtonProps) {
 
 	const result = useReadContract({
 		abi,
-		address: contractAddress as `0x${string}`,
+		address: contractAddress,
 		functionName: func.name,
 		args: args.length ? parseArgs(args) : undefined,
 		query: { enabled: false, retry: false },
@@ -51,6 +51,8 @@ function ReadButton({ func, args }: ReadButtonProps) {
 				throwOnError: true,
 				cancelRefetch: false,
 			});
+			console.log(result.data);
+			
 		} catch (error) {
 			console.error(`Error: ${errorHandler.getErrorMessage(error)}`);
 		}
