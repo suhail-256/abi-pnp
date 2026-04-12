@@ -10,17 +10,35 @@ interface ReadButtonProps {
 
 function ReadButton({ func, args }: ReadButtonProps) {
 	const { contractAddress, abi } = useContract();
+
+	const parseArgs = (args: string[]) => {
+		return args.map((arg, index) => {
+			if (arg === undefined) return undefined;
+			try {
+				// for array type, split by comma and trim spaces
+				if (func.inputs![index].type.endsWith(']')) {
+					return arg.split(',').map(item => item.trim());
+				}
+				return arg;
+			} catch (error) {
+				console.error(`Error parsing arguments: ${error}`);
+				console.log(args.length);
+				return arg;
+			}
+		});
+	};
+
 	const result = useReadContract({
 		abi,
 		address: contractAddress as `0x${string}`,
 		functionName: func.name,
-		args: args.length ? args : undefined,
+		args: args.length ? parseArgs(args) : undefined,
 		query: { enabled: false, retry: false },
 	});
 
 	const handleQuery = async () => {
-		console.log(args);
 		try {
+			console.log(parseArgs(args))
 			await result.refetch({
 				throwOnError: true,
 				cancelRefetch: false,

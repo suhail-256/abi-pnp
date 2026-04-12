@@ -19,10 +19,10 @@ interface FunctionCardProps {
 function FunctionCard({ func }: FunctionCardProps) {
 	const { inputs, name, stateMutability } = func;
 	const hasInputs = inputs && inputs.length > 0;
-	const [args, setArgs] = useState<string[]>(new Array(inputs?.length || 0).fill(''));
+	const [args, setArgs] = useState<string[]>(new Array(inputs?.length || 0));
 
-	const state: State = readStates.includes(stateMutability) ? State.READ : State.WRITE;
-	const color = state === State.READ ? '#2657c2' : '#d64c33';
+	const functState: State = readStates.includes(stateMutability) ? State.READ : State.WRITE;
+	const color = functState === State.READ ? '#2657c2' : '#d64c33';
 
 	return (
 		<div>
@@ -40,7 +40,8 @@ function FunctionCard({ func }: FunctionCardProps) {
 				{hasInputs && ')'}
 				{hasInputs && <ParamsInput inputs={inputs} args={args} setArgs={setArgs} />}
 				<br />
-				<ReadButton func={func} args={args} />
+				{functState === State.READ && <ReadButton func={func} args={args} />}
+				{/* {functState === State.WRITE && <WriteButton func={func} args={args} />} */}
 			</fieldset>
 		</div>
 	);

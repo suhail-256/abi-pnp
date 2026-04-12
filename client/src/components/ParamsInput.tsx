@@ -9,9 +9,17 @@ interface ParamsInputProps {
 
 function ParamsInput({ inputs, args, setArgs }: ParamsInputProps) {
   const handleChange = (index: number, value: string) => {
+    if (!value.length) return;
+
     const newArgs = [...args];
+    // if (inputs[index].type.includes('[]')) {
+    //   // for array type, split by comma and trim spaces
+    //   newArgs[index] = value.split(',').map(item => item.trim());
+    // }
     newArgs[index] = value;
     setArgs(newArgs);
+    console.log(newArgs);
+    
   };
 
   return inputs?.map((input, index) => {
