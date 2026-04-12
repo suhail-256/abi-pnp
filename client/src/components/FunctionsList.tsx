@@ -1,5 +1,4 @@
 import { useContract } from '../context/ContractContext';
-import { type FunctionType } from '../schemas/function';
 import FunctionCard  from './FunctionCard';
 
 

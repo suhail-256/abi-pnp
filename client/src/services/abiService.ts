@@ -1,35 +1,32 @@
-import axios from 'axios'
-import { Abi } from '../schemas/abi'
+import axios from 'axios';
+import  type { Abi, Chain, SolidityAddress }  from '../types/contract';
 
-const baseUrl = '/api/abi'
+const baseUrl = '/api/abi';
 
 const handleApiError = (error: unknown) => {
 	if (axios.isAxiosError(error)) {
 		if (error.response) {
-
-			throw new Error(error.response.data.error || 'API Error')
+			throw new Error(error.response.data.error || 'API Error');
 		} else if (error.request) {
-
-      console.error('No response from API:', error.request)
-			throw new Error('No response from API')
+			console.error('No response from API:', error.request);
+			throw new Error('No response from API');
 		} else {
-
-      console.error('Error setting up API request:', error.message)
-			throw new Error('Error setting up API request')
+			console.error('Error setting up API request:', error.message);
+			throw new Error('Error setting up API request');
 		}
 	} else {
-    console.error('Unexpected error:', error)
-		throw new Error('Unexpected error')
+		console.error('Unexpected error:', error);
+		throw new Error('Unexpected error');
 	}
-}
+};
 
-const getAbi = async (chainId: number, address: string): Promise<Abi> => {
+const getAbi = async (chainId: Chain['id'], address: SolidityAddress): Promise<Abi> => {
 	try {
-		const req = await axios.get(`${baseUrl}/${chainId}/${address}`)
-		return req.data
+		const req = await axios.get(`${baseUrl}/${chainId}/${address}`);
+		return req.data;
 	} catch (error) {
-		return handleApiError(error)
+		return handleApiError(error);
 	}
-}
+};
 
-export default { getAbi }
+export default { getAbi };

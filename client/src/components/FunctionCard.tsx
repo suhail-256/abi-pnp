@@ -1,22 +1,21 @@
 import { useState } from 'react';
-import { type FunctionType } from '../schemas/function';
+import { type AbiFunction } from '../types/contract';
 import ReadButton from './contracts/Readbutton';
 import ParamsInput from './ParamsInput';
 
-// list of stateMutabilities that doesn't modify the state (view, pure)
-const readStates = ['view', 'pure'];
-
-enum State {
-	READ = 'read',
-	WRITE = 'write',
-}
-
-
 interface FunctionCardProps {
-	func: FunctionType;
+	func: AbiFunction;
 }
 
 function FunctionCard({ func }: FunctionCardProps) {
+	// list of stateMutabilities that doesn't modify the state (view, pure)
+	const readStates = ['view', 'pure'];
+
+	enum State {
+		READ = 'read',
+		WRITE = 'write',
+	}
+
 	const { inputs, name, stateMutability } = func;
 	const hasInputs = inputs && inputs.length > 0;
 	const [args, setArgs] = useState<string[]>(new Array(inputs?.length || 0));
@@ -38,7 +37,7 @@ function FunctionCard({ func }: FunctionCardProps) {
 					);
 				})}
 				{hasInputs && ')'}
-				{hasInputs && <ParamsInput inputs={inputs} args={args} setArgs={setArgs} />}
+				{hasInputs && <ParamsInput inputs={inputs as any} args={args} setArgs={setArgs} />}
 				<br />
 				{functState === State.READ && <ReadButton func={func} args={args} />}
 				{/* {functState === State.WRITE && <WriteButton func={func} args={args} />} */}

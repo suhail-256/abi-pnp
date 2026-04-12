@@ -1,8 +1,8 @@
 import React from 'react';
-import { type FunctionType } from '../schemas/function';
+import { AbiFunction, type AbiParameter } from '../types/contract';
 
 interface ParamsInputProps {
-  inputs?: FunctionType['inputs'];
+  inputs?: AbiParameter[];
   args: string[];
   setArgs: React.Dispatch<React.SetStateAction<string[]>>;
 }

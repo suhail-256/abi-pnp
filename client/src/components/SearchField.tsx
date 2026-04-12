@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 import { useChainId } from 'wagmi';
 import abiService from '../services/abiService';
-import { AbiSchema, type Abi } from '../schemas/abi';
+import { AbiSchema, type Abi, type SolidityAddress } from '../types/contract';
 import { useContract } from '../context/ContractContext';
 
 interface SearchFieldProps {
-	setContractAddress: (address: string) => void;
+	setContractAddress: (address: SolidityAddress) => void;
 	setAbi: (abi: Abi) => void;
 }
 
@@ -18,7 +18,7 @@ function SearchField() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const address = inputRef.current?.value;
+		const address = inputRef.current?.value as SolidityAddress | undefined;
 		setContractAddress(address!);
 
 		console.log(address);
@@ -33,7 +33,7 @@ function SearchField() {
 			console.error('Invalid ABI:', parsedAbi.error);
 			return;
 		}
-    
+
 	};
 
 	return (

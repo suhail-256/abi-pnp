@@ -1,10 +1,10 @@
 import { useContract } from '../../context/ContractContext';
-import { type FunctionType } from '../../schemas/function';
+import { type AbiFunction } from '../../types/contract';
 import { useReadContract } from 'wagmi';
 import errorHandler from '../../utils/errorUtils';
 
 interface ReadButtonProps {
-	func: FunctionType;
+	func: AbiFunction;
 	args: string[];
 }
 
