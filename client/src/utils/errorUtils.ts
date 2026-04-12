@@ -11,7 +11,7 @@ const getErrorMessage = (error: unknown): string => {
     }
     return error.shortMessage;
   }
-  return 'Tx reverted with unknown error';
+  return 'Tx reverted';
 };
 
 export default { getErrorMessage };

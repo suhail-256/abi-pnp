@@ -18,7 +18,7 @@ function ParamsInput({ inputs, args, setArgs }: ParamsInputProps) {
     // }
     newArgs[index] = value;
     setArgs(newArgs);
-    console.log(newArgs);
+    // console.log(newArgs);
     
   };
 

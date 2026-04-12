@@ -1,9 +1,5 @@
 import { useContract } from '../../context/ContractContext';
-import {
-	type AbiFunction,
-	AbiSchema,
-	AbiParameterSchema,
-} from '../../types/contract';
+import { type AbiFunction, AbiSchema, AbiParameterSchema } from '../../types/contract';
 import { useReadContract } from 'wagmi';
 import errorHandler from '../../utils/errorUtils';
 
@@ -12,23 +8,31 @@ interface ReadButtonProps {
 	args: string[];
 }
 
+// TODO handle tuple type in the future
 function ReadButton({ func, args }: ReadButtonProps) {
 	const { contractAddress, abi } = useContract();
+
+	// get arr dim by countring the number of [ in it
+	const getArrayDim = (type: string): number => {
+		const matches = type.match(/\[/g);
+		return matches ? matches.length : 0;
+	};
 
 	const parseArgs = (args: string[]) => {
 		return args.map((arg, index) => {
 			if (arg === undefined) return undefined;
-			try {
-				// for array type, split by comma and trim spaces
-				if (func.inputs![index].type.endsWith(']')) {
+			const arrayDim = getArrayDim(func.inputs![index].type);
+
+			if (arrayDim > 0) {
+				try {
+					// for array type, split by comma and trim spaces (handle 1d array and multi-dim array)
 					return arg.split(',').map(item => item.trim());
+				} catch (error) {
+					console.error(`Error parsing arguments: ${error}`);
+					return arg;
 				}
-				return arg;
-			} catch (error) {
-				console.error(`Error parsing arguments: ${error}`);
-				console.log(args.length);
-				return arg;
 			}
+			return arg;
 		});
 	};
 
@@ -41,9 +45,6 @@ function ReadButton({ func, args }: ReadButtonProps) {
 	});
 
 	const handleQuery = async () => {
-
-
-
 		try {
 			console.log(parseArgs(args));
 			await result.refetch({
