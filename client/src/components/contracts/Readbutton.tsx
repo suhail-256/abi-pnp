@@ -13,16 +13,17 @@ interface ReadButtonProps {
 
 // TODO handle tuple type in the future
 function ReadButton({ func, args, buttonRef }: ReadButtonProps) {
-	const { contractAddress, abi } = useContract();
-	const [sumittedArgs, setSubmittedArgs] = useState<(string | string[] | undefined)[]>([]);
+	const { contractAddress, abi, selectedChainId } = useContract();
+	const [submittedArgs, setSubmittedArgs] = useState<(string | string[] | undefined)[]>([]);
 
 	const hasSubmitted = useRef(false);
 
 	const result = useReadContract({
 		address: contractAddress as Address,
 		abi: abi,
+		chainId: selectedChainId,
 		functionName: func.name,
-		args: sumittedArgs,
+		args: submittedArgs,
 		query: {
 			enabled: false,
 			retry: false,
@@ -36,7 +37,7 @@ function ReadButton({ func, args, buttonRef }: ReadButtonProps) {
 			cancelRefetch: false,
 		});
 		// hasSubmitted.current = false;
-	}, [sumittedArgs]);
+	}, [submittedArgs]);
 
 	const getArrayDim = (type: string): number => {
 		const matches = type.match(/\[/g);
@@ -61,7 +62,7 @@ function ReadButton({ func, args, buttonRef }: ReadButtonProps) {
 		});
 	};
 
-	const handleRead = async () => {
+	const handleRead = () => {
 		try {
 			setSubmittedArgs(parseArgs(args));
 			hasSubmitted.current = true;

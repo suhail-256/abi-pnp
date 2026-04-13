@@ -3,6 +3,7 @@ import { Address, type AbiFunction } from '../../types/contract';
 import { useWriteContract } from 'wagmi';
 import Result from '../Result';
 import { useState, useEffect, useRef } from 'react';
+import { useConnection } from 'wagmi';
 
 interface WriteButtonProps {
 	func: AbiFunction;
@@ -11,10 +12,11 @@ interface WriteButtonProps {
 }
 
 function WriteButton({ func, args, buttonRef }: WriteButtonProps) {
+	const { isDisconnected } = useConnection();
 	const { contractAddress, abi } = useContract();
 	const [submittedArgs, setSubmittedArgs] = useState<(string | string[] | undefined)[]>([]);
 
-  const hasSubmitted = useRef(false);
+	const hasSubmitted = useRef(false);
 	const writeContract = useWriteContract({
 		mutation: {
 			onSuccess(data) {
@@ -35,6 +37,14 @@ function WriteButton({ func, args, buttonRef }: WriteButtonProps) {
 			args: parseArgs(args),
 		});
 	}, [submittedArgs]);
+
+	if (isDisconnected) {
+		return (
+			<button ref={buttonRef} type="button" disabled>
+				Connect Wallet
+			</button>
+		);
+	}
 
 	const getArrayDim = (type: string): number => {
 		const matches = type.match(/\[/g);

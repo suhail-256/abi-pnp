@@ -8,6 +8,8 @@ interface ContractContextType {
 	contractAddress: Address | undefined;
 	setContractAddress: (address: Address) => void;
 	abi: Abi | undefined;
+	selectedChainId: number;
+	setSelectedChainId: (chainId: number) => void;
 	functions: AbiFunction[] | undefined;
 	showFunctions: boolean;
 	setShowFunctions: (show: boolean) => void;
@@ -19,6 +21,8 @@ export const ContractContext = createContext<ContractContextType>({
 	contractAddress: undefined,
 	setContractAddress: () => {},
 	abi: undefined,
+	selectedChainId: 1,
+	setSelectedChainId: () => {},
 	functions: undefined,
 	showFunctions: false,
 	setShowFunctions: () => {},
@@ -29,19 +33,18 @@ export const ContractContext = createContext<ContractContextType>({
 function ContractProvider({ children }: { children: React.ReactNode }) {
 	const [contractAddress, setContractAddress] = useState<Address>();
 	const [showFunctions, setShowFunctions] = useState(false);
-	const chainId = useChainId();
+	const [selectedChainId, setSelectedChainId] = useState<number>(1); // default mainnet
 
 	const extractFunctions = (abi: Abi): AbiFunction[] => {
-		// console.log(abi.filter((item): item is FunctionType => item.type === 'function'));
 		return abi.filter((item): item is AbiFunction => item.type === 'function');
 	};
 
 	const { data, isLoading, error } = useQuery({
-		queryKey: ['abi', contractAddress, chainId],
+		queryKey: ['abi', contractAddress, selectedChainId],
 		queryFn: async (): Promise<{ abi: Abi; functions: AbiFunction[] }> => {
 			let fetchedAbi;
 			try {
-				fetchedAbi = await abiService.getAbi(chainId, contractAddress!);
+				fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
 			} catch (err) {
 				setShowFunctions(false);
 				return {
@@ -71,6 +74,8 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
 				contractAddress,
 				setContractAddress,
 				abi: data?.abi,
+				selectedChainId,
+				setSelectedChainId,
 				functions: data?.functions,
 				showFunctions,
 				setShowFunctions,
