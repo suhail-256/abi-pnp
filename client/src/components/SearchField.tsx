@@ -32,10 +32,12 @@ function SearchField() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<input value={inputValue} onChange={handleChange} type="text" placeholder="0x45586..." />
-			<button type="submit">Submit</button>
-		</form>
+		<div>
+			<form onSubmit={handleSubmit}>
+				<input value={inputValue} onChange={handleChange} type="text" placeholder="0x45586..." />
+				<button type="submit">Submit</button>
+			</form>
+		</div>
 	);
 }
 

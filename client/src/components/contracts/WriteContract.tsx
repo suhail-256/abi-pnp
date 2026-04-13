@@ -12,7 +12,7 @@ interface WriteButtonProps {
 }
 
 function WriteButton({ func, args, buttonRef }: WriteButtonProps) {
-	const { isConnected } = useConnection();
+	const { isDisconnected } = useConnection();
 	const { contractAddress, abi } = useContract();
 	const [submittedArgs, setSubmittedArgs] = useState<(string | string[] | undefined)[]>([]);
 
@@ -38,7 +38,7 @@ function WriteButton({ func, args, buttonRef }: WriteButtonProps) {
 		});
 	}, [submittedArgs]);
 
-	if (!isConnected) {
+	if (isDisconnected) {
 		return (
 			<button ref={buttonRef} type="button" disabled>
 				Connect Wallet
