@@ -2,6 +2,7 @@ import { useContract } from '../../context/ContractContext';
 import { type AbiFunction } from '../../types/contract';
 import { useReadContract } from 'wagmi';
 import errorHandler from '../../utils/errorUtils';
+import Result from './Result';
 
 interface ReadButtonProps {
 	func: AbiFunction;
@@ -44,15 +45,14 @@ function ReadButton({ func, args }: ReadButtonProps) {
 		query: { enabled: false, retry: false },
 	});
 
-	const handleQuery = async () => {
+	const handleRead = async () => {
 		try {
 			console.log(parseArgs(args));
-			await result.refetch({
+			const response = await result.refetch({
 				throwOnError: true,
 				cancelRefetch: false,
 			});
-			console.log(result.data);
-			
+			console.log(response.data);
 		} catch (error) {
 			console.error(`Error: ${errorHandler.getErrorMessage(error)}`);
 		}
@@ -60,17 +60,18 @@ function ReadButton({ func, args }: ReadButtonProps) {
 
 	return (
 		<>
-			<button onClick={handleQuery}> Query </button>
-			<fieldset>
-				{result.isSuccess && (
+			<button onClick={handleRead}> Read </button>
+			{/* <fieldset> */}
+			{result.isFetched && <Result result={result} />}
+			{/* {result.isSuccess && (
 					<div>
 						{JSON.stringify(result.data, (_, v) =>
 							typeof v === 'bigint' ? v.toString() : v,
 						).replace(/"/g, '')}
 					</div>
 				)}
-				{result.isError && <div>{`Error: ${errorHandler.getErrorMessage(result.error)}`}</div>}
-			</fieldset>
+				{result.isError && <div>{`Error: ${errorHandler.getErrorMessage(result.error)}`}</div>} */}
+			{/* </fieldset> */}
 		</>
 	);
 }
