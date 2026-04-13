@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { type AbiFunction } from '../types/contract';
 import ReadButton from './contracts/Readbutton';
-import ParamsInput from './ParamsInput';
+import ArgsInput from './ArgsInput';
+import WriteButton from './contracts/WriteContract';
 
 interface FunctionCardProps {
 	func: AbiFunction;
@@ -17,16 +18,29 @@ function FunctionCard({ func }: FunctionCardProps) {
 	}
 
 	const { inputs, name, stateMutability } = func;
-	const hasInputs = inputs && inputs.length > 0;
-	const [args, setArgs] = useState<string[]>(new Array(inputs?.length || 0));
 
-	const functState: State = readStates.includes(stateMutability) ? State.READ : State.WRITE;
-	const color = functState === State.READ ? '#2657c2' : '#d64c33';
+	const [functState, setFunctState] = useState<State>(State.READ);
+	const [buttonColor, setButtonColor] = useState<string>('#2657c2');
+	const [args, setArgs] = useState<string[]>(new Array(inputs?.length || 0));
+	const [hasInputs, setHasInputs] = useState<boolean>(false);
+
+	const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+	useEffect(() => {
+		setHasInputs(!!inputs?.length);
+		if (readStates.includes(stateMutability)) {
+			setFunctState(State.READ);
+			setButtonColor('#2657c2');
+		} else {
+			setFunctState(State.WRITE);
+			setButtonColor('#d64c33');
+		}
+	}, []);
 
 	return (
 		<div>
 			<fieldset style={{ marginBottom: '16px' }}>
-				<button style={{ backgroundColor: color }}>{name}</button> &nbsp;
+				<button type="button" style={{ backgroundColor: buttonColor }}>{name}</button> &nbsp;
 				{hasInputs && '('}
 				{inputs?.map((param, index) => {
 					return (
@@ -37,9 +51,10 @@ function FunctionCard({ func }: FunctionCardProps) {
 					);
 				})}
 				{hasInputs && ')'}
-				{hasInputs && <ParamsInput inputs={inputs as any} args={args} setArgs={setArgs} />}
+				{hasInputs && <ArgsInput inputs={inputs as any} args={args} setArgs={setArgs} buttonRef={buttonRef} />}
 				<br />
-				{functState === State.READ && <ReadButton func={func} args={args} />}
+				{functState === State.READ && <ReadButton func={func} args={args} buttonRef={buttonRef} />}
+				{functState === State.WRITE && <WriteButton func={func} args={args} buttonRef={buttonRef} />}
 				{/* {functState === State.WRITE && <WriteButton func={func} args={args} />} */}
 			</fieldset>
 		</div>

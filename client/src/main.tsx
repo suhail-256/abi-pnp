@@ -7,6 +7,10 @@ import { config } from '../config/wagmi.ts'
 
 import './index.css'
 
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
