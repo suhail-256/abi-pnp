@@ -1,19 +1,43 @@
 import { useContract } from '../../context/ContractContext';
-import { type AbiFunction } from '../../types/contract';
-import { useReadContract } from 'wagmi';
+import { AbiParameter, Address, type AbiFunction } from '../../types/contract';
+import { useReadContract, UseReadContractParameters } from 'wagmi';
 import errorHandler from '../../utils/errorUtils';
 import Result from './Result';
+import { useState, useEffect, useRef } from 'react';
 
 interface ReadButtonProps {
 	func: AbiFunction;
 	args: string[];
+	buttonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
 // TODO handle tuple type in the future
-function ReadButton({ func, args }: ReadButtonProps) {
+function ReadButton({ func, args, buttonRef }: ReadButtonProps) {
 	const { contractAddress, abi } = useContract();
+	const [sumittedArgs, setSubmittedArgs] = useState<(string | string[] | undefined)[]>([]);
 
-	// get arr dim by countring the number of [ in it
+	const hasSubmitted = useRef(false);
+
+	const result = useReadContract({
+		address: contractAddress as Address,
+		abi: abi,
+		functionName: func.name,
+		args: sumittedArgs,
+		query: {
+			enabled: false,
+			retry: false,
+		},
+	});
+
+	useEffect(() => {
+		if (!hasSubmitted.current) return;
+		result.refetch({
+			throwOnError: true,
+			cancelRefetch: false,
+		});
+		// hasSubmitted.current = false;
+	}, [sumittedArgs]);
+
 	const getArrayDim = (type: string): number => {
 		const matches = type.match(/\[/g);
 		return matches ? matches.length : 0;
@@ -37,22 +61,10 @@ function ReadButton({ func, args }: ReadButtonProps) {
 		});
 	};
 
-	const result = useReadContract({
-		abi,
-		address: contractAddress,
-		functionName: func.name,
-		args: args.length ? parseArgs(args) : undefined,
-		query: { enabled: false, retry: false },
-	});
-
 	const handleRead = async () => {
 		try {
-			console.log(parseArgs(args));
-			const response = await result.refetch({
-				throwOnError: true,
-				cancelRefetch: false,
-			});
-			console.log(response.data);
+			setSubmittedArgs(parseArgs(args));
+			hasSubmitted.current = true;
 		} catch (error) {
 			console.error(`Error: ${errorHandler.getErrorMessage(error)}`);
 		}
@@ -60,18 +72,9 @@ function ReadButton({ func, args }: ReadButtonProps) {
 
 	return (
 		<>
-			<button onClick={handleRead}> Read </button>
-			{/* <fieldset> */}
+			<button ref={buttonRef} type="button" onClick={handleRead}> Read </button>
 			{result.isFetched && <Result result={result} />}
-			{/* {result.isSuccess && (
-					<div>
-						{JSON.stringify(result.data, (_, v) =>
-							typeof v === 'bigint' ? v.toString() : v,
-						).replace(/"/g, '')}
-					</div>
-				)}
-				{result.isError && <div>{`Error: ${errorHandler.getErrorMessage(result.error)}`}</div>} */}
-			{/* </fieldset> */}
+			{/* {result.isFetched ? 1 : 0} */}
 		</>
 	);
 }
