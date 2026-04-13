@@ -2,6 +2,7 @@ import { useConnect, useConnection, useConnectors, useDisconnect } from 'wagmi';
 import SearchField from './components/SearchField';
 import FunctionsList from './components/FunctionsList';
 import ContractProvider from './context/ContractContext';
+import ChainSelector from './components/ChainSelector';
 
 function App() {
 	const connection = useConnection();
@@ -39,6 +40,7 @@ function App() {
 				<div>{status}</div>
 				<div>{error?.message}</div>
 			</div>
+			<ChainSelector />
 			<SearchField />
 			<FunctionsList />
 		</ContractProvider>
