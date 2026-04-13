@@ -2,7 +2,7 @@ import { useContract } from '../../context/ContractContext';
 import { AbiParameter, Address, type AbiFunction } from '../../types/contract';
 import { useReadContract, UseReadContractParameters } from 'wagmi';
 import errorHandler from '../../utils/errorUtils';
-import Result from './Result';
+import Result from '../Result';
 import { useState, useEffect, useRef } from 'react';
 
 interface ReadButtonProps {
