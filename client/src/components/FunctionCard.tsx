@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { type AbiFunction } from '../types/contract';
 import ReadButton from './contracts/Readbutton';
 import ArgsInput from './ArgsInput';
+import WriteButton from './contracts/WriteContract';
 
 interface FunctionCardProps {
 	func: AbiFunction;
@@ -53,7 +54,7 @@ function FunctionCard({ func }: FunctionCardProps) {
 				{hasInputs && <ArgsInput inputs={inputs as any} args={args} setArgs={setArgs} buttonRef={buttonRef} />}
 				<br />
 				{functState === State.READ && <ReadButton func={func} args={args} buttonRef={buttonRef} />}
-				{/* {functState === State.WRITE && <ReadButton func={func} args={args} buttonRef={buttonRef} />} */}
+				{functState === State.WRITE && <WriteButton func={func} args={args} buttonRef={buttonRef} />}
 				{/* {functState === State.WRITE && <WriteButton func={func} args={args} />} */}
 			</fieldset>
 		</div>
