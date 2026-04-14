@@ -2,7 +2,6 @@ import { createContext, useContext, useState } from 'react';
 import { AbiSchema, type Abi, type AbiFunction, type Address } from '../types/contract';
 import { useQuery } from '@tanstack/react-query';
 import abiService from '../services/abiService';
-import { useChains } from 'wagmi';
 
 interface ContractContextType {
 	contractAddress: Address | undefined;
@@ -33,31 +32,27 @@ export const ContractContext = createContext<ContractContextType>({
 function ContractProvider({ children }: { children: React.ReactNode }) {
 	const [contractAddress, setContractAddress] = useState<Address>();
 	const [showFunctions, setShowFunctions] = useState(false);
-	const chains = useChains();
-	const [selectedChainId, setSelectedChainId] = useState<number>(
-		chains.find(c => c.name.toLowerCase() === 'sepolia')?.id ?? 1,
-	); // default mainnet
+	const [selectedChainId, setSelectedChainId] = useState<number>(11155111); // default sepolia
 
 	const extractFunctions = (abi: Abi): AbiFunction[] => {
 		return abi.filter((item): item is AbiFunction => item.type === 'function');
 	};
 
-	const { data, isLoading, error: AbiError } = useQuery({
+	const {
+		data,
+		isLoading,
+		error: AbiError,
+	} = useQuery({
 		queryKey: ['abi', contractAddress, selectedChainId],
 		queryFn: async (): Promise<{ abi: Abi; functions: AbiFunction[] }> => {
 			let fetchedAbi;
 			// try {
 			fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
 			if (!fetchedAbi) {
-				throw new Error(`No ABI found for address ${contractAddress} on chain ${selectedChainId}`);
+				throw new Error(
+					`No ABI found for address ${contractAddress} on chain ${selectedChainId}`,
+				);
 			}
-			// } catch (err) {
-			// 	setShowFunctions(false);
-			// 	return {
-			// 		abi: [],
-			// 		functions: [],
-			// 	};
-			// }
 
 			const parsedAbi = AbiSchema.safeParse(fetchedAbi);
 			if (!parsedAbi.success) {
@@ -72,6 +67,7 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
 		},
 		enabled: !!contractAddress,
 		retry: false,
+		refetchOnWindowFocus: false,
 	});
 
 	return (

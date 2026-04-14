@@ -76,16 +76,36 @@ function SearchField() {
 
 	return (
 		<div>
-			<form onSubmit={handleSubmit}>
+			<form className="search-form" onSubmit={handleSubmit}>
 				<input
+					className="search-input"
 					value={inputValue}
 					onChange={handleChange}
 					type="text"
-					placeholder="0x45586..."
+					placeholder="0x000..."
 				/>
-				<button type="submit">Submit</button>
+				<button className="search-submit" type="submit" aria-label="Search">
+					<svg
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<circle cx="11" cy="11" r="8" />
+						<line x1="21" y1="21" x2="16.65" y2="16.65" />
+					</svg>
+				</button>
 			</form>
-			{displayError && <p style={{ color: 'red' }}>{displayError}</p>}
+			{displayError && (
+				<div className="error-alert search-error">
+					<span className="error-alert-icon" aria-hidden="true">
+						!
+					</span>
+					<span>{displayError}</span>
+				</div>
+			)}
 		</div>
 	);
 }
