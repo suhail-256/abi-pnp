@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import { AbiSchema, type Abi, type AbiFunction, type Address } from '../types/contract';
 import { useQuery } from '@tanstack/react-query';
 import abiService from '../services/abiService';
-import { useChainId } from 'wagmi';
+import { useChains } from 'wagmi';
 
 interface ContractContextType {
 	contractAddress: Address | undefined;
@@ -21,7 +21,7 @@ export const ContractContext = createContext<ContractContextType>({
 	contractAddress: undefined,
 	setContractAddress: () => {},
 	abi: undefined,
-	selectedChainId: 1,
+	selectedChainId: 0,
 	setSelectedChainId: () => {},
 	functions: undefined,
 	showFunctions: false,
@@ -33,7 +33,8 @@ export const ContractContext = createContext<ContractContextType>({
 function ContractProvider({ children }: { children: React.ReactNode }) {
 	const [contractAddress, setContractAddress] = useState<Address>();
 	const [showFunctions, setShowFunctions] = useState(false);
-	const [selectedChainId, setSelectedChainId] = useState<number>(1); // default mainnet
+	const chains = useChains();
+	const [selectedChainId, setSelectedChainId] = useState<number>(chains.find(c => c.name.toLowerCase() === 'sepolia')?.id); // default mainnet
 
 	const extractFunctions = (abi: Abi): AbiFunction[] => {
 		return abi.filter((item): item is AbiFunction => item.type === 'function');
