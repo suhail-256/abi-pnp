@@ -1,5 +1,5 @@
 import axios from 'axios';
-import  type { Abi, Chain, Address }  from '../types/contract';
+import type { Abi, Chain, Address } from '../types/contract';
 
 const baseUrl = '/api/abi';
 
@@ -8,7 +8,7 @@ const handleApiError = (err: any) => {
 
 	if (axios.isAxiosError(err)) {
 		if (err.response) {
-			throw new Error(err.response.data || 'API Error');
+			throw new Error(err.response.data?.error || err.response.data || 'API Error');
 		} else if (err.request) {
 			console.error('No response from API:', err.request);
 			throw new Error('No response from API');

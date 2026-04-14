@@ -34,7 +34,9 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
 	const [contractAddress, setContractAddress] = useState<Address>();
 	const [showFunctions, setShowFunctions] = useState(false);
 	const chains = useChains();
-	const [selectedChainId, setSelectedChainId] = useState<number>(chains.find(c => c.name.toLowerCase() === 'sepolia')?.id); // default mainnet
+	const [selectedChainId, setSelectedChainId] = useState<number>(
+		chains.find(c => c.name.toLowerCase() === 'sepolia')?.id ?? 1,
+	); // default mainnet
 
 	const extractFunctions = (abi: Abi): AbiFunction[] => {
 		return abi.filter((item): item is AbiFunction => item.type === 'function');
@@ -44,15 +46,15 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
 		queryKey: ['abi', contractAddress, selectedChainId],
 		queryFn: async (): Promise<{ abi: Abi; functions: AbiFunction[] }> => {
 			let fetchedAbi;
-			try {
-				fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
-			} catch (err) {
-				setShowFunctions(false);
-				return {
-					abi: [],
-					functions: [],
-				};
-			}
+			// try {
+			fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
+			// } catch (err) {
+			// 	setShowFunctions(false);
+			// 	return {
+			// 		abi: [],
+			// 		functions: [],
+			// 	};
+			// }
 
 			const parsedAbi = AbiSchema.safeParse(fetchedAbi);
 			if (!parsedAbi.success) {

@@ -1,12 +1,30 @@
-import { type Abi, type Address } from '../types/contract';
+import { type Address } from '../types/contract';
 import { useContract } from '../context/ContractContext';
 import { isAddress } from 'viem';
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 
 function SearchField() {
 	const [inputValue, setInputValue] = useState('');
-	const [error, setError] = useState<string | null>(null);
-	const { setContractAddress, showFunctions, setShowFunctions } = useContract();
+	const [addressError, setAddressError] = useState<string | null>(null);
+	const { setContractAddress, showFunctions, setShowFunctions, error } = useContract();
+	const [displayError, setDisplayError] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (!error) return;
+		setDisplayError((error as Error).message);
+		const timer = setTimeout(() => setDisplayError(null), 5000);
+		return () => clearTimeout(timer);
+	}, [error]);
+
+	useEffect(() => {
+		if (!addressError) return;
+		setDisplayError(addressError);
+		const timer = setTimeout(() => {
+			setDisplayError(null);
+			setAddressError(null);
+		}, 5000);
+		return () => clearTimeout(timer);
+	}, [addressError]);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
@@ -15,10 +33,9 @@ function SearchField() {
 
 		if (address.length !== 42) return;
 		if (!isAddress(address)) {
-			setError('Invalid address format');
+			setAddressError('Invalid address');
 			return;
 		}
-		setError(null);
 
 		if (!showFunctions) {
 			setContractAddress(address);
@@ -28,10 +45,9 @@ function SearchField() {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!isAddress(inputValue)) {
-			setError('Invalid address format');
+			setAddressError('Invalid address');
 			return;
 		}
-		setError(null);
 
 		setContractAddress(inputValue);
 		setShowFunctions(true);
@@ -48,6 +64,7 @@ function SearchField() {
 				/>
 				<button type="submit">Submit</button>
 			</form>
+			{displayError && <p style={{ color: 'red' }}>{displayError}</p>}
 		</div>
 	);
 }
