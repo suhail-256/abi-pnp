@@ -14,7 +14,7 @@ interface ContractContextType {
 	showFunctions: boolean;
 	setShowFunctions: (show: boolean) => void;
 	isLoading: boolean;
-	error: unknown;
+	AbiError: unknown;
 }
 
 export const ContractContext = createContext<ContractContextType>({
@@ -27,7 +27,7 @@ export const ContractContext = createContext<ContractContextType>({
 	showFunctions: false,
 	setShowFunctions: () => {},
 	isLoading: false,
-	error: null,
+	AbiError: null,
 });
 
 function ContractProvider({ children }: { children: React.ReactNode }) {
@@ -42,12 +42,15 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
 		return abi.filter((item): item is AbiFunction => item.type === 'function');
 	};
 
-	const { data, isLoading, error } = useQuery({
+	const { data, isLoading, error: AbiError } = useQuery({
 		queryKey: ['abi', contractAddress, selectedChainId],
 		queryFn: async (): Promise<{ abi: Abi; functions: AbiFunction[] }> => {
 			let fetchedAbi;
 			// try {
 			fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
+			if (!fetchedAbi) {
+				throw new Error(`No ABI found for address ${contractAddress} on chain ${selectedChainId}`);
+			}
 			// } catch (err) {
 			// 	setShowFunctions(false);
 			// 	return {
@@ -83,7 +86,7 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
 				showFunctions,
 				setShowFunctions,
 				isLoading,
-				error,
+				AbiError,
 			}}
 		>
 			{children}
