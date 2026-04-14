@@ -12,7 +12,7 @@ interface WriteButtonProps {
 }
 
 function WriteButton({ func, args, buttonRef }: WriteButtonProps) {
-	const { isDisconnected } = useConnection();
+	const { isConnected } = useConnection();
 	const { contractAddress, abi } = useContract();
 	const [submittedArgs, setSubmittedArgs] = useState<(string | string[] | undefined)[]>([]);
 
@@ -38,9 +38,9 @@ function WriteButton({ func, args, buttonRef }: WriteButtonProps) {
 		});
 	}, [submittedArgs]);
 
-	if (isDisconnected) {
+	if (!isConnected) {
 		return (
-			<button ref={buttonRef} type="button" disabled>
+			<button className="action-btn action-btn--write" ref={buttonRef} type="button" disabled>
 				Connect Wallet
 			</button>
 		);
@@ -76,9 +76,8 @@ function WriteButton({ func, args, buttonRef }: WriteButtonProps) {
 
 	return (
 		<>
-			<button ref={buttonRef} type="button" onClick={handleWrite}>
-				{' '}
-				Write{' '}
+			<button className="action-btn action-btn--write" ref={buttonRef} type="button" onClick={handleWrite}>
+				Write
 			</button>
 			{writeContract.status === 'success' && <Result result={writeContract} />}
 		</>

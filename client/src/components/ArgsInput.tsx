@@ -22,21 +22,24 @@ function ArgsInput({ inputs, args, setArgs, buttonRef }: ArgsInputProps) {
 		}
 	};
 
-	return inputs?.map((input, index) => {
-		const paramName = input.name || `input`;
-		return (
-			<span key={index}>
-				<br />
-				<input
-					type="text"
-					placeholder={`${paramName} (${input.type})`}
-					value={args[index] || ''}
-					onChange={e => handleChange(index, e.target.value)}
-					onKeyDown={handleKeyDown}
-				/>
-			</span>
-		);
-	});
+	return (
+		<>
+			{inputs?.map((input, index) => {
+				const paramName = input.name || `input`;
+				return (
+					<input
+						key={index}
+						className="arg-input"
+						type="text"
+						placeholder={`${paramName} (${input.type})`}
+						value={args[index] || ''}
+						onChange={e => handleChange(index, e.target.value)}
+						onKeyDown={handleKeyDown}
+					/>
+				);
+			})}
+		</>
+	);
 }
 
 export default ArgsInput;

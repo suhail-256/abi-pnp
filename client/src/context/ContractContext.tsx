@@ -2,7 +2,6 @@ import { createContext, useContext, useState } from 'react';
 import { AbiSchema, type Abi, type AbiFunction, type Address } from '../types/contract';
 import { useQuery } from '@tanstack/react-query';
 import abiService from '../services/abiService';
-import { useChainId } from 'wagmi';
 
 interface ContractContextType {
 	contractAddress: Address | undefined;
@@ -14,43 +13,45 @@ interface ContractContextType {
 	showFunctions: boolean;
 	setShowFunctions: (show: boolean) => void;
 	isLoading: boolean;
-	error: unknown;
+	AbiError: unknown;
 }
 
 export const ContractContext = createContext<ContractContextType>({
 	contractAddress: undefined,
 	setContractAddress: () => {},
 	abi: undefined,
-	selectedChainId: 1,
+	selectedChainId: 0,
 	setSelectedChainId: () => {},
 	functions: undefined,
 	showFunctions: false,
 	setShowFunctions: () => {},
 	isLoading: false,
-	error: null,
+	AbiError: null,
 });
 
 function ContractProvider({ children }: { children: React.ReactNode }) {
 	const [contractAddress, setContractAddress] = useState<Address>();
 	const [showFunctions, setShowFunctions] = useState(false);
-	const [selectedChainId, setSelectedChainId] = useState<number>(1); // default mainnet
+	const [selectedChainId, setSelectedChainId] = useState<number>(11155111); // default sepolia
 
 	const extractFunctions = (abi: Abi): AbiFunction[] => {
 		return abi.filter((item): item is AbiFunction => item.type === 'function');
 	};
 
-	const { data, isLoading, error } = useQuery({
+	const {
+		data,
+		isLoading,
+		error: AbiError,
+	} = useQuery({
 		queryKey: ['abi', contractAddress, selectedChainId],
 		queryFn: async (): Promise<{ abi: Abi; functions: AbiFunction[] }> => {
 			let fetchedAbi;
-			try {
-				fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
-			} catch (err) {
-				setShowFunctions(false);
-				return {
-					abi: [],
-					functions: [],
-				};
+			// try {
+			fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
+			if (!fetchedAbi) {
+				throw new Error(
+					`No ABI found for address ${contractAddress} on chain ${selectedChainId}`,
+				);
 			}
 
 			const parsedAbi = AbiSchema.safeParse(fetchedAbi);
@@ -66,6 +67,7 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
 		},
 		enabled: !!contractAddress,
 		retry: false,
+		refetchOnWindowFocus: false,
 	});
 
 	return (
@@ -80,7 +82,7 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
 				showFunctions,
 				setShowFunctions,
 				isLoading,
-				error,
+				AbiError,
 			}}
 		>
 			{children}

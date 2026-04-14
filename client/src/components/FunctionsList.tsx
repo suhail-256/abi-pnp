@@ -3,10 +3,9 @@ import FunctionCard from './FunctionCard';
 
 function FunctionsList() {
 	const { functions } = useContract();
-
+	
 	return (
-		<div>
-			<br/>
+		<div className="functions-list">
 			{functions?.map((func, index) => (
 				<FunctionCard key={index} func={func} />
 			))}

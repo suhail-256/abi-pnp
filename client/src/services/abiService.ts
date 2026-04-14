@@ -1,14 +1,14 @@
 import axios from 'axios';
-import  type { Abi, Chain, Address }  from '../types/contract';
+import type { Abi, Chain, Address } from '../types/contract';
 
-const baseUrl = '/api/abi';
+const baseUrl = '/api';
 
 const handleApiError = (err: any) => {
 	console.error('API Error:', err.response?.data);
 
 	if (axios.isAxiosError(err)) {
 		if (err.response) {
-			throw new Error(err.response.data || 'API Error');
+			throw new Error(err.response.data?.error || err.response.data || 'API Error');
 		} else if (err.request) {
 			console.error('No response from API:', err.request);
 			throw new Error('No response from API');
@@ -24,11 +24,20 @@ const handleApiError = (err: any) => {
 
 const getAbi = async (chainId: Chain['id'], address: Address): Promise<Abi> => {
 	try {
-		const req = await axios.get(`${baseUrl}/${chainId}/${address}`);
+		const req = await axios.get(`${baseUrl}/abi/${chainId}/${address}`);
 		return req.data;
 	} catch (err) {
 		return handleApiError(err);
 	}
 };
 
-export default { getAbi };
+const isContract = async (chainId: Chain['id'], address: Address): Promise<boolean> => {
+	try {
+		const req = await axios.get(`${baseUrl}/is-contract/${chainId}/${address}`);
+		return req.data.isContract;
+	} catch (err) {
+		return handleApiError(err);
+	}
+}
+
+export default { getAbi, isContract };

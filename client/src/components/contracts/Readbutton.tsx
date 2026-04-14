@@ -73,9 +73,8 @@ function ReadButton({ func, args, buttonRef }: ReadButtonProps) {
 
 	return (
 		<>
-			<button ref={buttonRef} type="button" onClick={handleRead}> Read </button>
+			<button className="action-btn action-btn--read" ref={buttonRef} type="button" onClick={handleRead}>Read</button>
 			{result.isFetched && <Result result={result} />}
-			{/* {result.isFetched ? 1 : 0} */}
 		</>
 	);
 }
