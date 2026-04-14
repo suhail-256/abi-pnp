@@ -11,5 +11,5 @@ export {
 	opBNBTestnet,
 	bsc,
 	bscTestnet,
-} from 'wagmi/chains'
+} from 'viem/chains'
 

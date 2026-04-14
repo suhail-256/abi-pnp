@@ -3,6 +3,7 @@ import { useContract } from '../context/ContractContext';
 import { isAddress } from 'viem';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import abiService from '../services/abiService';
 
 function SearchField() {
 	const [inputValue, setInputValue] = useState('');
@@ -13,7 +14,7 @@ function SearchField() {
 
 	useEffect(() => {
 		if (!displayError) return;
-			setShowFunctions(false);
+		setShowFunctions(false);
 
 		const timer = setTimeout(() => setDisplayError(null), 3000);
 		return () => clearTimeout(timer);
@@ -28,17 +29,36 @@ function SearchField() {
 		if (showFunctions) setDisplayError(null);
 	}, [showFunctions]);
 
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+	const checkIfContract = async (address: Address) => {
+		try {
+			const isContract = await abiService.isContract(selectedChainId, address);
+			if (!isContract) {
+				setDisplayError('No contract found at this address');
+				return false;
+			}
+		} catch (err) {
+			setDisplayError((err as Error).message);
+			return false;
+		}
+		return true;
+	};
+
+	const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
 		const address = e.target.value as Address;
 		setInputValue(address);
 
-		if (isAddress(address) && !showFunctions) {
-			setContractAddress(address);
+		if (isAddress(address)) {
+			const isContract = await checkIfContract(address);
+			if (!isContract) return;
+
+			if (!showFunctions) {
+				setContractAddress(address);
+			}
 		}
 	};
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		if (!isAddress(inputValue)) {
@@ -46,6 +66,10 @@ function SearchField() {
 			return;
 		}
 		queryClient.removeQueries({ queryKey: ['abi', inputValue, selectedChainId] });
+
+		const isContract = await checkIfContract(inputValue as Address);
+		if (!isContract) return;
+
 		setContractAddress(inputValue as Address);
 		setShowFunctions(true);
 	};
