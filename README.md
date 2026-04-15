@@ -12,7 +12,6 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 - **Multi-chain** — Ethereum, Sepolia, Optimism, Arbitrum, Polygon, BSC, opBNB and their testnets
 - **EOA & unverified contract detection** — validates the address is a verified contract before fetching
 
----
 
 ## Screenshots
 
@@ -27,7 +26,6 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
   </tr>
 </table>
 
----
 
 ## Upcoming
 
@@ -35,7 +33,7 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 - **Complex input types** — structured input fields for tuples, structs, and nested arrays
 - **Complex output rendering** — formatted display for struct and tuple return values
 
----
+
 
 ## Stack
 
@@ -44,7 +42,7 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 | Client | React, TypeScript, Wagmi, Viem, TanStack Query |
 | Server | Node.js, Express, TypeScript, Viem |
 
----
+
 
 ## Running Locally
 
