@@ -9,6 +9,11 @@ function Connection() {
 	const primaryAddress = String(connection.addresses?.[0] ?? '');
 	const [copied, setCopied] = useState(false);
 
+	
+  const foo = (x: number) => { 
+    return x ** 2;
+	}
+	
 	const shortenAddress = (address: string) => {
 		if (!address) return '';
 		if (address.length <= 12) return address;
