@@ -34,7 +34,11 @@
 
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-synthesis: none;
   font-weight: 400;
   line-height: 1.5;
@@ -105,7 +109,9 @@ body {
   font-weight: 500;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   box-shadow: var(--shadow-sm);
   white-space: nowrap;
 }
@@ -140,7 +146,7 @@ body {
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   list-style: none;
   padding: 4px;
   z-index: 50;
@@ -226,7 +232,9 @@ body {
   opacity: 0;
   transform: translateY(-2px);
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .copy-feedback--show {
@@ -287,7 +295,9 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   box-shadow: var(--shadow-md);
 }
 
@@ -356,7 +366,9 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 0;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
@@ -476,7 +488,9 @@ body {
   font-size: 13px;
   font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .arg-input::placeholder {
@@ -485,7 +499,7 @@ body {
 
 .arg-input:focus {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(138, 126, 107, 0.10);
+  box-shadow: 0 0 0 3px rgba(138, 126, 107, 0.1);
 }
 
 /* ===== READ / WRITE BUTTONS ===== */
@@ -587,9 +601,15 @@ body {
 /* ===== LOADING SHIMMER ===== */
 
 @keyframes shimmer {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
 .loading-text {

@@ -14,7 +14,7 @@ function ArgsInput({ inputs, args, setArgs, buttonRef }: ArgsInputProps) {
     newArgs[index] = value;
     setArgs(newArgs);
   };
-  
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();

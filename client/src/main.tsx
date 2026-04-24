@@ -9,19 +9,19 @@ import './index.css';
 import ContractProvider from './context/ContractContext.tsx';
 
 (BigInt.prototype as any).toJSON = function () {
-	return this.toString();
+  return this.toString();
 };
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<WagmiProvider config={config}>
-			<QueryClientProvider client={queryClient}>
-				<ContractProvider>
-					<App />
-				</ContractProvider>
-			</QueryClientProvider>
-		</WagmiProvider>
-	</React.StrictMode>,
+  <React.StrictMode>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <ContractProvider>
+          <App />
+        </ContractProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  </React.StrictMode>,
 );
