@@ -2,7 +2,7 @@ import express from 'express';
 import config from '../utils/config';
 import logger from '../utils/logger';
 import { createPublicClient, http, fallback, type Address, type Chain } from 'viem';
-import * as supportedChains from '../../shared/chains';
+import * as supportedChains from '../utils/chains';
 
 const ETHERSCAN_GET_CONTRACT_ABI_URL = `https://api.etherscan.io/v2/api?apikey=${config.ETHERSCAN_SECRET_KEY}&chainid={chainId}&address={address}&module=contract&action=getabi`;
 

@@ -1,5 +1,5 @@
 import { createConfig, http } from 'wagmi'
-import * as supportedChains from '../../shared/chains.ts'
+import * as supportedChains from './chains'
 
 const chainsArray = Object.values(supportedChains)
 
