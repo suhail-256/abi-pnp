@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { type AbiFunction } from '../types/contract';
+import { AbiParameter, type AbiFunction } from '../types/contract';
 import ReadButton from './contracts/Readbutton';
 import ArgsInput from './ArgsInput';
 import WriteButton from './contracts/WriteContract';
@@ -34,6 +34,10 @@ function FunctionCard({ func }: FunctionCardProps) {
       setFunctState(State.WRITE);
     }
   }, []);
+
+  const isArray = (type: string): boolean => {
+    return type.endsWith(']');
+  }
 
   return (
     <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
@@ -73,7 +77,7 @@ function FunctionCard({ func }: FunctionCardProps) {
           {hasInputs && (
             <div className="fn-inputs">
               <ArgsInput
-                inputs={inputs as any}
+                inputs={inputs as AbiParameter[]}
                 args={args}
                 setArgs={setArgs}
                 buttonRef={buttonRef}
