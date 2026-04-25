@@ -30,12 +30,12 @@ function ArgsInput({ inputs, inputIndex = -1, args, setArgs, buttonRef }: ArgsIn
   };
 
   // function to render tuple title only or tuple title with index if it's an array of tuples
-  const renderTupleTitle = (input: AbiParameter, index: number) => {
-    if (index >= 0) {
+  const renderTupleTitle = (input: AbiParameter) => {
+    if (inputIndex >= 0) {
       return (
         <>
           <span className="tuple-title">
-            {input.name || 'input'}<span className='tuple-index'>{`[${index}]`}</span>
+            {input.name || 'input'}<span className='tuple-index'>{`[${inputIndex}]`}</span>
           </span>
         </>
       );
@@ -69,7 +69,7 @@ function ArgsInput({ inputs, inputIndex = -1, args, setArgs, buttonRef }: ArgsIn
           if ('components' in input && Array.isArray(input.components)) {
             return (
               <div key={index}>
-                {renderTupleTitle(input, inputIndex)}
+                {renderTupleTitle(input)}
                 <div className="tuple-body">
                   <ArgsInput
                     inputs={input.components}
