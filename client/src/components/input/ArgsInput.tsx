@@ -29,6 +29,25 @@ function ArgsInput({ inputs, inputIndex = -1, args, setArgs, buttonRef }: ArgsIn
     return type.endsWith(']');
   };
 
+  // function to render tuple title only or tuple title with index if it's an array of tuples
+  const renderTupleTitle = (input: AbiParameter, index: number) => {
+    if (index >= 0) {
+      return (
+        <>
+          <span className="tuple-title">
+            {input.name || 'input'}<span className='tuple-index'>{`[${index}]`}</span>
+          </span>
+        </>
+      );
+    }
+    return (
+      <>
+        <span className="tuple-title">{input.name || 'input'}</span>
+        <span className="fn-params">({input.type})</span>
+      </>
+    );
+  }
+
   return (
     <>
       {inputs?.map((input, index) => {
@@ -47,7 +66,24 @@ function ArgsInput({ inputs, inputIndex = -1, args, setArgs, buttonRef }: ArgsIn
         }
         //* Tuple
         else if (type.startsWith('tuple')) {
-          return <> </>;
+          if ('components' in input && Array.isArray(input.components)) {
+            return (
+              <div key={index}>
+                {renderTupleTitle(input, inputIndex)}
+                <div className="tuple-body">
+                  <ArgsInput
+                    inputs={input.components}
+                    // inputIndex={index}
+                    args={args}
+                    setArgs={setArgs}
+                    buttonRef={buttonRef}
+                  />
+                </div>
+              </div>
+            );
+          }
+          // Optionally handle the error case here
+          return null;
         }
         //* Primitive
         else {

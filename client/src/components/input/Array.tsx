@@ -16,6 +16,7 @@ function ArrayInput({ input }: ArrayInputProps) {
   const [fields, setFields] = React.useState<number[]>([0]);
   const [expanded, setExpanded] = useState(false);
 
+
   const addField = () => {
     setFields(prev => [...prev, prev.length]);
   };

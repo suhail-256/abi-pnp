@@ -628,35 +628,6 @@ body {
   padding-left: 4px;
 }
 
-.array-field {
-  padding-bottom: 4px;
-}
-
-/* .array-input {
-  width: 100%;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  padding: 9px 12px;
-  font-size: 13px;
-  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
-  outline: none;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-}
-
-.array-input::placeholder {
-  color: var(--text-muted);
-}
-
-.array-input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(138, 126, 107, 0.1);
-} */
-
-/* ===== READ / WRITE BUTTONS ===== */
 
 .action-btn {
   border: none;
@@ -719,6 +690,30 @@ body {
   opacity: 0.45;
   cursor: not-allowed;
 }
+
+/* ==== TUPLE ===== */
+.tuple-body {
+  /* background: var(--bg-primary); */
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  margin-bottom: 8px;  /* display: flex; */
+  font-size: 13px;
+  /* font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; */
+  word-break: break-all;
+  color: var(--tex/t-secondary);
+}
+
+.tuple-title {
+  font-size: 12px;
+  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+  font-weight: 600;
+  background-color: var(--bg-secondary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+
 
 /* ===== RESULT ===== */
 
