@@ -15,7 +15,8 @@ function ArrayInput({ input }: ArrayInputProps) {
   // state array of fields that will be renderd as map
   const [fields, setFields] = React.useState<number[]>([0]);
   const [expanded, setExpanded] = useState(false);
-
+  const [arrayDepth, setArrayDepth] = useState(1);
+  const [arrayLength, setArrayLength] = useState<number | null>(null);
 
   const addField = () => {
     setFields(prev => [...prev, prev.length]);
@@ -26,6 +27,48 @@ function ArrayInput({ input }: ArrayInputProps) {
     setFields(prev => prev.slice(0, -1));
   };
 
+  const getArrayDepth = () => {
+    return input.type.split('').reduce((acc: number, char: string) => {
+      if (char === '[') {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+  };
+
+  useEffect(() => {
+    const depth = getArrayDepth();
+    setArrayDepth(depth);
+    console.log(depth);
+
+    // check if it's fixed array and extract the length
+    const lengthMatch = input.type.match(/\[(\d+)\]/);
+    if (!lengthMatch) return;
+
+    setArrayLength(parseInt(lengthMatch[1]));
+    console.log(parseInt(lengthMatch[1]));
+
+    const newFields = Array.from({ length: parseInt(lengthMatch[1]) }, (_, i) => i);
+    setFields(newFields);
+  }, []);
+
+  // function to remove one dimension from the array type, for example if the type is uint256[2][3] it will return uint256[3]
+  const removeArrayDimension = (type: string): string => {
+    if (!type) return type;
+    
+    const firstOpenBracketIndex = type.indexOf('[');
+    const firstCloseBracketIndex = type.indexOf(']');
+
+    console.log(`before: ${type}`);
+    console.log(
+      `after: ${type.substring(0, firstOpenBracketIndex) + type.substring(firstCloseBracketIndex + 1)}`,
+    );
+
+    return (
+      type.substring(0, firstOpenBracketIndex) + type.substring(firstCloseBracketIndex + 1)
+    );
+  };
+
   return (
     <div>
       <label>
@@ -34,7 +77,6 @@ function ArrayInput({ input }: ArrayInputProps) {
       </label>
       <div className={`arr-card ${expanded ? 'arr-card--open' : ''}`}>
         <div className="arr-header" onClick={() => setExpanded(prev => !prev)}>
-
           <span className="arr-params">{input.internalType}</span>
           <span className={`arr-chevron ${expanded ? 'arr-chevron--open' : ''}`}>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -51,26 +93,34 @@ function ArrayInput({ input }: ArrayInputProps) {
         <div className={`arr-body ${expanded ? 'arr-body--open' : ''}`}>
           <div className="arr-body-inner">
             <div className="arr-inputs">
-              {fields.map((index) => (
+              {fields.map(index => (
                 <div key={index}>
                   <ArgsInput
-                    inputs={[{ ...input, type: input.type.replace('[]', '') }]} 
+                    inputs={[
+                      {
+                        ...input,
+                        type: removeArrayDimension(input.type),
+                        internalType: removeArrayDimension(input.internalType!),
+                      },
+                    ]}
                     inputIndex={index}
                     args={[]}
-                    setArgs={() => { }}
+                    setArgs={() => {}}
                     // buttonRef={null}
                   />
                 </div>
               ))}
             </div>
-            <div className="arr-actions">
-              <button type="button" className="btn btn--add-field" onClick={addField}>
-                +
-              </button>
-              <button type="button" className="btn btn--remove-field" onClick={removeField}>
-                -
-              </button>
-            </div>
+            {!arrayLength && (
+              <div className="arr-actions">
+                <button type="button" className="btn btn--add-field" onClick={addField}>
+                  +
+                </button>
+                <button type="button" className="btn btn--remove-field" onClick={removeField}>
+                  -
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -79,8 +129,6 @@ function ArrayInput({ input }: ArrayInputProps) {
 }
 
 export default ArrayInput;
-
-
 
 // <label>
 //   <span className="arr-params">{`${input.name}[${fieldIndex}]`} </span>

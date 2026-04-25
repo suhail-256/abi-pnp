@@ -26,6 +26,7 @@ function PrimitiveInput({ input, index }: PrimitiveInputProps) {
       </>
     );
   };
+
   return (
     <div>
       <label>{inputTitle()}</label>
