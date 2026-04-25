@@ -2,7 +2,6 @@
 
 A lightweight smart contract interaction tool. Paste any verified contract address, select a chain, and read or write to its functions directly from the browserd.
 
----
 
 ## Features
 
