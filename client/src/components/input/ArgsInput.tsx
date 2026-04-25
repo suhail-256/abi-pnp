@@ -45,8 +45,8 @@ function ArgsInput({ inputs, inputIndex = -1, args, setArgs, buttonRef }: ArgsIn
             />
           );
         }
-        // * Tuple
-        else if (type === 'tuple') {
+        //* Tuple
+        else if (type.startsWith('tuple')) {
           return <> </>;
         }
         //* Primitive
