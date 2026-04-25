@@ -26,7 +26,7 @@
   --accent-connect-hover: rgba(0, 0, 0, 0.04);
   --error: #c44040;
   --success: #3ea87a;
-  --radius-sm: 8px;
+  --radius-sm: 5px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -476,6 +476,121 @@ body {
   margin-top: 12px;
 }
 
+/* ===== Array INPUT ===== */
+
+.arr-card {
+  width: 100%;
+  max-width: 560px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.arr-card:hover {
+  border-color: #c2bdb4;
+  box-shadow: var(--shadow-md);
+}
+
+.arr-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--bg-primary);
+  flex-wrap: wrap;
+  padding: 9px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.arr-chevron {
+  margin-left: auto;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  transition: transform 0.25s ease;
+}
+
+.arr-chevron--open {
+  transform: rotate(180deg);
+}
+
+.arr-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.arr-body--open {
+  grid-template-rows: 1fr;
+}
+
+.arr-body-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.arr-body-inner > :first-child {
+  margin-top: 12px;
+}
+
+.arr-body-inner > :last-child {
+  margin-bottom: 16px;
+}
+
+.arr-inputs,
+.arr-actions {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.arr-card--open .arr-header {
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* .arr-name-btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 7px 18px;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 600;
+  color: #fff;
+  cursor: default;
+  letter-spacing: 0.3px;
+  pointer-events: none;
+}
+
+.arr-name-btn--read {
+  background: var(--accent-read);
+}
+
+.arr-name-btn--write {
+  background: var(--accent-write);
+} */
+
+.arr-params {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+.arr-inputs {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  /* gap: 4px; */
+}
+
+.arr-actions {
+  margin-top: 12px;
+}
+
 /* ===== ARGS INPUT ===== */
 
 .arg-input {
@@ -485,6 +600,7 @@ body {
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   padding: 9px 12px;
+  margin-bottom: 4px;
   font-size: 13px;
   font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
   outline: none;
@@ -501,6 +617,44 @@ body {
   border-color: var(--border-focus);
   box-shadow: 0 0 0 3px rgba(138, 126, 107, 0.1);
 }
+
+.arg-input:hover {
+  border-color: #c2bdb4;
+  box-shadow: var(--shadow-md);
+}
+
+.arg-title {
+  font-size: 14px;
+  padding-left: 4px;
+}
+
+.array-field {
+  padding-bottom: 4px;
+}
+
+/* .array-input {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.array-input::placeholder {
+  color: var(--text-muted);
+}
+
+.array-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(138, 126, 107, 0.1);
+} */
 
 /* ===== READ / WRITE BUTTONS ===== */
 
@@ -530,6 +684,35 @@ body {
 
 .action-btn--write:hover {
   background: var(--action-neutral-hover);
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  margin-top: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn--add-field {
+  background: var(--accent-read);
+}
+
+.btn--add-field:hover {
+  background: var(--accent-read-hover);
+}
+
+.btn--remove-field {
+  background: var(--accent-write);
+  margin-left: 8px;
+}
+.btn--remove-field:hover {
+  background: var(--accent-write-hover);
 }
 
 .action-btn:disabled {

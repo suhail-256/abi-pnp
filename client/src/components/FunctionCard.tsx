@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { AbiParameter, type AbiFunction } from '../types/contract';
 import ReadButton from './contracts/Readbutton';
-import ArgsInput from './ArgsInput';
+import ArgsInput from './input/ArgsInput';
 import WriteButton from './contracts/WriteContract';
 
 interface FunctionCardProps {
@@ -34,10 +34,6 @@ function FunctionCard({ func }: FunctionCardProps) {
       setFunctState(State.WRITE);
     }
   }, []);
-
-  const isArray = (type: string): boolean => {
-    return type.endsWith(']');
-  }
 
   return (
     <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
@@ -74,6 +70,7 @@ function FunctionCard({ func }: FunctionCardProps) {
       </div>
       <div className={`fn-body ${expanded ? 'fn-body--open' : ''}`}>
         <div className="fn-body-inner">
+          
           {hasInputs && (
             <div className="fn-inputs">
               <ArgsInput
