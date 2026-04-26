@@ -16,10 +16,14 @@
   --text-primary: #2c2a26;
   --text-secondary: #6b665c;
   --text-muted: #a39e93;
+  --accent-add: #8a7e6b;
+  --accent-add-hover: #6b665c;
+  --accent-remove: #8a7e6b;
+  --accent-remove-hover: #6b665c;
   --accent-read: #3a6b9f;
   --accent-read-hover: #2f5a87;
-  --accent-write: #b5453a;
-  --accent-write-hover: #9c3a30;
+  --accent-write: #fb8c00;
+  --accent-write-hover: #b85d00;
   --action-neutral: #2c2a26;
   --action-neutral-hover: #4a4844;
   --accent-connect: transparent;
@@ -54,9 +58,9 @@ body {
 /* ===== LAYOUT ===== */
 
 .app-container {
-  max-width: 960px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 24px 28px 48px;
+  padding: 24px 24px 48px;
 }
 
 /* ===== TOP BAR (chain + connect) ===== */
@@ -66,6 +70,12 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+  max-width: 1050px;
+  gap: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 /* ===== HERO (title + search) ===== */
@@ -361,7 +371,7 @@ body {
 
 .fn-card {
   width: 100%;
-  max-width: 560px;
+  max-width: 680px;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
@@ -382,7 +392,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   padding: 14px 20px;
   cursor: pointer;
   user-select: none;
@@ -463,6 +473,16 @@ body {
   font-size: 13px;
   color: var(--text-secondary);
   font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60%;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block; /* or inline-block if needed */
 }
 
 .fn-inputs {
@@ -480,7 +500,7 @@ body {
 
 .arr-card {
   width: 100%;
-  max-width: 560px;
+  max-width: 680px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   padding: 0;
@@ -629,6 +649,12 @@ body {
   padding-left: 4px;
 }
 
+.arg-title,
+.fn-params {
+  display: inline;
+  vertical-align: middle;
+}
+
 .action-btn {
   border: none;
   border-radius: var(--radius-sm);
@@ -671,19 +697,19 @@ body {
 }
 
 .btn--add-field {
-  background: var(--accent-read);
+  background: var(--accent-add);
 }
 
 .btn--add-field:hover {
-  background: var(--accent-read-hover);
+  background: var(--accent-add-hover);
 }
 
 .btn--remove-field {
-  background: var(--accent-write);
+  background: var(--accent-remove);
   margin-left: 8px;
 }
 .btn--remove-field:hover {
-  background: var(--accent-write-hover);
+  background: var(--accent-remove-hover);
 }
 
 .action-btn:disabled {
@@ -727,11 +753,13 @@ body {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  font-size: 13px;
+  padding: 12px 18px;
+  font-size: 14px;
   font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
   word-break: break-all;
   color: var(--text-secondary);
+  max-width: 700px;
+  width: 100%;
 }
 
 .result-box--error {
