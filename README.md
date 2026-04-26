@@ -28,6 +28,7 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 
 ## Upcoming
 
+- **Payable functions** — include value input for payable functions
 - **Manual ABI input** — paste a raw ABI for unverified contracts
 - **Complex input types** — structured input fields for tuples, structs, and nested arrays
 - **Complex output rendering** — formatted display for struct and tuple return values
