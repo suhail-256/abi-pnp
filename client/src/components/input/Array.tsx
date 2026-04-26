@@ -49,16 +49,15 @@ function ArrayInput({ input }: ArrayInputProps) {
     );
   };
 
-  const newInputArray = (index: number) => {
+  const newInputShape = (index: number) => {
+    if (!input.type) return input;
+
     const newInput = {
       ...input,
+      name: `${input.name}[${index}]`,
+      type: removeArrayDimension(input.type),
+      internalType: removeArrayDimension(input.internalType!),
     };
-
-    if (input.type) {
-      newInput.name = `${input.name}[${index}]`;
-      newInput.type = removeArrayDimension(input.type);
-      newInput.internalType = removeArrayDimension(input.internalType!);
-    }
 
     return newInput;
   };
@@ -90,7 +89,7 @@ function ArrayInput({ input }: ArrayInputProps) {
               {fields.map(index => (
                 <div key={index}>
                   <ArgsInput
-                    inputs={[newInputArray(index)]}
+                    inputs={[newInputShape(index)]}
                     inputIndex={index}
                     args={[]}
                     setArgs={() => {}}

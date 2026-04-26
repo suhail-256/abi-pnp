@@ -582,9 +582,10 @@ body {
 
 .arr-inputs {
   margin-top: 12px;
+
   display: flex;
   flex-direction: column;
-  /* gap: 4px; */
+  gap: 4px;
 }
 
 .arr-actions {
@@ -628,11 +629,11 @@ body {
   padding-left: 4px;
 }
 
-
 .action-btn {
   border: none;
   border-radius: var(--radius-sm);
   padding: 8px 24px;
+  margin-top: 10px;
   font-size: 13px;
   font-family: inherit;
   font-weight: 500;
@@ -661,7 +662,6 @@ body {
   border: none;
   border-radius: var(--radius-sm);
   padding: 4px 12px;
-  margin-top: 4px;
   font-size: 16px;
   font-family: inherit;
   font-weight: 500;
@@ -697,7 +697,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   padding: 9px 12px;
-  margin-bottom: 8px;  /* display: flex; */
+  margin-bottom: 8px; /* display: flex; */
   font-size: 13px;
   /* font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; */
   word-break: break-all;
@@ -713,7 +713,12 @@ body {
   border-radius: var(--radius-sm);
 }
 
-
+.tuple-inputs {
+  /* margin-top: 12px; */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
 /* ===== RESULT ===== */
 
