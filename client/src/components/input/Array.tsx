@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AbiParameter } from '../../types/contract';
 import PrimitiveInput from './PrimitiveInput';
 import ArgsInput from './ArgsInput';
@@ -15,7 +15,6 @@ function ArrayInput({ input }: ArrayInputProps) {
   // state array of fields that will be renderd as map
   const [fields, setFields] = React.useState<number[]>([0]);
   const [expanded, setExpanded] = useState(false);
-  const [arrayDepth, setArrayDepth] = useState(1);
   const [arrayLength, setArrayLength] = useState<number | null>(null);
 
   const addField = () => {
@@ -27,26 +26,13 @@ function ArrayInput({ input }: ArrayInputProps) {
     setFields(prev => prev.slice(0, -1));
   };
 
-  const getArrayDepth = () => {
-    return input.type.split('').reduce((acc: number, char: string) => {
-      if (char === '[') {
-        return acc + 1;
-      }
-      return acc;
-    }, 0);
-  };
-
   useEffect(() => {
-    const depth = getArrayDepth();
-    setArrayDepth(depth);
-    console.log(depth);
-
     // check if it's fixed array and extract the length
-    const lengthMatch = input.type.match(/\[(\d+)\]/);
-    if (!lengthMatch) return;
+    const lengthMatch = input.type.match(/\[(\d*)\]/);
+
+    if (!lengthMatch || !lengthMatch[1]) return;
 
     setArrayLength(parseInt(lengthMatch[1]));
-    console.log(parseInt(lengthMatch[1]));
 
     const newFields = Array.from({ length: parseInt(lengthMatch[1]) }, (_, i) => i);
     setFields(newFields);
@@ -55,14 +41,9 @@ function ArrayInput({ input }: ArrayInputProps) {
   // function to remove one dimension from the array type, for example if the type is uint256[2][3] it will return uint256[3]
   const removeArrayDimension = (type: string): string => {
     if (!type) return type;
-    
+
     const firstOpenBracketIndex = type.indexOf('[');
     const firstCloseBracketIndex = type.indexOf(']');
-
-    console.log(`before: ${type}`);
-    console.log(
-      `after: ${type.substring(0, firstOpenBracketIndex) + type.substring(firstCloseBracketIndex + 1)}`,
-    );
 
     return (
       type.substring(0, firstOpenBracketIndex) + type.substring(firstCloseBracketIndex + 1)
