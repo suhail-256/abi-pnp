@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { AbiParameter } from '../../types/contract';
-import PrimitiveInput from './PrimitiveInput';
 import ArgsInput from './ArgsInput';
 
 interface ArrayInputProps {
@@ -12,41 +11,39 @@ interface ArrayInputProps {
 
 function ArrayInput({ input }: ArrayInputProps) {
   // state array of fields that will be renderd as map
-  const [fields, setFields] = React.useState<number[]>([0]);
+  const [fields, setFields] = useState<number[]>([0]);
   const [expanded, setExpanded] = useState(false);
   const [arrayLength, setArrayLength] = useState<number | null>(null);
+
+  useEffect(() => {
+    const openingBracketIndex = input.type.lastIndexOf('[');
+    const closingBracketIndex = input.type.lastIndexOf(']');
+
+    if (closingBracketIndex - openingBracketIndex === 1) return;
+
+    const lengthStr = input.type.substring(openingBracketIndex + 1, closingBracketIndex);
+    const length = parseInt(lengthStr);
+
+    setArrayLength(length);
+    const newFields = Array.from({ length }, (_, i) => i);
+    setFields(newFields);
+  }, []);
 
   const addField = () => {
     setFields(prev => [...prev, prev.length]);
   };
 
   const removeField = () => {
-    if (fields.length == 1) return;
+    if (fields.length === 1) return;
     setFields(prev => prev.slice(0, -1));
   };
 
-  useEffect(() => {
-    // check if it's fixed array and extract the length
-    const lengthMatch = input.type.match(/\[(\d*)\]/);
-
-    if (!lengthMatch || !lengthMatch[1]) return;
-
-    setArrayLength(parseInt(lengthMatch[1]));
-
-    const newFields = Array.from({ length: parseInt(lengthMatch[1]) }, (_, i) => i);
-    setFields(newFields);
-  }, []);
-
-  // function to remove one dimension from the array type, for example if the type is uint256[2][3] it will return uint256[3]
+  /**
+   * Removes one dimension from the array type string. For example, converts 'uint256[2][3][4]' to 'uint256[2][3]'.
+   * It handles both fixed-length (e.g., [2]) and dynamic-length (e.g., []) arrays.
+   */
   const removeArrayDimension = (type: string): string => {
-    if (!type) return type;
-
-    const firstOpenBracketIndex = type.indexOf('[');
-    const firstCloseBracketIndex = type.indexOf(']');
-
-    return (
-      type.substring(0, firstOpenBracketIndex) + type.substring(firstCloseBracketIndex + 1)
-    );
+    return type.substring(0, type.lastIndexOf('['));
   };
 
   const newInputShape = (index: number) => {
