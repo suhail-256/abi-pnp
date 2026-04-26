@@ -10,7 +10,6 @@ interface ArrayInputProps {
   // onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-
 function ArrayInput({ input }: ArrayInputProps) {
   // state array of fields that will be renderd as map
   const [fields, setFields] = React.useState<number[]>([0]);
@@ -50,6 +49,20 @@ function ArrayInput({ input }: ArrayInputProps) {
     );
   };
 
+  const newInputArray = (index: number) => {
+    const newInput = {
+      ...input,
+    };
+
+    if (input.type) {
+      newInput.name = `${input.name}[${index}]`;
+      newInput.type = removeArrayDimension(input.type);
+      newInput.internalType = removeArrayDimension(input.internalType!);
+    }
+
+    return newInput;
+  };
+
   return (
     <div>
       <label>
@@ -77,13 +90,7 @@ function ArrayInput({ input }: ArrayInputProps) {
               {fields.map(index => (
                 <div key={index}>
                   <ArgsInput
-                    inputs={[
-                      {
-                        ...input,
-                        type: removeArrayDimension(input.type),
-                        internalType: removeArrayDimension(input.internalType!),
-                      },
-                    ]}
+                    inputs={[newInputArray(index)]}
                     inputIndex={index}
                     args={[]}
                     setArgs={() => {}}
