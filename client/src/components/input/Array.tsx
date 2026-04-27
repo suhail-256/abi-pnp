@@ -13,7 +13,7 @@ function ArrayInput({ input }: ArrayInputProps) {
   // state array of fields that will be renderd as map
   const [fields, setFields] = useState<number[]>([0]);
   const [expanded, setExpanded] = useState(false);
-  const [arrayLength, setArrayLength] = useState<number | null>(null);
+  const [arrayLength, setArrayLength] = useState(0);
 
   useEffect(() => {
     const openingBracketIndex = input.type.lastIndexOf('[');
