@@ -6,13 +6,12 @@ import TupleInput from './TupleInput';
 
 interface ArgsInputProps {
   inputs?: AbiParameter[];
-  inputIndex?: number;
   args: string[];
   setArgs: React.Dispatch<React.SetStateAction<string[]>>;
   buttonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
-function ArgsInput({ inputs, inputIndex = -1, args, setArgs, buttonRef }: ArgsInputProps) {
+function ArgsInput({ inputs, args, setArgs, buttonRef }: ArgsInputProps) {
   const handleChange = (idx: number, value: string) => {
     const newArgs = [...args];
     newArgs[idx] = value;
@@ -54,7 +53,7 @@ function ArgsInput({ inputs, inputIndex = -1, args, setArgs, buttonRef }: ArgsIn
         }
         //* Primitive
         else {
-          return <PrimitiveInput key={index} input={input} index={inputIndex} />;
+          return <PrimitiveInput key={index} input={input} />;
         }
       })}
     </>

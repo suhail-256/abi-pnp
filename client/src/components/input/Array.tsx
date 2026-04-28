@@ -15,10 +15,16 @@ function ArrayInput({ input }: ArrayInputProps) {
   const [expanded, setExpanded] = useState(false);
   const [arrayLength, setArrayLength] = useState(0);
 
+  /**
+   * Extracts the length of the array from the input type string and initializes the fields state accordingly. 
+   * For example, if the input type is 'uint256[5]', it will set arrayLength to 5 and fields to [0, 1, 2, 3, 4]. 
+   * If the array is dynamic (e.g., 'uint256[]'), it will keep fields as [0] and allow adding/removing fields dynamically.
+   */
   useEffect(() => {
     const openingBracketIndex = input.type.lastIndexOf('[');
     const closingBracketIndex = input.type.lastIndexOf(']');
 
+    // If the opening and closing brackets are adjacent (e.g., 'uint256[]'), it means it's a dynamic array, so we don't set a fixed length.
     if (closingBracketIndex - openingBracketIndex === 1) return;
 
     const lengthStr = input.type.substring(openingBracketIndex + 1, closingBracketIndex);
@@ -46,7 +52,7 @@ function ArrayInput({ input }: ArrayInputProps) {
     return type.substring(0, type.lastIndexOf('['));
   };
 
-  const newInputShape = (index: number) => {
+  const newInputObject = (index: number) => {
     if (!input.type) return input;
 
     const newInput = {
@@ -86,8 +92,7 @@ function ArrayInput({ input }: ArrayInputProps) {
               {fields.map(index => (
                 <div key={index}>
                   <ArgsInput
-                    inputs={[newInputShape(index)]}
-                    inputIndex={index}
+                    inputs={[newInputObject(index)]}
                     args={[]}
                     setArgs={() => {}}
                     // buttonRef={null}

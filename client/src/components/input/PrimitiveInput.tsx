@@ -2,10 +2,9 @@ import { AbiParameter } from 'abitype';
 
 interface PrimitiveInputProps {
   input: AbiParameter;
-  index: number;
 }
 
-function PrimitiveInput({ input, index }: PrimitiveInputProps) {
+function PrimitiveInput({ input }: PrimitiveInputProps) {
   return (
     <div>
       <label>
