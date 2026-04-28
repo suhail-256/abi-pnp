@@ -12,12 +12,12 @@ interface ArrayInputProps {
 function ArrayInput({ input }: ArrayInputProps) {
   // state array of fields that will be renderd as map
   const [fields, setFields] = useState<number[]>([0]);
+  const [isDynamic, setIsDynamic] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [arrayLength, setArrayLength] = useState(0);
 
   /**
-   * Extracts the length of the array from the input type string and initializes the fields state accordingly. 
-   * For example, if the input type is 'uint256[5]', it will set arrayLength to 5 and fields to [0, 1, 2, 3, 4]. 
+   * Extracts the length of the array from the input type string and initializes the fields state accordingly.
+   * For example, if the input type is 'uint256[5]', it will set arrayLength to 5 and fields to [0, 1, 2, 3, 4].
    * If the array is dynamic (e.g., 'uint256[]'), it will keep fields as [0] and allow adding/removing fields dynamically.
    */
   useEffect(() => {
@@ -25,12 +25,14 @@ function ArrayInput({ input }: ArrayInputProps) {
     const closingBracketIndex = input.type.lastIndexOf(']');
 
     // If the opening and closing brackets are adjacent (e.g., 'uint256[]'), it means it's a dynamic array, so we don't set a fixed length.
-    if (closingBracketIndex - openingBracketIndex === 1) return;
+    if (closingBracketIndex - openingBracketIndex === 1) {
+      setIsDynamic(true);
+      return;
+    }
 
     const lengthStr = input.type.substring(openingBracketIndex + 1, closingBracketIndex);
     const length = parseInt(lengthStr);
 
-    setArrayLength(length);
     const newFields = Array.from({ length }, (_, i) => i);
     setFields(newFields);
   }, []);
@@ -100,7 +102,7 @@ function ArrayInput({ input }: ArrayInputProps) {
                 </div>
               ))}
             </div>
-            {!arrayLength && (
+            {isDynamic && (
               <div className="arr-actions">
                 <button type="button" className="btn btn--add-field" onClick={addField}>
                   +
