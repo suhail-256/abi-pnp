@@ -1,6 +1,6 @@
 import React from 'react';
 import { type AbiParameter } from '../../types/contract';
-import ArrayInput from './Array';
+import ArrayInput from './ArrayInput';
 import PrimitiveInput from './PrimitiveInput';
 import TupleInput from './TupleInput';
 
