@@ -1,70 +1,85 @@
 import { useState, useEffect } from 'react';
 import { AbiParameter } from '../../types/contract';
 import ArgsInput from './ArgsInput';
+import { type ArgValue } from '../../types/argValue';
+
+export const generateValueStructure = (type: string): ArgValue => {
+  // Array
+  if (type.endsWith(']')) {
+    const openBracket = type.lastIndexOf('[');
+    const closeBracket = type.lastIndexOf(']');
+    const isDyn = closeBracket - openBracket === 1;
+
+    if (isDyn) {
+      // Dynamic: start with a single empty slot
+      return [generateValueStructure(type.substring(0, openBracket))];
+    } else {
+      // Fixed: pre-fill with the correct number of empty slots
+      const length = parseInt(type.substring(openBracket + 1, closeBracket), 10);
+      const elementType = type.substring(0, openBracket);
+      return Array.from({ length }, () => generateValueStructure(elementType));
+    }
+  }
+
+  // if tuple, return an empty object (the actual structure will be built in TupleInput based on the components)
+  else if (type.startsWith('tuple')) {
+    return {};
+  }
+
+  // Primitive
+  return '';
+};
 
 interface ArrayInputProps {
   input: AbiParameter;
-  // value: string;
-  // onChange: (index: number, value: string) => void;
-  // onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  value: ArgValue[];
+  onChange: (values: ArgValue[]) => void;
 }
 
-function ArrayInput({ input }: ArrayInputProps) {
-  // state array of fields that will be renderd as map
-  const [fields, setFields] = useState<number[]>([0]);
+function ArrayInput({ input, value, onChange }: ArrayInputProps) {
   const [isDynamic, setIsDynamic] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  /**
-   * Extracts the length of the array from the input type string and initializes the fields state accordingly.
-   * For example, if the input type is 'uint256[5]', it will set arrayLength to 5 and fields to [0, 1, 2, 3, 4].
-   * If the array is dynamic (e.g., 'uint256[]'), it will keep fields as [0] and allow adding/removing fields dynamically.
-   */
+  // Determine if the array is dynamic (e.g., uint256[]) or fixed (e.g., uint256[3]) on mount
   useEffect(() => {
-    const openingBracketIndex = input.type.lastIndexOf('[');
-    const closingBracketIndex = input.type.lastIndexOf(']');
-
-    // If the opening and closing brackets are adjacent (e.g., 'uint256[]'), it means it's a dynamic array, so we don't set a fixed length.
-    if (closingBracketIndex - openingBracketIndex === 1) {
-      setIsDynamic(true);
-      return;
-    }
-
-    const lengthStr = input.type.substring(openingBracketIndex + 1, closingBracketIndex);
-    const length = parseInt(lengthStr);
-
-    const newFields = Array.from({ length }, (_, i) => i);
-    setFields(newFields);
+    const openBracket = input.type.lastIndexOf('[');
+    const closeBracket = input.type.lastIndexOf(']');
+    setIsDynamic(closeBracket - openBracket === 1);
   }, []);
-
-  const addField = () => {
-    setFields(prev => [...prev, prev.length]);
-  };
-
-  const removeField = () => {
-    if (fields.length === 1) return;
-    setFields(prev => prev.slice(0, -1));
-  };
 
   /**
    * Removes one dimension from the array type string. For example, converts 'uint256[2][3][4]' to 'uint256[2][3]'.
    * It handles both fixed-length (e.g., [2]) and dynamic-length (e.g., []) arrays.
    */
-  const removeArrayDimension = (type: string): string => {
-    return type.substring(0, type.lastIndexOf('['));
+  const stripLastDimension = (type: string): string =>
+    type.substring(0, type.lastIndexOf('['));
+
+  const addField = () => {
+    const strippedInputType = stripLastDimension(input.type);
+    const newFieldValue = generateValueStructure(strippedInputType);
+    onChange([...value, newFieldValue]);
   };
 
-  const newInputObject = (index: number) => {
-    if (!input.type) return input;
+  const removeField = () => {
+    if (value.length === 1) return;
+    onChange(value.slice(0, -1));
+  };
 
-    const newInput = {
-      ...input,
-      name: `${input.name}[${index}]`,
-      type: removeArrayDimension(input.type),
-      internalType: removeArrayDimension(input.internalType!),
-    };
+  /**
+   * Builds a synthetic AbiParameter for one slot of the array.
+   * e.g. for input `balances uint256[3]`, slot 1 becomes `balances[1] uint256`.
+   */
+  const slotInput = (slotIndex: number): AbiParameter => ({
+    ...input,
+    name: `${input.name ?? 'item'}[${slotIndex}]`,
+    type: stripLastDimension(input.type),
+    internalType: input.internalType ? stripLastDimension(input.internalType) : undefined,
+  });
 
-    return newInput;
+  const handleSlotChange = (slotIndex: number, newSlotValue: ArgValue) => {
+    const next = [...value];
+    next[slotIndex] = newSlotValue;
+    onChange(next);
   };
 
   return (
@@ -91,12 +106,12 @@ function ArrayInput({ input }: ArrayInputProps) {
         <div className={`arr-body ${expanded ? 'arr-body--open' : ''}`}>
           <div className="arr-body-inner">
             <div className="arr-inputs">
-              {fields.map(index => (
+              {value.map((item, index) => (
                 <div key={index}>
                   <ArgsInput
-                    inputs={[newInputObject(index)]}
-                    args={[]}
-                    setArgs={() => {}}
+                    inputs={[slotInput(index)]}
+                    values={[item]}
+                    onChange={([newSlotValue]) => handleSlotChange(index, newSlotValue)}
                     // buttonRef={null}
                   />
                 </div>
@@ -120,8 +135,3 @@ function ArrayInput({ input }: ArrayInputProps) {
 }
 
 export default ArrayInput;
-
-// <label>
-//   <span className="arr-params">{`${input.name}[${fieldIndex}]`} </span>
-//   {/* <span className="arr-params">({input.type})</span> */}
-// </label>

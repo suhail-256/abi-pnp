@@ -1,15 +1,58 @@
 import { useState, useRef, useEffect } from 'react';
 import { AbiParameter, type AbiFunction } from '../types/contract';
+import { type ArgValue } from '../types/argValue';
 import ReadButton from './contracts/Readbutton';
 import ArgsInput from './input/ArgsInput';
 import WriteButton from './contracts/WriteContract';
 
-interface FunctionCardProps {
-  func: AbiFunction;
+function generateArgsStructure(param: AbiParameter): ArgValue {
+  const { type } = param;
+
+  // Array
+  if (type.endsWith(']')) {
+    const openBracket = type.lastIndexOf('[');
+    const closeBracket = type.lastIndexOf(']');
+    const isDynamic = closeBracket - openBracket === 1;
+
+    if (isDynamic) {
+      // Dynamic: start with a single empty slokt
+      return [generateArgsStructure({ ...param, type: type.substring(0, openBracket) })];
+    } else {
+      // Fixed: pre-fill with the correct number of empty slots
+      const length = parseInt(type.substring(openBracket + 1, closeBracket), 10);
+      const elementType = type.substring(0, openBracket);
+      return Array.from({ length }, () =>
+        generateArgsStructure({ ...param, type: elementType }),
+      );
+    }
+  }
+
+  // Tuple
+  else if (
+    type.startsWith('tuple') &&
+    'components' in param &&
+    Array.isArray(param.components)
+  ) {
+    const record: Record<string, ArgValue> = {};
+    (param.components as AbiParameter[]).forEach((c, i) => {
+      record[c.name ?? String(i)] = generateArgsStructure(c);
+    });
+    return record;
+  }
+
+  // Primitive
+  return '';
 }
 
-function FunctionCard({ func }: FunctionCardProps) {
-  // list of stateMutabilities that doesn't modify the state (view, pure)
+function initArgs(inputs: AbiParameter[]): ArgValue[] {
+  return inputs.map(input => generateArgsStructure(input));
+}
+
+interface FunctionCardProps {
+  functionInfo: AbiFunction;
+}
+
+function FunctionCard({ functionInfo }: FunctionCardProps) {
   const readStates = ['view', 'pure'];
 
   enum State {
@@ -17,27 +60,27 @@ function FunctionCard({ func }: FunctionCardProps) {
     WRITE = 'write',
   }
 
-  const { inputs, name, stateMutability } = func;
+  const { inputs, name, stateMutability } = functionInfo;
 
   const [functState, setFunctState] = useState<State>(State.READ);
-  const [args, setArgs] = useState<string[]>(new Array(inputs?.length || 0));
-  const [hasInputs, setHasInputs] = useState<boolean>(false);
+  const [args, setArgs] = useState<ArgValue[]>(() => initArgs(inputs as AbiParameter[]));
+  const [hasInputs, setHasInputs] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     setHasInputs(!!inputs?.length);
-    if (readStates.includes(stateMutability)) {
-      setFunctState(State.READ);
-    } else {
-      setFunctState(State.WRITE);
-    }
+    setFunctState(readStates.includes(stateMutability) ? State.READ : State.WRITE);
   }, []);
+
+  useEffect(() => {
+    console.log(args);
+  }, [args]);
 
   return (
     <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
-      <div className="fn-header" onClick={() => setExpanded(prev => !prev)}>
+      <div className="fn-header" onClick={() => setExpanded(p => !p)}>
         <button
           type="button"
           className={`fn-name-btn ${functState === State.READ ? 'fn-name-btn--read' : 'fn-name-btn--write'}`}
@@ -49,7 +92,7 @@ function FunctionCard({ func }: FunctionCardProps) {
             (
             {inputs?.map((param, index) => (
               <span key={index}>
-                {param.name ? param.name : 'input'}
+                {param.name || 'input'}
                 {index < inputs.length - 1 ? ', ' : ''}
               </span>
             ))}
@@ -70,23 +113,22 @@ function FunctionCard({ func }: FunctionCardProps) {
       </div>
       <div className={`fn-body ${expanded ? 'fn-body--open' : ''}`}>
         <div className="fn-body-inner">
-          
           {hasInputs && (
             <div className="fn-inputs">
               <ArgsInput
                 inputs={inputs as AbiParameter[]}
-                args={args}
-                setArgs={setArgs}
+                values={args}
+                onChange={setArgs}
                 buttonRef={buttonRef}
               />
             </div>
           )}
           <div className="fn-actions">
             {functState === State.READ && (
-              <ReadButton func={func} args={args} buttonRef={buttonRef} />
+              <ReadButton func={functionInfo} args={args} buttonRef={buttonRef} />
             )}
             {functState === State.WRITE && (
-              <WriteButton func={func} args={args} buttonRef={buttonRef} />
+              <WriteButton func={functionInfo} args={args} buttonRef={buttonRef} />
             )}
           </div>
         </div>
