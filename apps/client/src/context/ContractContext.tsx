@@ -9,7 +9,7 @@ interface ContractContextType {
   abi: Abi | undefined;
   selectedChainId: number;
   setSelectedChainId: (chainId: number) => void;
-  functions: AbiFunction[] | undefined;
+  contractFunctions: AbiFunction[] | undefined;
   showFunctions: boolean;
   setShowFunctions: (show: boolean) => void;
   isLoading: boolean;
@@ -22,7 +22,7 @@ export const ContractContext = createContext<ContractContextType>({
   abi: undefined,
   selectedChainId: 0,
   setSelectedChainId: () => {},
-  functions: undefined,
+  contractFunctions: undefined,
   showFunctions: false,
   setShowFunctions: () => {},
   isLoading: false,
@@ -34,67 +34,9 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
   const [showFunctions, setShowFunctions] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<number>(11155111); // default sepolia
 
-  const testAbi: Abi = [
-    {
-      name: 'submitComplexProposal',
-      type: 'function',
-      stateMutability: 'payable',
-      inputs: [
-        {
-          name: 'proposalId',
-          type: 'uint256',
-          internalType: 'uint256',
-        },
-        {
-          name: 'coordinateVoxels',
-          type: 'uint256[10][4][2]',
-          internalType: 'uint256[10][4][2]',
-        },
-        {
-          name: 'dynamicDataCube',
-          type: 'uint256[][][]',
-          internalType: 'uint256[][][]',
-        },
-        {
-          name: 'proposerProfile',
-          type: 'tuple',
-          internalType: 'struct Governance.ProposerProfile',
-          components: [
-            { name: 'uid', type: 'uint256', internalType: 'uint256' },
-            { name: 'account', type: 'address', internalType: 'address' },
-            {
-              name: 'tags',
-              type: 'string[]',
-              internalType: 'string[]',
-            },
-          ],
-        },
-        {
-          name: 'actionBatches',
-          type: 'tuple[]',
-          internalType: 'struct Governance.ActionBatch[]',
-          components: [
-            {
-              name: 'categoryCode',
-              type: 'bytes32',
-              internalType: 'bytes32',
-            },
-            {
-              name: 'weightedGrids',
-              type: 'uint256[2][]',
-              internalType: 'uint256[2][]',
-            },
-          ],
-        },
-      ],
-      outputs: [{ type: 'bool', internalType: 'bool' }],
-    },
-  ];
-
   const extractFunctions = (abi: Abi): AbiFunction[] => {
-    return testAbi.filter((item): item is AbiFunction => item.type === 'function');
+    return abi.filter((item): item is AbiFunction => item.type === 'function');
   };
-
 
   const {
     data,
@@ -104,7 +46,6 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
     queryKey: ['abi', contractAddress, selectedChainId],
     queryFn: async (): Promise<{ abi: Abi; functions: AbiFunction[] }> => {
       let fetchedAbi;
-      // try {
       fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
       if (!fetchedAbi) {
         throw new Error(
@@ -136,7 +77,7 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
         abi: data?.abi,
         selectedChainId,
         setSelectedChainId,
-        functions: data?.functions,
+        contractFunctions: data?.functions,
         showFunctions,
         setShowFunctions,
         isLoading,
