@@ -10,7 +10,7 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 - **Write functions** — send transactions via connected wallet
 - **Multi-chain** — Ethereum, Sepolia, Optimism, Arbitrum, Polygon, BSC, opBNB and their testnets
 - **EOA & unverified contract detection** — validates the address is a verified contract before fetching
-
+- **Handle complex types** — supports arrays, tuples, structs, and nested inputs
 
 ## Screenshots
 
@@ -30,7 +30,6 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 
 - **Payable functions** — include value input for payable functions
 - **Manual ABI input** — paste a raw ABI for unverified contracts
-- **Complex input types** — structured input fields for tuples, structs, and nested arrays
 - **Complex output rendering** — formatted display for struct and tuple return values
 
 
