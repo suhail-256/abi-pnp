@@ -46,10 +46,10 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 
 ```bash
 # install & run server
-cd server && npm install && npm run dev
+cd server && pnpm install && pnpm run dev
 
 # install & run client (separate terminal)
-cd client && npm install && npm run dev
+cd client && pnpm install && pnpm run dev
 ```
 
 **`server/.env`**
