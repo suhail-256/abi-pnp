@@ -26,14 +26,14 @@ export default function BoolField({ input, value, onChange }: BoolFieldProps) {
         <button
           type="button"
           className={`inline-toggle-btn ${isTrue ? 'active' : ''}`}
-          onClick={() => onChange('true')}
+          onClick={() => onChange(true)}
         >
           True
         </button>
         <button
           type="button"
           className={`inline-toggle-btn ${!isTrue ? 'active' : ''}`}
-          onClick={() => onChange('false')}
+          onClick={() => onChange(false)}
         >
           False
         </button>
