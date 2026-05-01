@@ -52,18 +52,18 @@ interface FunctionCardProps {
   functionInfo: AbiFunction;
 }
 
+enum State {
+  READ = 'read',
+  WRITE = 'write',
+  PAYABLE = 'payable',
+}
+
 function FunctionCard({ functionInfo }: FunctionCardProps) {
-  const readStates = ['view', 'pure'];
-
-  enum State {
-    READ = 'read',
-    WRITE = 'write',
-  }
-
   const { inputs, name, stateMutability } = functionInfo;
 
   const [functState, setFunctState] = useState<State>(State.READ);
   const [args, setArgs] = useState<ArgValue[]>(() => initArgs(inputs as AbiParameter[]));
+  const [payableValue, setPayableValue] = useState<bigint | ''>('');
   const [hasInputs, setHasInputs] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
@@ -71,20 +71,33 @@ function FunctionCard({ functionInfo }: FunctionCardProps) {
 
   useEffect(() => {
     setHasInputs(!!inputs?.length);
-    setFunctState(readStates.includes(stateMutability) ? State.READ : State.WRITE);
+    let fnState: State;
+    switch (stateMutability) {
+      case 'view':
+      case 'pure':
+        fnState = State.READ;
+        break;
+      case 'payable':
+        fnState = State.PAYABLE;
+        break;
+      default:
+        fnState = State.WRITE;
+    }
+    console.log(fnState);
+
+    setFunctState(fnState);
   }, []);
 
-  useEffect(() => {
-    console.log(args);
-  }, [args]);
+  // useEffect(() => {
+  //   console.log(args);
+  //   console.log(`payableValue: ${payableValue}`);
+
+  // }, [args, payableValue]);
 
   return (
     <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
       <div className="fn-header" onClick={() => setExpanded(p => !p)}>
-        <button
-          type="button"
-          className={`fn-name-btn ${functState === State.READ ? 'fn-name-btn--read' : 'fn-name-btn--write'}`}
-        >
+        <button type="button" className={`fn-name-btn fn-name-btn--${functState}`}>
           {name}
         </button>
         {hasInputs && (
@@ -117,8 +130,11 @@ function FunctionCard({ functionInfo }: FunctionCardProps) {
             <div className="fn-inputs">
               <ArgsInput
                 inputs={inputs as AbiParameter[]}
+                isPayable={stateMutability === 'payable'}
                 values={args}
                 onChange={setArgs}
+                payableValue={payableValue as bigint}
+                setPayableValue={setPayableValue}
                 buttonRef={buttonRef}
               />
             </div>
@@ -127,8 +143,13 @@ function FunctionCard({ functionInfo }: FunctionCardProps) {
             {functState === State.READ && (
               <ReadButton func={functionInfo} args={args} buttonRef={buttonRef} />
             )}
-            {functState === State.WRITE && (
-              <WriteButton func={functionInfo} args={args} buttonRef={buttonRef} />
+            {(functState === State.WRITE || functState === State.PAYABLE) && (
+              <WriteButton
+                func={functionInfo}
+                args={args}
+                payableValue={payableValue as bigint}
+                buttonRef={buttonRef}
+              />
             )}
           </div>
         </div>

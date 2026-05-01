@@ -10,32 +10,15 @@ interface BytesFieldProps {
   setDisplayError: (error: string | null) => void;
 }
 
-export default function BytesField({ input, value, onChange, setDisplayError }: BytesFieldProps) {
+export default function BytesField({
+  input,
+  value,
+  onChange,
+  setDisplayError,
+}: BytesFieldProps) {
   const [inputValue, setInputValue] = useState('');
-  // const [displayError, setDisplayError] = useState<string | null>(null);
-  const [isExiting, setIsExiting] = useState(false);
 
   const { type } = input;
-
-  // useEffect(() => {
-  //   if (!displayError) return;
-
-  //   let exitTimer: any;
-
-  //   const hideTimer = setTimeout(() => {
-  //     setIsExiting(true);
-  //     exitTimer = setTimeout(() => {
-  //       setDisplayError(null);
-  //       setIsExiting(false);
-  //     }, 300);
-  //   }, 2700);
-
-  //   return () => {
-  //     clearTimeout(hideTimer);
-  //     if (exitTimer) clearTimeout(exitTimer);
-  //     setIsExiting(false);
-  //   };
-  // }, [displayError]);
 
   /**
    * Gets the byte size for a given type string
@@ -149,16 +132,6 @@ export default function BytesField({ input, value, onChange, setDisplayError }: 
           </button>
         </div>
       </div>
-      {/* {displayError && (
-        <div className={`error-box ${isExiting ? 'exiting' : ''}`}>
-          <div className="error-alert search-error" role="alert">
-            <span className="error-alert-icon" aria-hidden="true">
-              !
-            </span>
-            <span>{displayError}</span>
-          </div>
-        </div>
-      )} */}
     </>
   );
 }

@@ -24,6 +24,7 @@
   --accent-read-hover: #2f5a87;
   --accent-write: #fb8c00;
   --accent-write-hover: #b85d00;
+  --accent-payable: #b22222;
   --action-neutral: #2c2a26;
   --action-neutral-hover: #4a4844;
   --accent-connect: transparent;
@@ -469,6 +470,10 @@ body {
   background: var(--accent-write);
 }
 
+.fn-name-btn--payable {
+  background: var(--accent-payable);
+}
+
 .fn-params {
   font-size: 13px;
   color: var(--text-secondary);
@@ -666,18 +671,18 @@ body {
 
 .input-with-toggle .arg-input {
   margin-bottom: 0;
-  padding-right: 80px;
+  padding-right: 110px;
 }
 
 .inline-toggle {
   position: absolute;
   right: 6px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   background: var(--bg-secondary);
   border-radius: var(--radius-sm);
   padding: 2px;
-  width: max-content;
-  min-width: 70px;
+  width: 100px;
 }
 
 .inline-toggle-slider {
@@ -703,9 +708,9 @@ body {
   background: transparent;
   border: none;
   font-size: 11px;
-  padding: 4px 8px;
-  flex: 1;
-  min-width: 35px;
+  padding: 4px 0;
+  width: 100%;
+  text-align: center;
   font-family: inherit;
   color: var(--text-secondary);
   cursor: pointer;
