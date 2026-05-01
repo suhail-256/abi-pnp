@@ -1,4 +1,3 @@
-import React from 'react';
 import { type AbiParameter } from '../../types/contract';
 import ArrayInput from './ArrayInput';
 import PrimitiveInput from './PrimitiveInput';
@@ -13,7 +12,6 @@ interface ArgsInputProps {
   onChange: (values: ArgValue[]) => void;
   payableValue?: bigint;
   setPayableValue?: (value: bigint) => void;
-  buttonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
 function ArgsInput({
@@ -23,19 +21,11 @@ function ArgsInput({
   onChange,
   payableValue,
   setPayableValue,
-  buttonRef,
 }: ArgsInputProps) {
   const handleChange = (idx: number, newValue: ArgValue) => {
     const updatedArgs = [...values];
     updatedArgs[idx] = newValue;
     onChange(updatedArgs);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      buttonRef?.current?.click();
-    }
   };
 
   const isArray = (type: string): boolean => {
@@ -55,7 +45,6 @@ function ArgsInput({
               input={input}
               value={(values[index] || []) as ArgValue[]}
               onChange={(v: ArgValue) => handleChange(index, v)}
-              // onKeyDown={handleKeyDown}
             />
           );
         }

@@ -1,5 +1,5 @@
 import { useContract } from '../../context/ContractContext';
-import { Address, type AbiFunction } from '../../types/contract';
+import { Abi, Address, type AbiFunction } from '../../types/contract';
 import Result from '../Result';
 import {
   useConnection,
@@ -10,13 +10,12 @@ import {
 } from 'wagmi';
 
 interface WriteButtonProps {
-  func: AbiFunction;
+  fn: AbiFunction;
   args: string[];
   payableValue?: bigint;
-  buttonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
-function WriteButton({ func, args, payableValue, buttonRef }: WriteButtonProps) {
+function WriteButton({ fn, args, payableValue }: WriteButtonProps) {
   const { isConnected } = useConnection();
   const { contractAddress, abi } = useContract();
   const connectors = useConnectors();
@@ -32,7 +31,6 @@ function WriteButton({ func, args, payableValue, buttonRef }: WriteButtonProps) 
     return (
       <button
         className="action-btn action-btn--write"
-        ref={buttonRef}
         type="button"
         onClick={() => connect({ connector: connectors[0] })}
         disabled={status === 'pending'}
@@ -45,8 +43,8 @@ function WriteButton({ func, args, payableValue, buttonRef }: WriteButtonProps) 
   const handleWrite = () => {
     writeContract.mutate({
       address: contractAddress as Address,
-      abi: abi as any,
-      functionName: func.name,
+      abi: abi as Abi,
+      functionName: fn.name,
       args: args,
       value: payableValue,
     });
@@ -56,7 +54,6 @@ function WriteButton({ func, args, payableValue, buttonRef }: WriteButtonProps) 
     <>
       <button
         className="action-btn action-btn--write"
-        ref={buttonRef}
         type="button"
         onClick={handleWrite}
         disabled={isLoading || writeContract.isPending}
