@@ -676,7 +676,8 @@ body {
   background: var(--bg-secondary);
   border-radius: var(--radius-sm);
   padding: 2px;
-  width: 70px;
+  width: max-content;
+  min-width: 70px;
 }
 
 .inline-toggle-slider {
@@ -702,8 +703,9 @@ body {
   background: transparent;
   border: none;
   font-size: 11px;
-  padding: 4px 0;
+  padding: 4px 8px;
   flex: 1;
+  min-width: 35px;
   font-family: inherit;
   color: var(--text-secondary);
   cursor: pointer;

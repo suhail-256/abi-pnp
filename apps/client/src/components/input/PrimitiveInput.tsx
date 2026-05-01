@@ -3,6 +3,7 @@ import { type ArgValue } from '../../types/argValue';
 // import { toBytes, stringToHex } from 'viem'
 import { isHex, stringToHex, padHex, hexToBytes, size, hexToString } from 'viem';
 import BytesField from './inputFields/BytesField';
+import BoolField from './inputFields/BoolField';
 
 interface PrimitiveInputProps {
   input: AbiParameter;
@@ -63,8 +64,20 @@ function PrimitiveInput({ input, value, onChange }: PrimitiveInputProps) {
     inputField = (
       <BytesField input={input} value={value} onChange={onChange} />
     );
-  } else {
-    // TODO: handle other primitive types (bool, address, string)
+  } else if (type === 'bool') {
+    inputField = (
+      <BoolField input={input} value={value} onChange={onChange} />
+    );
+  } else { 
+    inputField = (
+      <input
+        className="arg-input"
+        type="text"
+        placeholder={type}
+        value={value}
+        onChange={e => onChange(castInputValue(e.target.value))}
+      />
+    );
   }
 
   return (
