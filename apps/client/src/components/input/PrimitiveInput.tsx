@@ -4,6 +4,8 @@ import { type ArgValue } from '../../types/argValue';
 import { isHex, stringToHex, padHex, hexToBytes, size, hexToString } from 'viem';
 import BytesField from './inputFields/BytesField';
 import BoolField from './inputFields/BoolField';
+import RegularField from './inputFields/RegularField';
+import NumberField from './inputFields/NumberField';
 
 interface PrimitiveInputProps {
   input: AbiParameter;
@@ -14,70 +16,16 @@ interface PrimitiveInputProps {
 function PrimitiveInput({ input, value, onChange }: PrimitiveInputProps) {
   const { type } = input;
 
-  const castInputValue = (rawInputString: string): ArgValue => {
-    if (type.startsWith('uint') || type.startsWith('int')) {
-      return BigInt(rawInputString);
-    }
-    if (type === 'address') {
-      return rawInputString as SolidityAddress;
-    }
-    if (type === 'bool') {
-      return rawInputString.toLowerCase() === 'true';
-    }
-    if (type.startsWith('bytes')) {
-      const match: RegExpMatchArray | null = rawInputString.match(/bytes(\d+)/);
-      const byteSize: number | null = match ? parseInt(match[1], 10) : null;
-
-      let hex: `0x${string}`;
-
-      if (isHex(value)) {
-        // User gave "0x123..."
-        hex = value;
-      } else {
-        // User gave plain text "hello", convert to "0x68656c6c6f"
-        hex = stringToHex(value);
-      }
-
-      if (byteSize) {
-        const currentSize = size(hex);
-        if (currentSize > byteSize) {
-          throw new Error(`Input exceeds byte size of ${byteSize}`);
-        }
-        return padHex(stringToHex(rawInputString), {
-          size: byteSize,
-          dir: 'right',
-        });
-      }
-
-      return hex;
-    }
-
-    return rawInputString;
-  };
-
-
   let inputField = <></>;
 
   if (type.includes('int')) {
-    // TODO: handle number inputs
+    inputField = <NumberField input={input} value={value} onChange={onChange} />;
   } else if (type.startsWith('bytes')) {
-    inputField = (
-      <BytesField input={input} value={value} onChange={onChange} />
-    );
+    inputField = <BytesField input={input} value={value} onChange={onChange} />;
   } else if (type === 'bool') {
-    inputField = (
-      <BoolField input={input} value={value} onChange={onChange} />
-    );
-  } else { 
-    inputField = (
-      <input
-        className="arg-input"
-        type="text"
-        placeholder={type}
-        value={value}
-        onChange={e => onChange(castInputValue(e.target.value))}
-      />
-    );
+    inputField = <BoolField input={input} value={value} onChange={onChange} />;
+  } else {
+    inputField = <RegularField input={input} value={value} onChange={onChange} />;
   }
 
   return (
@@ -89,7 +37,6 @@ function PrimitiveInput({ input, value, onChange }: PrimitiveInputProps) {
       {inputField}
     </span>
   );
-
 }
 
 export default PrimitiveInput;
