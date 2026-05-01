@@ -12,7 +12,7 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 - **EOA & unverified contract detection** — validates the address is a verified contract before fetching
 - **Handle complex types** — supports arrays, tuples, structs, and nested inputs
 
-## Screenshots
+## Preview
 
 <table>
   <tr>
@@ -20,8 +20,29 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
     <td align="center"><b>Connected</b></td>
   </tr>
   <tr>
-    <td><img src="./disconnected.png" /></td>
-    <td><img src="./connected.png" /></td>
+    <td><img src="./images/disconnected.png" /></td>
+    <td><img src="./images/connected.png" /></td>
+  </tr>
+</table>
+
+### Complex Types Handling
+
+<table>
+  <tr>
+    <td align="center"><b>Types Overview</b></td>
+    <td align="center"><b>Nested Arrays (Fixed)</b></td>
+  </tr>
+  <tr>
+    <td><img src="./images/img1.png" /></td>
+    <td><img src="./images/img2.png" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Nested Arrays (Dynamic)</b></td>
+    <td align="center"><b>Tuples</b></td>
+  </tr>
+  <tr>
+    <td><img src="./images/im3.png" /></td>
+    <td><img src="./images/im4.png" /></td>
   </tr>
 </table>
 
