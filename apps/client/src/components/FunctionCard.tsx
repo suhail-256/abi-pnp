@@ -141,7 +141,7 @@ function FunctionCard({ functionInfo }: FunctionCardProps) {
           )}
           <div className="fn-actions">
             {functState === State.READ && (
-              <ReadButton func={functionInfo} args={args} buttonRef={buttonRef} />
+              <ReadButton fn={functionInfo} args={args} buttonRef={buttonRef} />
             )}
             {(functState === State.WRITE || functState === State.PAYABLE) && (
               <WriteButton
