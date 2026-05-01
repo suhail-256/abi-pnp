@@ -1,10 +1,13 @@
 import { useContract } from '../../context/ContractContext';
 import { Address, type AbiFunction } from '../../types/contract';
-import { useWriteContract } from 'wagmi';
 import Result from '../Result';
-import { useState, useEffect, useRef } from 'react';
-import { useConnection } from 'wagmi';
-import { type ArgValue } from '../../types/argValue';
+import {
+  useConnection,
+  useConnectors,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+  useConnect,
+} from 'wagmi';
 
 interface WriteButtonProps {
   func: AbiFunction;
@@ -16,22 +19,30 @@ interface WriteButtonProps {
 function WriteButton({ func, args, payableValue, buttonRef }: WriteButtonProps) {
   const { isConnected } = useConnection();
   const { contractAddress, abi } = useContract();
-  const [submittedArgs, setSubmittedArgs] = useState<ArgValue[]>([]);
+  const connectors = useConnectors();
+  const { connect, status } = useConnect();
 
-  const hasSubmitted = useRef(false);
-  const writeContract = useWriteContract({
-    mutation: {
-      onSuccess(data) {
-        console.log('tx hash:', data);
-      },
-      onError(error) {
-        console.error('failed:', error);
-      },
-    },
+  const writeContract = useWriteContract();
+
+  const { isLoading, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+    hash: writeContract.data,
   });
 
-  useEffect(() => {
-    if (!hasSubmitted.current) return;
+  if (!isConnected) {
+    return (
+      <button
+        className="action-btn action-btn--write"
+        ref={buttonRef}
+        type="button"
+        onClick={() => connect({ connector: connectors[0] })}
+        disabled={status === 'pending'}
+      >
+        {status === 'pending' ? 'Connecting...' : 'Connect Wallet'}
+      </button>
+    );
+  }
+
+  const handleWrite = () => {
     writeContract.mutate({
       address: contractAddress as Address,
       abi: abi as any,
@@ -39,19 +50,6 @@ function WriteButton({ func, args, payableValue, buttonRef }: WriteButtonProps) 
       args: args,
       value: payableValue,
     });
-  }, [submittedArgs]);
-
-  if (!isConnected) {
-    return (
-      <button className="action-btn action-btn--write" ref={buttonRef} type="button" disabled>
-        Connect Wallet
-      </button>
-    );
-  }
-
-  const handleWrite = () => {
-    setSubmittedArgs(args);
-    hasSubmitted.current = true;
   };
 
   return (
@@ -61,10 +59,11 @@ function WriteButton({ func, args, payableValue, buttonRef }: WriteButtonProps) 
         ref={buttonRef}
         type="button"
         onClick={handleWrite}
+        disabled={isLoading || writeContract.isPending}
       >
-        Write
+        {isLoading ? 'Confirming...' : writeContract.isPending ? 'Pending...' : 'Write'}
       </button>
-      {writeContract.status === 'success' && <Result result={writeContract} />}
+      {isConfirmed && <Result result={writeContract} />}
     </>
   );
 }
