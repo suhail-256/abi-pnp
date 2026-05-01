@@ -41,8 +41,8 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
     <td align="center"><b>Tuples</b></td>
   </tr>
   <tr>
-    <td><img src="./images/im3.png" /></td>
-    <td><img src="./images/im4.png" /></td>
+    <td><img src="./images/img3.png" /></td>
+    <td><img src="./images/img4.png" /></td>
   </tr>
 </table>
 
