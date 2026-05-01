@@ -711,6 +711,7 @@ body {
   cursor: pointer;
   font-weight: 600;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 
 .inline-toggle-btn.active {
