@@ -7,34 +7,35 @@ interface BytesFieldProps {
   input: AbiParameter;
   value: string;
   onChange: (values: ArgValue) => void;
+  setDisplayError: (error: string | null) => void;
 }
 
-export default function BytesField({ input, value, onChange }: BytesFieldProps) {
+export default function BytesField({ input, value, onChange, setDisplayError }: BytesFieldProps) {
   const [inputValue, setInputValue] = useState('');
-  const [displayError, setDisplayError] = useState<string | null>(null);
+  // const [displayError, setDisplayError] = useState<string | null>(null);
   const [isExiting, setIsExiting] = useState(false);
 
   const { type } = input;
 
-  useEffect(() => {
-    if (!displayError) return;
+  // useEffect(() => {
+  //   if (!displayError) return;
 
-    let exitTimer: any;
+  //   let exitTimer: any;
 
-    const hideTimer = setTimeout(() => {
-      setIsExiting(true);
-      exitTimer = setTimeout(() => {
-        setDisplayError(null);
-        setIsExiting(false);
-      }, 300);
-    }, 2700);
+  //   const hideTimer = setTimeout(() => {
+  //     setIsExiting(true);
+  //     exitTimer = setTimeout(() => {
+  //       setDisplayError(null);
+  //       setIsExiting(false);
+  //     }, 300);
+  //   }, 2700);
 
-    return () => {
-      clearTimeout(hideTimer);
-      if (exitTimer) clearTimeout(exitTimer);
-      setIsExiting(false);
-    };
-  }, [displayError]);
+  //   return () => {
+  //     clearTimeout(hideTimer);
+  //     if (exitTimer) clearTimeout(exitTimer);
+  //     setIsExiting(false);
+  //   };
+  // }, [displayError]);
 
   /**
    * Gets the byte size for a given type string
@@ -132,23 +133,23 @@ export default function BytesField({ input, value, onChange }: BytesFieldProps) 
         />
         <div className="inline-toggle">
           <div className={`inline-toggle-slider ${isHexView ? 'is-right' : ''}`}></div>
-          <button 
-            type="button" 
-            className={`inline-toggle-btn ${!isHexView ? 'active' : ''}`} 
+          <button
+            type="button"
+            className={`inline-toggle-btn ${!isHexView ? 'active' : ''}`}
             onClick={() => isHexView && handleToggleView()}
           >
             Str
           </button>
-          <button 
-            type="button" 
-            className={`inline-toggle-btn ${isHexView ? 'active' : ''}`} 
+          <button
+            type="button"
+            className={`inline-toggle-btn ${isHexView ? 'active' : ''}`}
             onClick={() => !isHexView && handleToggleView()}
           >
             Hex
           </button>
         </div>
       </div>
-      {displayError && (
+      {/* {displayError && (
         <div className={`error-box ${isExiting ? 'exiting' : ''}`}>
           <div className="error-alert search-error" role="alert">
             <span className="error-alert-icon" aria-hidden="true">
@@ -157,7 +158,7 @@ export default function BytesField({ input, value, onChange }: BytesFieldProps) 
             <span>{displayError}</span>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

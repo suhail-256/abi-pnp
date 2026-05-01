@@ -1,7 +1,5 @@
 import { AbiParameter } from 'abitype';
 import { ArgValue } from '../../../types/argValue';
-import { isValidIntegerInput } from '../../../utils/inputValidation';
-import { useState } from 'react';
 
 interface RegularFieldProps {
   input: AbiParameter;
