@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { AbiParameter, type AbiFunction } from '../types/contract';
 import { type ArgValue } from '../types/argValue';
 import ReadButton from './contracts/Readbutton';
@@ -49,7 +49,7 @@ function initArgs(inputs: AbiParameter[]): ArgValue[] {
 }
 
 interface FunctionCardProps {
-  functionInfo: AbiFunction;
+  fnInfo: AbiFunction;
 }
 
 enum State {
@@ -58,16 +58,14 @@ enum State {
   PAYABLE = 'payable',
 }
 
-function FunctionCard({ functionInfo }: FunctionCardProps) {
-  const { inputs, name, stateMutability } = functionInfo;
+function FunctionCard({ fnInfo }: FunctionCardProps) {
+  const { inputs, name, stateMutability } = fnInfo;
 
   const [functState, setFunctState] = useState<State>(State.READ);
   const [args, setArgs] = useState<ArgValue[]>(() => initArgs(inputs as AbiParameter[]));
   const [payableValue, setPayableValue] = useState<bigint | ''>('');
   const [hasInputs, setHasInputs] = useState(false);
   const [expanded, setExpanded] = useState(false);
-
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     setHasInputs(!!inputs?.length);
@@ -87,12 +85,6 @@ function FunctionCard({ functionInfo }: FunctionCardProps) {
 
     setFunctState(fnState);
   }, []);
-
-  // useEffect(() => {
-  //   console.log(args);
-  //   console.log(`payableValue: ${payableValue}`);
-
-  // }, [args, payableValue]);
 
   return (
     <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
@@ -135,21 +127,13 @@ function FunctionCard({ functionInfo }: FunctionCardProps) {
                 onChange={setArgs}
                 payableValue={payableValue as bigint}
                 setPayableValue={setPayableValue}
-                buttonRef={buttonRef}
               />
             </div>
           )}
           <div className="fn-actions">
-            {functState === State.READ && (
-              <ReadButton fn={functionInfo} args={args} buttonRef={buttonRef} />
-            )}
+            {functState === State.READ && <ReadButton fn={fnInfo} args={args} />}
             {(functState === State.WRITE || functState === State.PAYABLE) && (
-              <WriteButton
-                func={functionInfo}
-                args={args}
-                payableValue={payableValue as bigint}
-                buttonRef={buttonRef}
-              />
+              <WriteButton fn={fnInfo} args={args} payableValue={payableValue as bigint} />
             )}
           </div>
         </div>

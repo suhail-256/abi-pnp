@@ -7,7 +7,7 @@ function FunctionsList() {
   return (
     <div className="functions-list">
       {contractFunctions?.map((functionInfo, index) => (
-        <FunctionCard key={index} functionInfo={functionInfo} />
+        <FunctionCard key={index} fnInfo={functionInfo} />
       ))}
     </div>
   );

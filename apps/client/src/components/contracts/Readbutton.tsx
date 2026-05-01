@@ -7,10 +7,9 @@ import { ArgValue } from '../../types/argValue';
 interface ReadButtonProps {
   fn: AbiFunction;
   args: ArgValue[];
-  buttonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
-function ReadButton({ fn, args, buttonRef }: ReadButtonProps) {
+function ReadButton({ fn, args }: ReadButtonProps) {
   const { contractAddress, abi, selectedChainId } = useContract();
 
   const readContract = useReadContract({
@@ -36,7 +35,6 @@ function ReadButton({ fn, args, buttonRef }: ReadButtonProps) {
     <>
       <button
         className="action-btn action-btn--read"
-        ref={buttonRef}
         type="button"
         onClick={handleRead}
         disabled={readContract.isFetching}
