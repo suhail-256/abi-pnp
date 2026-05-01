@@ -8,6 +8,7 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 - **Auto ABI fetching** — fetches verified ABI from Etherscan automatically
 - **Read functions** — call view/pure functions without connecting a wallet
 - **Write functions** — send transactions via connected wallet
+- **Payable functions** — specify value in ETH or Wei for payable functions
 - **Multi-chain** — Ethereum, Sepolia, Optimism, Arbitrum, Polygon, BSC, opBNB and their testnets
 - **EOA & unverified contract detection** — validates the address is a verified contract before fetching
 - **Handle complex types** — supports arrays, tuples, structs, and nested inputs
@@ -49,7 +50,6 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 
 ## Upcoming
 
-- **Payable functions** — include value input for payable functions
 - **Manual ABI input** — paste a raw ABI for unverified contracts
 - **Complex output rendering** — formatted display for struct and tuple return values
 

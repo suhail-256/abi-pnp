@@ -4,15 +4,27 @@ import ArrayInput from './ArrayInput';
 import PrimitiveInput from './PrimitiveInput';
 import TupleInput from './TupleInput';
 import { ArgValue } from '../../types/argValue';
+import ValueField from './inputFields/ValueField';
 
 interface ArgsInputProps {
   inputs?: AbiParameter[];
+  isPayable?: boolean;
   values: ArgValue[];
   onChange: (values: ArgValue[]) => void;
+  payableValue?: bigint;
+  setPayableValue?: (value: bigint) => void;
   buttonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
-function ArgsInput({ inputs, values, onChange, buttonRef }: ArgsInputProps) {
+function ArgsInput({
+  inputs,
+  isPayable,
+  values,
+  onChange,
+  payableValue,
+  setPayableValue,
+  buttonRef,
+}: ArgsInputProps) {
   const handleChange = (idx: number, newValue: ArgValue) => {
     const updatedArgs = [...values];
     updatedArgs[idx] = newValue;
@@ -70,11 +82,18 @@ function ArgsInput({ inputs, values, onChange, buttonRef }: ArgsInputProps) {
               key={index}
               input={input}
               value={(values[index] || '') as string}
-              onChange={(v) => handleChange(index, v)}
+              onChange={v => handleChange(index, v)}
             />
           );
         }
       })}
+      {isPayable && (
+        <ValueField
+          input={{ name: 'value', type: 'value' }}
+          value={payableValue!}
+          onChange={v => setPayableValue?.(v as bigint)}
+        />
+      )}
     </>
   );
 }
