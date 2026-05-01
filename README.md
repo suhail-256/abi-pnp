@@ -17,19 +17,6 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
 
 <table>
   <tr>
-    <td align="center"><b>Disconnected</b></td>
-    <td align="center"><b>Connected</b></td>
-  </tr>
-  <tr>
-    <td><img src="./images/disconnected.png" /></td>
-    <td><img src="./images/connected.png" /></td>
-  </tr>
-</table>
-
-### Complex Types Handling
-
-<table>
-  <tr>
     <td align="center"><b>Types Overview</b></td>
     <td align="center"><b>Nested Arrays (Fixed)</b></td>
   </tr>
