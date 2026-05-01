@@ -4,4 +4,4 @@
  *  - ArgValue[]      → a fixed or dynamic array
  *  - Record<string, ArgValue> → a tuple (struct), keyed by field name
  */
-export type ArgValue = string | ArgValue[] | Record<string, ArgValue>;
+export type ArgValue = string | boolean | bigint | ArgValue[] | Record<string, ArgValue>;
