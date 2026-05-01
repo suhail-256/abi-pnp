@@ -70,7 +70,7 @@ function ArgsInput({ inputs, values, onChange, buttonRef }: ArgsInputProps) {
               key={index}
               input={input}
               value={(values[index] || '') as string}
-              onChange={(v: string) => handleChange(index, v)}
+              onChange={(v) => handleChange(index, v)}
             />
           );
         }

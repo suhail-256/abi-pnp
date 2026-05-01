@@ -655,11 +655,72 @@ body {
   vertical-align: middle;
 }
 
+/* ===== INLINE TOGGLE ===== */
+.input-with-toggle {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.input-with-toggle .arg-input {
+  margin-bottom: 0;
+  padding-right: 80px;
+}
+
+.inline-toggle {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  width: max-content;
+  min-width: 70px;
+}
+
+.inline-toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  width: calc(50% - 2px);
+  background: var(--bg-input);
+  border-radius: calc(var(--radius-sm) - 1px);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.inline-toggle-slider.is-right {
+  transform: translateX(100%);
+}
+
+.inline-toggle-btn {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  padding: 4px 8px;
+  flex: 1;
+  min-width: 35px;
+  font-family: inherit;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.inline-toggle-btn.active {
+  color: var(--text-primary);
+}
+
 .action-btn {
   border: none;
   border-radius: var(--radius-sm);
   padding: 8px 24px;
-  margin-top: 10px;
   font-size: 13px;
   font-family: inherit;
   font-weight: 500;
@@ -781,6 +842,39 @@ body {
 }
 
 /* ===== ERROR ALERTS ===== */
+.error-box {
+  display: flex;
+  justify-content: center;
+  animation: slideDown 0.3s ease;
+}
+
+.error-box.exiting {
+  animation: slideUp 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+
 
 .error-alert {
   display: inline-flex;
