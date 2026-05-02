@@ -7,20 +7,14 @@ import ValueField from './inputFields/ValueField';
 
 interface ArgsInputProps {
   inputs?: AbiParameter[];
-  isPayable?: boolean;
   values: ArgValue[];
   onChange: (values: ArgValue[]) => void;
-  payableValue?: bigint;
-  setPayableValue?: (value: bigint) => void;
 }
 
 function ArgsInput({
   inputs,
-  isPayable,
   values,
   onChange,
-  payableValue,
-  setPayableValue,
 }: ArgsInputProps) {
   const handleChange = (idx: number, newValue: ArgValue) => {
     const updatedArgs = [...values];
@@ -76,13 +70,6 @@ function ArgsInput({
           );
         }
       })}
-      {isPayable && (
-        <ValueField
-          input={{ name: 'value', type: 'value' }}
-          value={payableValue!}
-          onChange={v => setPayableValue?.(v as bigint)}
-        />
-      )}
     </>
   );
 }

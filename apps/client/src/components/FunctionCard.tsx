@@ -4,6 +4,7 @@ import { type ArgValue } from '../types/argValue';
 import ReadButton from './contracts/Readbutton';
 import ArgsInput from './input/ArgsInput';
 import WriteButton from './contracts/WriteContract';
+import ValueField from './input/inputFields/ValueField';
 
 function generateArgsStructure(param: AbiParameter): ArgValue {
   const { type } = param;
@@ -120,13 +121,15 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
         <div className="fn-body-inner">
           {hasInputs && (
             <div className="fn-inputs">
-              <ArgsInput
-                inputs={inputs as AbiParameter[]}
-                isPayable={stateMutability === 'payable'}
-                values={args}
-                onChange={setArgs}
-                payableValue={payableValue as bigint}
-                setPayableValue={setPayableValue}
+              <ArgsInput inputs={inputs as AbiParameter[]} values={args} onChange={setArgs} />
+            </div>
+          )}
+          {functState === State.PAYABLE && (
+            <div className="fn-inputs">
+              <ValueField
+                input={{ name: 'value', type: 'value' }}
+                value={payableValue!}
+                onChange={v => setPayableValue(v as bigint)}
               />
             </div>
           )}
