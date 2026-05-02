@@ -23,16 +23,20 @@ function WriteButton({ fn, args, payableValue }: WriteButtonProps) {
 
   const writeContract = useWriteContract();
 
-  const { isLoading, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash: writeContract.data,
   });
+
+  const handleConnect = () => {
+    connect({ connector: connectors[0] });
+  };
 
   if (!isConnected) {
     return (
       <button
         className="action-btn action-btn--write"
         type="button"
-        onClick={() => connect({ connector: connectors[0] })}
+        onClick={handleConnect}
         disabled={status === 'pending'}
       >
         {status === 'pending' ? 'Connecting...' : 'Connect Wallet'}
@@ -56,9 +60,9 @@ function WriteButton({ fn, args, payableValue }: WriteButtonProps) {
         className="action-btn action-btn--write"
         type="button"
         onClick={handleWrite}
-        disabled={isLoading || writeContract.isPending}
+        disabled={isConfirming || writeContract.isPending}
       >
-        {isLoading ? 'Confirming...' : writeContract.isPending ? 'Pending...' : 'Write'}
+        {isConfirming ? 'Confirming...' : writeContract.isPending ? 'Pending...' : 'Write'}
       </button>
       {isConfirmed && <Result result={writeContract} />}
     </>
