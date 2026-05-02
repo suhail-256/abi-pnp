@@ -9,13 +9,13 @@ import {
   useConnect,
 } from 'wagmi';
 
-interface WriteButtonProps {
+interface SendButtonProps {
   fn: AbiFunction;
   args: string[];
   payableValue?: bigint;
 }
 
-function WriteButton({ fn, args, payableValue }: WriteButtonProps) {
+function SendButton({ fn, args, payableValue }: SendButtonProps) {
   const { isConnected } = useConnection();
   const { contractAddress, abi } = useContract();
   const connectors = useConnectors();
@@ -62,11 +62,11 @@ function WriteButton({ fn, args, payableValue }: WriteButtonProps) {
         onClick={handleWrite}
         disabled={isConfirming || writeContract.isPending}
       >
-        {isConfirming ? 'Confirming...' : writeContract.isPending ? 'Pending...' : 'Write'}
+        {isConfirming ? 'Confirming...' : writeContract.isPending ? 'Pending...' : 'Send'}
       </button>
       {isConfirmed && <Result result={writeContract} />}
     </>
   );
 }
 
-export default WriteButton;
+export default SendButton;
