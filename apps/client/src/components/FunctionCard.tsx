@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { AbiParameter, type AbiFunction } from '../types/contract';
 import { type ArgValue } from '../types/argValue';
-import ReadButton from './contracts/Readbutton';
+import ReadButton from './contracts/ReadButton';
 import ArgsInput from './input/ArgsInput';
-import WriteButton from './contracts/WriteContract';
+import SendButton from './contracts/SendButton';
 import ValueField from './input/inputFields/ValueField';
 
 function generateArgsStructure(param: AbiParameter): ArgValue {
@@ -16,7 +16,7 @@ function generateArgsStructure(param: AbiParameter): ArgValue {
     const isDynamic = closeBracket - openBracket === 1;
 
     if (isDynamic) {
-      // Dynamic: start with a single empty slokt
+      // Dynamic: start with a single empty slot
       return [generateArgsStructure({ ...param, type: type.substring(0, openBracket) })];
     } else {
       // Fixed: pre-fill with the correct number of empty slots
@@ -136,7 +136,7 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
           <div className="fn-actions">
             {functState === State.READ && <ReadButton fn={fnInfo} args={args} />}
             {(functState === State.WRITE || functState === State.PAYABLE) && (
-              <WriteButton fn={fnInfo} args={args} payableValue={payableValue as bigint} />
+              <SendButton fn={fnInfo} args={args} payableValue={payableValue as bigint} />
             )}
           </div>
         </div>
