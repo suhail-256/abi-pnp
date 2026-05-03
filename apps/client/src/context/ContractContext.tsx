@@ -1,11 +1,12 @@
 import { createContext, useContext, useState } from 'react';
 import { AbiSchema, type Abi, type AbiFunction, type Address } from '../types/contract';
 import { useQuery } from '@tanstack/react-query';
-import abiService from '../services/abiService';
+import contractService from '../services/contractService';
 
 interface ContractContextType {
   contractAddress: Address | undefined;
   setContractAddress: (address: Address) => void;
+  contractSource: string | undefined;
   abi: Abi | undefined;
   selectedChainId: number;
   setSelectedChainId: (chainId: number) => void;
@@ -19,6 +20,7 @@ interface ContractContextType {
 export const ContractContext = createContext<ContractContextType>({
   contractAddress: undefined,
   setContractAddress: () => {},
+  contractSource: '',
   abi: undefined,
   selectedChainId: 0,
   setSelectedChainId: () => {},
@@ -44,22 +46,26 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
     error: AbiError,
   } = useQuery({
     queryKey: ['abi', contractAddress, selectedChainId],
-    queryFn: async (): Promise<{ abi: Abi; functions: AbiFunction[] }> => {
-      let fetchedAbi;
-      fetchedAbi = await abiService.getAbi(selectedChainId, contractAddress!);
-      if (!fetchedAbi) {
+    queryFn: async (): Promise<{
+      contractSource: string;
+      abi: Abi;
+      functions: AbiFunction[];
+    }> => {
+      const contract = await contractService.contractSource(selectedChainId, contractAddress!);
+      if (!contract) {
         throw new Error(
-          `No ABI found for address ${contractAddress} on chain ${selectedChainId}`,
+          `No contract found at address ${contractAddress} or the source code is not verified on Etherscan`,
         );
       }
 
-      const parsedAbi = AbiSchema.safeParse(fetchedAbi);
+      const parsedAbi = AbiSchema.safeParse(contract.abi);
       if (!parsedAbi.success) {
         throw new Error(`Invalid ABI: ${parsedAbi.error}`);
       }
       console.log(parsedAbi.data);
 
       return {
+        contractSource: contract.source,
         abi: parsedAbi.data,
         functions: extractFunctions(parsedAbi.data),
       };
@@ -74,6 +80,7 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
       value={{
         contractAddress,
         setContractAddress,
+        contractSource: data?.contractSource,
         abi: data?.abi,
         selectedChainId,
         setSelectedChainId,

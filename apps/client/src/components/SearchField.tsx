@@ -3,7 +3,7 @@ import { useContract } from '../context/ContractContext';
 import { isAddress } from 'viem';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import abiService from '../services/abiService';
+import contractService from '../services/contractService';
 
 function SearchField() {
   const [inputValue, setInputValue] = useState('');
@@ -31,7 +31,7 @@ function SearchField() {
 
   const checkIfContract = async (address: Address) => {
     try {
-      const isContract = await abiService.isContract(selectedChainId, address);
+      const isContract = await contractService.isContract(selectedChainId, address);
       if (!isContract) {
         setDisplayError('No contract found at this address');
         return false;

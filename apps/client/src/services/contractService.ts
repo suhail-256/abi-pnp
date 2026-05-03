@@ -22,9 +22,12 @@ const handleApiError = (err: any) => {
   }
 };
 
-const getAbi = async (chainId: Chain['id'], address: Address): Promise<Abi> => {
+const contractSource = async (
+  chainId: Chain['id'],
+  address: Address,
+): Promise<{ source: string; abi: Abi }> => {
   try {
-    const req = await axios.get(`${baseUrl}/abi/${chainId}/${address}`);
+    const req = await axios.get(`${baseUrl}/contract-source/${chainId}/${address}`);
     return req.data;
   } catch (err) {
     return handleApiError(err);
@@ -40,4 +43,4 @@ const isContract = async (chainId: Chain['id'], address: Address): Promise<boole
   }
 };
 
-export default { getAbi, isContract };
+export default { contractSource, isContract };
