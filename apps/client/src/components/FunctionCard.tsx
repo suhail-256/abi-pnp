@@ -5,6 +5,8 @@ import ReadButton from './contracts/ReadButton';
 import ArgsInput from './input/ArgsInput';
 import SendButton from './contracts/SendButton';
 import ValueField from './input/inputFields/ValueField';
+import { useContract } from '../context/ContractContext';
+import AiExplain from './AiExplain';
 
 function generateArgsStructure(param: AbiParameter): ArgValue {
   const { type } = param;
@@ -62,12 +64,13 @@ enum State {
 function FunctionCard({ fnInfo }: FunctionCardProps) {
   const { inputs, name, stateMutability } = fnInfo;
 
+  const { contractSource } = useContract();
+
   const [functState, setFunctState] = useState<State>(State.READ);
   const [args, setArgs] = useState<ArgValue[]>(() => initArgs(inputs as AbiParameter[]));
   const [payableValue, setPayableValue] = useState<bigint | ''>('');
   const [hasInputs, setHasInputs] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [showAiExplain, setShowAiExplain] = useState(false);
 
   useEffect(() => {
     setHasInputs(!!inputs?.length);
@@ -83,7 +86,6 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
       default:
         fnState = State.WRITE;
     }
-    console.log(fnState);
 
     setFunctState(fnState);
   }, []);
@@ -125,7 +127,11 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
             <div className="fn-body-inner">
               {hasInputs && (
                 <div className="fn-inputs">
-                  <ArgsInput inputs={inputs as AbiParameter[]} values={args} onChange={setArgs} />
+                  <ArgsInput
+                    inputs={inputs as AbiParameter[]}
+                    values={args}
+                    onChange={setArgs}
+                  />
                 </div>
               )}
               {functState === State.PAYABLE && (
@@ -142,33 +148,13 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
                 {(functState === State.WRITE || functState === State.PAYABLE) && (
                   <SendButton fn={fnInfo} args={args} payableValue={payableValue as bigint} />
                 )}
-                
               </div>
             </div>
           </div>
         </div>
       </div>
-      
-      <div className="ai-explain-wrapper">
-        <button
-          className={`ai-explain-toggle ${showAiExplain ? 'active' : ''}`}
-          onClick={() => setShowAiExplain(prev => !prev)}
-          title="AI Explain"
-        >
-          ✨
-        </button>
-        {showAiExplain && (
-          <div className="ai-explain-panel">
-            <div className="ai-explain-header">
-              <span>AI Explanation</span>
-            </div>
-            <div className="ai-explain-content">
-              Placeholder text for AI explanation of the <strong>{name}</strong> function.
-            </div>
-          </div>
-        )}
-      </div>
 
+      <AiExplain fnInfo={fnInfo} />
     </div>
   );
 }

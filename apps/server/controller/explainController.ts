@@ -40,7 +40,7 @@ export const explainFunction = async (
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.5-flash',
       contents: `contract: ${contractSource}\n\nfunction ABI: ${functionABI}`,
       config: {
         systemInstruction: systemInstruction,
