@@ -1,5 +1,23 @@
 import express from 'express';
 import { GoogleGenAI } from '@google/genai';
+import { z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+
+const explainResponseSchema = z.object({
+  summary: z.string(),
+  inputs: z.array(
+    z.object({
+      name: z.string(),
+      description: z.string(),
+    }),
+  ),
+  outputs: z.array(
+    z.object({
+      description: z.string(),
+    }),
+  ),
+  warnings: z.array(z.string()),
+});
 
 const systemInstruction = `You are a smart contract interpreter. Your job is to explain Solidity functions 
 to users who may not be familiar with blockchain development.
@@ -44,19 +62,12 @@ export const explainFunction = async (
       contents: `contract: ${contractSource}\n\nfunction ABI: ${functionABI}`,
       config: {
         systemInstruction: systemInstruction,
+        responseMimeType: 'application/json',
+        responseJsonSchema: zodToJsonSchema(explainResponseSchema as any),
       },
     });
 
-    const raw = response.text!.replace(/```json\n?|```/g, '').trim();
-
-    return res.status(201).json(
-      JSON.parse(raw) as {
-        summary: string;
-        inputs: { name: string; description: string }[];
-        outputs: { description: string }[];
-        warnings: string[];
-      },
-    );
+    return res.status(201).json(explainResponseSchema.parse(JSON.parse(response.text!)));
   } catch (err) {
     next(err);
   }
