@@ -2,7 +2,6 @@
 
 A lightweight smart contract interaction tool. Paste any verified contract address, select a chain, and read or write to its functions directly from the browserd.
 
-
 ## Features
 
 - **Auto ABI fetching** — fetches verified ABI from Etherscan automatically
@@ -34,21 +33,18 @@ A lightweight smart contract interaction tool. Paste any verified contract addre
   </tr>
 </table>
 
-
 ## Upcoming
 
+- **AI Explanation** — Describes function purpose, inputs, and outputs in natural language, and adds warnings for potential pitfalls (e.g. reentrancy, front-running, etc.)
 - **Manual ABI input** — paste a raw ABI for unverified contracts
 - **Complex output rendering** — formatted display for struct and tuple return values
 
-
 ## Stack
 
-| Layer | Tech |
-|-------|------|
+| Layer  | Tech                                           |
+| ------ | ---------------------------------------------- |
 | Client | React, TypeScript, Wagmi, Viem, TanStack Query |
-| Server | Node.js, Express, TypeScript, Viem |
-
-
+| Server | Node.js, Express, TypeScript, Viem             |
 
 ## Running Locally
 
