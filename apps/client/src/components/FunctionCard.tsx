@@ -67,6 +67,7 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
   const [payableValue, setPayableValue] = useState<bigint | ''>('');
   const [hasInputs, setHasInputs] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [showAiExplain, setShowAiExplain] = useState(false);
 
   useEffect(() => {
     setHasInputs(!!inputs?.length);
@@ -88,59 +89,86 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
   }, []);
 
   return (
-    <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
-      <div className="fn-header" onClick={() => setExpanded(p => !p)}>
-        <button type="button" className={`fn-name-btn fn-name-btn--${functState}`}>
-          {name}
-        </button>
-        {hasInputs && (
-          <span className="fn-params">
-            (
-            {inputs?.map((param, index) => (
-              <span key={index}>
-                {param.name || 'input'}
-                {index < inputs.length - 1 ? ', ' : ''}
+    <div className="function-card-container">
+      <div className="fn-card-wrapper">
+        <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
+          <div className="fn-header" onClick={() => setExpanded(p => !p)}>
+            <button type="button" className={`fn-name-btn fn-name-btn--${functState}`}>
+              {name}
+            </button>
+            {hasInputs && (
+              <span className="fn-params">
+                (
+                {inputs?.map((param, index) => (
+                  <span key={index}>
+                    {param.name || 'input'}
+                    {index < inputs.length - 1 ? ', ' : ''}
+                  </span>
+                ))}
+                )
               </span>
-            ))}
-            )
-          </span>
-        )}
-        <span className={`fn-chevron ${expanded ? 'fn-chevron--open' : ''}`}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path
-              d="M3 4.5L6 7.5L9 4.5"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
-      </div>
-      <div className={`fn-body ${expanded ? 'fn-body--open' : ''}`}>
-        <div className="fn-body-inner">
-          {hasInputs && (
-            <div className="fn-inputs">
-              <ArgsInput inputs={inputs as AbiParameter[]} values={args} onChange={setArgs} />
-            </div>
-          )}
-          {functState === State.PAYABLE && (
-            <div className="fn-inputs">
-              <ValueField
-                input={{ name: 'value', type: 'value' }}
-                value={payableValue!}
-                onChange={v => setPayableValue(v as bigint)}
-              />
-            </div>
-          )}
-          <div className="fn-actions">
-            {functState === State.READ && <ReadButton fn={fnInfo} args={args} />}
-            {(functState === State.WRITE || functState === State.PAYABLE) && (
-              <SendButton fn={fnInfo} args={args} payableValue={payableValue as bigint} />
             )}
+
+            <span className={`fn-chevron ${expanded ? 'fn-chevron--open' : ''}`}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path
+                  d="M3 4.5L6 7.5L9 4.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+          <div className={`fn-body ${expanded ? 'fn-body--open' : ''}`}>
+            <div className="fn-body-inner">
+              {hasInputs && (
+                <div className="fn-inputs">
+                  <ArgsInput inputs={inputs as AbiParameter[]} values={args} onChange={setArgs} />
+                </div>
+              )}
+              {functState === State.PAYABLE && (
+                <div className="fn-inputs">
+                  <ValueField
+                    input={{ name: 'value', type: 'value' }}
+                    value={payableValue!}
+                    onChange={v => setPayableValue(v as bigint)}
+                  />
+                </div>
+              )}
+              <div className="fn-actions">
+                {functState === State.READ && <ReadButton fn={fnInfo} args={args} />}
+                {(functState === State.WRITE || functState === State.PAYABLE) && (
+                  <SendButton fn={fnInfo} args={args} payableValue={payableValue as bigint} />
+                )}
+                
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      
+      <div className="ai-explain-wrapper">
+        <button
+          className={`ai-explain-toggle ${showAiExplain ? 'active' : ''}`}
+          onClick={() => setShowAiExplain(prev => !prev)}
+          title="AI Explain"
+        >
+          ✨
+        </button>
+        {showAiExplain && (
+          <div className="ai-explain-panel">
+            <div className="ai-explain-header">
+              <span>AI Explanation</span>
+            </div>
+            <div className="ai-explain-content">
+              Placeholder text for AI explanation of the <strong>{name}</strong> function.
+            </div>
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
