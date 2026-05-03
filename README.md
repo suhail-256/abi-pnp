@@ -9,7 +9,7 @@
 ## Features
 
 - **Auto ABI Fetching** — Fetches verified ABIs from block explorers automatically.
-- **AI Function Explanations** — Understand complex transactions instantly. AI describes function purpose, inputs, outputs, and adds warnings for potential pitfalls like reentrancy.
+- **AI Function Explanations** — AI explains function purpose, inputs, outputs, and adds warnings for potential pitfalls like reentrancy.
 - **Read & Write** — Call view/pure functions without connecting a wallet, or send transactions via your connected wallet.
 - **Payable Support** — Specify value in ETH or Wei for payable functions.
 - **Multi-Chain** — Supports Ethereum, Sepolia, Optimism, Arbitrum, Polygon, BSC, opBNB and testnets.
