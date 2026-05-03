@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useId, useState } from 'react';
 import explainService from '../services/explainService';
 import { useContract } from '../context/ContractContext';
 import { AbiFunction } from '../types/contract';
 
 export default function AiExplain({ fnInfo }: { fnInfo: AbiFunction }) {
-  const { contractSource } = useContract();
-  const [showAiExplain, setShowAiExplain] = useState(false);
+  const { contractSource, activeAiPanel, setActiveAiPanel } = useContract();
+  const panelId = useId();
+  const showAiExplain = activeAiPanel === panelId;
   const [explanation, setExplanation] = useState<{
     summary: string;
     inputs: { name: string; description: string }[];
@@ -13,14 +14,13 @@ export default function AiExplain({ fnInfo }: { fnInfo: AbiFunction }) {
     warnings: string[];
   } | null>(null);
 
-  
-
   const toggleExplainPanel = async () => {
     if (showAiExplain) {
-      setShowAiExplain(false);
+      setActiveAiPanel(null);
       return;
     }
-    setShowAiExplain(true);
+    setActiveAiPanel(panelId);
+
     if (explanation) return; // already have explanation
 
     try {
@@ -37,14 +37,20 @@ export default function AiExplain({ fnInfo }: { fnInfo: AbiFunction }) {
   return (
     <div className="ai-explain-wrapper">
       <button
+        type="button"
         className={`ai-explain-toggle ${showAiExplain ? 'active' : ''}`}
-        onClick={toggleExplainPanel}
+        onClick={event => {
+          event.stopPropagation();
+          toggleExplainPanel();
+        }}
         title="AI Explain"
+        aria-expanded={showAiExplain}
+        aria-controls={panelId}
       >
         ✨
       </button>{' '}
       {showAiExplain && (
-        <div className="ai-explain-panel">
+        <div className="ai-explain-panel" id={panelId}>
           <div className="ai-explain-header">
             <span>AI Explanation</span>
           </div>

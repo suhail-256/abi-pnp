@@ -13,6 +13,8 @@ interface ContractContextType {
   contractFunctions: AbiFunction[] | undefined;
   showFunctions: boolean;
   setShowFunctions: (show: boolean) => void;
+  activeAiPanel: string | null;
+  setActiveAiPanel: (id: string | null) => void;
   isLoading: boolean;
   AbiError: unknown;
 }
@@ -27,6 +29,8 @@ export const ContractContext = createContext<ContractContextType>({
   contractFunctions: undefined,
   showFunctions: false,
   setShowFunctions: () => {},
+  activeAiPanel: null,
+  setActiveAiPanel: () => {},
   isLoading: false,
   AbiError: null,
 });
@@ -35,6 +39,7 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
   const [contractAddress, setContractAddress] = useState<Address>();
   const [showFunctions, setShowFunctions] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<number>(11155111); // default sepolia
+  const [activeAiPanel, setActiveAiPanel] = useState<string | null>(null);
 
   const extractFunctions = (abi: Abi): AbiFunction[] => {
     return abi.filter((item): item is AbiFunction => item.type === 'function');
@@ -87,6 +92,8 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
         contractFunctions: data?.functions,
         showFunctions,
         setShowFunctions,
+        activeAiPanel,
+        setActiveAiPanel,
         isLoading,
         AbiError,
       }}
