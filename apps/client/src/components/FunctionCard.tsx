@@ -5,6 +5,8 @@ import ReadButton from './contracts/ReadButton';
 import ArgsInput from './input/ArgsInput';
 import SendButton from './contracts/SendButton';
 import ValueField from './input/inputFields/ValueField';
+import { useContract } from '../context/ContractContext';
+import AiExplain from './AiExplain';
 
 function generateArgsStructure(param: AbiParameter): ArgValue {
   const { type } = param;
@@ -62,6 +64,8 @@ enum State {
 function FunctionCard({ fnInfo }: FunctionCardProps) {
   const { inputs, name, stateMutability } = fnInfo;
 
+  const { contractSource } = useContract();
+
   const [functState, setFunctState] = useState<State>(State.READ);
   const [args, setArgs] = useState<ArgValue[]>(() => initArgs(inputs as AbiParameter[]));
   const [payableValue, setPayableValue] = useState<bigint | ''>('');
@@ -82,65 +86,75 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
       default:
         fnState = State.WRITE;
     }
-    console.log(fnState);
 
     setFunctState(fnState);
   }, []);
 
   return (
-    <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
-      <div className="fn-header" onClick={() => setExpanded(p => !p)}>
-        <button type="button" className={`fn-name-btn fn-name-btn--${functState}`}>
-          {name}
-        </button>
-        {hasInputs && (
-          <span className="fn-params">
-            (
-            {inputs?.map((param, index) => (
-              <span key={index}>
-                {param.name || 'input'}
-                {index < inputs.length - 1 ? ', ' : ''}
+    <div className="function-card-container">
+      <div className="fn-card-wrapper">
+        <div className={`fn-card ${expanded ? 'fn-card--open' : ''}`}>
+          <div className="fn-header" onClick={() => setExpanded(p => !p)}>
+            <button type="button" className={`fn-name-btn fn-name-btn--${functState}`}>
+              {name}
+            </button>
+            {hasInputs && (
+              <span className="fn-params">
+                (
+                {inputs?.map((param, index) => (
+                  <span key={index}>
+                    {param.name || 'input'}
+                    {index < inputs.length - 1 ? ', ' : ''}
+                  </span>
+                ))}
+                )
               </span>
-            ))}
-            )
-          </span>
-        )}
-        <span className={`fn-chevron ${expanded ? 'fn-chevron--open' : ''}`}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path
-              d="M3 4.5L6 7.5L9 4.5"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
-      </div>
-      <div className={`fn-body ${expanded ? 'fn-body--open' : ''}`}>
-        <div className="fn-body-inner">
-          {hasInputs && (
-            <div className="fn-inputs">
-              <ArgsInput inputs={inputs as AbiParameter[]} values={args} onChange={setArgs} />
-            </div>
-          )}
-          {functState === State.PAYABLE && (
-            <div className="fn-inputs">
-              <ValueField
-                input={{ name: 'value', type: 'value' }}
-                value={payableValue!}
-                onChange={v => setPayableValue(v as bigint)}
-              />
-            </div>
-          )}
-          <div className="fn-actions">
-            {functState === State.READ && <ReadButton fn={fnInfo} args={args} />}
-            {(functState === State.WRITE || functState === State.PAYABLE) && (
-              <SendButton fn={fnInfo} args={args} payableValue={payableValue as bigint} />
             )}
+
+            <span className={`fn-chevron ${expanded ? 'fn-chevron--open' : ''}`}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path
+                  d="M3 4.5L6 7.5L9 4.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+          <div className={`fn-body ${expanded ? 'fn-body--open' : ''}`}>
+            <div className="fn-body-inner">
+              {hasInputs && (
+                <div className="fn-inputs">
+                  <ArgsInput
+                    inputs={inputs as AbiParameter[]}
+                    values={args}
+                    onChange={setArgs}
+                  />
+                </div>
+              )}
+              {functState === State.PAYABLE && (
+                <div className="fn-inputs">
+                  <ValueField
+                    input={{ name: 'value', type: 'value' }}
+                    value={payableValue!}
+                    onChange={v => setPayableValue(v as bigint)}
+                  />
+                </div>
+              )}
+              <div className="fn-actions">
+                {functState === State.READ && <ReadButton fn={fnInfo} args={args} />}
+                {(functState === State.WRITE || functState === State.PAYABLE) && (
+                  <SendButton fn={fnInfo} args={args} payableValue={payableValue as bigint} />
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <AiExplain fnInfo={fnInfo} />
     </div>
   );
 }
