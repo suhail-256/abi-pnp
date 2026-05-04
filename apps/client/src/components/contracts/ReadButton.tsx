@@ -1,8 +1,11 @@
+import { useState } from 'react';
+import { useConfig } from 'wagmi';
+import { readContract } from 'wagmi/actions';
 import { useContract } from '../../context/ContractContext';
 import { Address, type AbiFunction } from '../../types/contract';
-import { useReadContract } from 'wagmi';
 import Result from '../Result';
 import { ArgValue } from '../../types/argValue';
+import { Abi } from 'viem';
 
 interface ReadButtonProps {
   fn: AbiFunction;
@@ -11,24 +14,29 @@ interface ReadButtonProps {
 
 function ReadButton({ fn, args }: ReadButtonProps) {
   const { contractAddress, abi, selectedChainId } = useContract();
+  const [displayData, setDisplayData] = useState<any>(null);
+  const [isFetching, setIsFetching] = useState(false);
 
-  const readContract = useReadContract({
-    address: contractAddress as Address,
-    abi: abi,
-    chainId: selectedChainId,
-    functionName: fn.name,
-    args: args,
-    query: {
-      enabled: false,
-      retry: false,
-    },
-  });
+  const config = useConfig();
 
-  const handleRead = () => {
-    readContract.refetch({
-      throwOnError: true,
-      cancelRefetch: false,
-    });
+  const handleRead = async () => {
+    setIsFetching(true);
+    try {
+      const result = await readContract(config, {
+        address: contractAddress as Address,
+        abi: abi as Abi,
+        chainId: selectedChainId,
+        functionName: fn.name,
+        args: args,
+      });
+
+      setDisplayData(result);
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error);
+    } finally {
+      setIsFetching(false);
+    }
   };
 
   return (
@@ -37,11 +45,11 @@ function ReadButton({ fn, args }: ReadButtonProps) {
         className="action-btn action-btn--read"
         type="button"
         onClick={handleRead}
-        disabled={readContract.isFetching}
+        disabled={isFetching}
       >
-        {readContract.isFetching ? 'Reading...' : 'Read'}
+        {isFetching ? 'Reading...' : 'Read'}
       </button>
-      {readContract.isFetched && <Result result={readContract} />}
+      {displayData && <Result data={displayData} />}
     </>
   );
 }
