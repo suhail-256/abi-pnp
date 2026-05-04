@@ -38,7 +38,6 @@ function ReadButton({ fn, args }: ReadButtonProps) {
       setIsFetching(false);
     }
   };
-
   return (
     <>
       <button

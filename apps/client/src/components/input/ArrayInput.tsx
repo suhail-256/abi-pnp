@@ -88,10 +88,10 @@ function ArrayInput({ input, value, onChange }: ArrayInputProps) {
         <span className="arg-title">{input.name || 'input'} </span>
         <span className="fn-params">({input.type})</span>
       </label>
-      <div className={`arr-card ${expanded ? 'arr-card--open' : ''}`}>
-        <div className="arr-header" onClick={() => setExpanded(prev => !prev)}>
-          <span className="arr-params">{input.internalType}</span>
-          <span className={`arr-chevron ${expanded ? 'arr-chevron--open' : ''}`}>
+      <div className={`wrapper-card ${expanded ? 'wrapper-card--open' : ''}`}>
+        <div className="wrapper-header" onClick={() => setExpanded(prev => !prev)}>
+          <span className="wrapper-params">{input.internalType}</span>
+          <span className={`wrapper-chevron ${expanded ? 'wrapper-chevron--open' : ''}`}>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
               <path
                 d="M3 4.5L6 7.5L9 4.5"
@@ -103,9 +103,9 @@ function ArrayInput({ input, value, onChange }: ArrayInputProps) {
             </svg>
           </span>
         </div>
-        <div className={`arr-body ${expanded ? 'arr-body--open' : ''}`}>
-          <div className="arr-body-inner">
-            <div className="arr-inputs">
+        <div className={`wrapper-body ${expanded ? 'wrapper-body--open' : ''}`}>
+          <div className="wrapper-body-inner">
+            <div className="wrapper-inputs">
               {value.map((item, index) => (
                 <div key={index}>
                   <ArgsInput
@@ -118,7 +118,7 @@ function ArrayInput({ input, value, onChange }: ArrayInputProps) {
               ))}
             </div>
             {isDynamic && (
-              <div className="arr-actions">
+              <div className="wrapper-actions">
                 <button type="button" className="btn btn--add-field" onClick={addField}>
                   +
                 </button>

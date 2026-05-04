@@ -14,42 +14,48 @@
 - **Payable Support** — Specify value in ETH or Wei for payable functions.
 - **Multi-Chain** — Supports Ethereum, Sepolia, Optimism, Arbitrum, Polygon, BSC, opBNB and testnets.
 - **Smart Validation** — Automatically detects EOA & unverified contracts to save time.
-- **Handle Complex Types** — Full support for arrays, tuples, structs, and deep nested inputs.
+- **Handle Complex IO Types** — Full support for deeply nested inputs alongside elegantly formatted structs, tuples, and nested output displays!
+- **Instant TX Feedback** — Real-time tracking of pending transactions and detailed transaction receipts directly in the interface.
 
 ## Preview
 
 ### AI Function Explanation
+
 <img src="./images/ai-explain.png" alt="AI Explanation Preview" />
 
 ### Interface Overview
+
 <table>
-  <tr>
-    <td align="center"><b>Types Overview</b></td>
-    <td align="center"><b>Nested Arrays (Fixed)</b></td>
-  </tr>
+  <hr/>
   <tr>
     <td><img src="./images/img1.png" /></td>
     <td><img src="./images/img2.png" /></td>
   </tr>
+</table>
+
+### Transaction Execution & Receipts
+
+<table>
+  <hr/>
   <tr>
-    <td align="center"><b>Nested Arrays (Dynamic)</b></td>
-    <td align="center"><b>Tuples</b></td>
+    <th>Pending Confirmation</th>
+    <th>Transaction Confirmed</th>
   </tr>
   <tr>
-    <td><img src="./images/img3.png" /></td>
-    <td><img src="./images/img4.png" /></td>
+    <td><img src="./images/confirming-write.png" /></td>
+    <td><img src="./images/confrimed-write.png" /></td>
   </tr>
 </table>
 
 ## 🚀 Upcoming
 
 - **Manual ABI input** — Paste a raw ABI for unverified contracts.
-- **Complex output rendering** — Formatted display for struct and tuple return values.
+
 
 ## Stack
 
-| Layer    | Tech Stack                                     |
-| -------- | ---------------------------------------------- |
+| Layer      | Tech Stack                                     |
+| ---------- | ---------------------------------------------- |
 | **Client** | React, TypeScript, Wagmi, Viem, TanStack Query |
 | **Server** | Node.js, Express, TypeScript, Viem             |
 
@@ -62,4 +68,3 @@ cd apps/server && pnpm install && pnpm run dev
 # install & run client (separate terminal)
 cd apps/client && pnpm install && pnpm run dev
 ```
-
