@@ -1,5 +1,6 @@
 import { AbiParameter } from 'abitype';
 import { type ArgValue } from '../../../types/argValue';
+import { useEffect } from 'react';
 
 
 interface BoolFieldProps {
@@ -11,6 +12,10 @@ interface BoolFieldProps {
 export default function BoolField({ input, value, onChange }: BoolFieldProps) {
   const { type } = input;
   const isTrue = String(value) === 'true';
+  
+  useEffect(() => {
+    onChange(false);
+  }, []);
 
   return (
     <div className="input-with-toggle">
