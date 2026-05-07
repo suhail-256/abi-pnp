@@ -8,7 +8,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://abi-pnp.vercel.app/',
+    origin: 'https://abi-pnp.vercel.app',
   }),
 );
 
