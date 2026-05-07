@@ -2,8 +2,12 @@ import express from 'express';
 import contractRouter from './router/contractRouter';
 import explainRouter from './router/explainRouter';
 import middleware from './utils/middleware';
+import cors from 'cors';
 
 const app = express();
+
+//! temporary, for testing purposes only
+app.use(cors());
 
 app.use(middleware.requestLogger);
 app.use(express.static('dist'));
