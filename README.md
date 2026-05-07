@@ -47,9 +47,17 @@
   </tr>
 </table>
 
-## 🚀 Upcoming
+## 🚀 Upcoming Roadmap
+
+### Core Product Upgrades
 
 - **Manual ABI input** — Paste a raw ABI for unverified contracts.
+- **Embedded Mini-LLM** — Replace external Gemini API dependency with an in-app mini-LLM flow for function explanations.
+- **Developer receipt detail toggle** — Add a dev-mode switch to choose between full transaction receipts and logs-only output.
+
+### Transaction UX Improvements
+
+- **Etherscan deep links on transaction hash** — Make each tx hash clickable to open its transaction page on Etherscan.
 
 
 ## Stack
