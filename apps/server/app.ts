@@ -6,8 +6,11 @@ import cors from 'cors';
 
 const app = express();
 
-//! temporary, for testing purposes only
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://abi-pnp.vercel.app/',
+  }),
+);
 
 app.use(middleware.requestLogger);
 app.use(express.static('dist'));
