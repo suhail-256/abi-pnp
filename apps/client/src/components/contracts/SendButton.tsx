@@ -1,4 +1,5 @@
 import { useContract } from '../../context/ContractContext';
+import { ArgValue } from '../../types/argValue';
 import { Abi, Address, type AbiFunction } from '../../types/contract';
 import Result from '../Result';
 import { useState } from 'react';
@@ -12,7 +13,7 @@ import {
 
 interface SendButtonProps {
   fn: AbiFunction;
-  args: string[];
+  args: ArgValue[];
   payableValue?: bigint;
 }
 
