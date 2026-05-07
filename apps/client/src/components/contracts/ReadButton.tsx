@@ -30,6 +30,7 @@ function ReadButton({ fn, args }: ReadButtonProps) {
         args: args,
       });
 
+      
       setDisplayData(result);
     } catch (error) {
       // TODO: Handle error properly
@@ -48,7 +49,7 @@ function ReadButton({ fn, args }: ReadButtonProps) {
       >
         {isFetching ? 'Reading...' : 'Read'}
       </button>
-      {displayData && <Result data={displayData} />}
+      {(displayData !== null) && <Result data={displayData} />}
     </>
   );
 }
