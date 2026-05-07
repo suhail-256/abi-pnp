@@ -2,7 +2,7 @@ import axios from 'axios';
 import errorHandler from '../utils/errorUtils';
 import { useContract } from '../context/ContractContext';
 
-const baseUrl = '/api';
+const baseUrl = import.meta.env.VITE_API_URL ?? '';
 
 const explainFunction = async (
   contractSource: string,
@@ -14,7 +14,7 @@ const explainFunction = async (
   warnings: string[];
 }> => {
   try {
-    const req = await axios.post(`${baseUrl}/explain`, {
+    const req = await axios.post(`${baseUrl}/api/explain`, {
       contractSource,
       functionABI,
     });
