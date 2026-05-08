@@ -1,6 +1,6 @@
 import express from 'express';
 import config from '../utils/config';
-import { createPublicClient, http, fallback, type Address, type Chain } from 'viem';
+import { createPublicClient, http, type Address, type Chain } from 'viem';
 import * as supportedChains from '../utils/chains';
 
 const ETHERSCAN_CONTRACT_API_URL =
@@ -17,18 +17,15 @@ const getContractSource = async (
 
   try {
     const response = await fetch(
-      ETHERSCAN_CONTRACT_API_URL.replace('{chainId}', chainId).replace(
-        '{address}',
-        address,
-      ),
+      ETHERSCAN_CONTRACT_API_URL.replace('{chainId}', chainId).replace('{address}', address),
     );
     const data = await response.json();
 
     if (data.message === 'NOTOK') {
       return res.status(400).json({ error: data.result });
     } else if (data.result[0].ABI === 'Contract source code not verified') {
-			return res.status(400).json({ error: 'Contract source code not verified' });
-		}
+      return res.status(400).json({ error: 'Contract source code not verified' });
+    }
 
     res.json({ source: data.result[0].SourceCode, abi: JSON.parse(data.result[0].ABI) });
   } catch (err) {
@@ -51,11 +48,7 @@ const isContract = async (
 
   const publicClient = createPublicClient({
     chain: chain as Chain,
-    transport: fallback([
-      http('https://cloudflare-eth.com'),
-      http('https://rpc.ankr.com/eth'),
-      http(),
-    ]),
+    transport: http(),
   });
   try {
     const bytecode = await publicClient.getCode({ address: address as Address });
