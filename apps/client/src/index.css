@@ -945,15 +945,12 @@ body {
 
 /* ===== TUPLE ===== */
 .tuple-body {
-  /* background: var(--bg-primary); */
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   padding: 9px 12px;
-  margin-bottom: 8px; /* display: flex; */
+  margin-bottom: 8px; 
   font-size: 13px;
-  /* font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; */
   word-break: break-all;
-  color: var(--text-secondary);
 }
 
 .tuple-title {
@@ -966,7 +963,6 @@ body {
 }
 
 .tuple-inputs {
-  /* margin-top: 12px; */
   display: flex;
   flex-direction: column;
   gap: 4px;
