@@ -2,7 +2,6 @@ import { type Address } from '../types/contract';
 import { useContract } from '../context/ContractContext';
 import { isAddress } from 'viem';
 import { type ChangeEvent, useEffect, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import contractService from '../services/contractService';
 
 function SearchField() {
@@ -10,7 +9,10 @@ function SearchField() {
   const { setContractAddress, showFunctions, setShowFunctions, AbiError } = useContract();
   const [displayError, setDisplayError] = useState<string | null>(null);
   const { selectedChainId } = useContract();
-  const queryClient = useQueryClient();
+
+  const [contractValidityCache, setContractValidityCache] = useState<Record<Address, boolean>>(
+    {},
+  );
 
   useEffect(() => {
     if (!displayError) return;
@@ -31,16 +33,11 @@ function SearchField() {
 
   const checkIfContract = async (address: Address) => {
     try {
-      const isContract = await contractService.isContract(selectedChainId, address);
-      if (!isContract) {
-        setDisplayError('No contract found at this address');
-        return false;
-      }
+      return await contractService.isContract(selectedChainId, address);
     } catch (err) {
       setDisplayError((err as Error).message);
       return false;
     }
-    return true;
   };
 
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +45,14 @@ function SearchField() {
     const address = e.target.value as Address;
     setInputValue(address);
 
-    if (isAddress(address)) {
+    if (isAddress(address) && contractValidityCache[address] === undefined) {
       const isContract = await checkIfContract(address);
-      if (!isContract) return;
+      setContractValidityCache(prev => ({ ...prev, [address]: isContract }));
+
+      if (!isContract) {
+        setDisplayError('No contract found at this address');
+        return;
+      }
 
       if (!showFunctions) {
         setContractAddress(address);
@@ -60,17 +62,20 @@ function SearchField() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const address = inputValue as Address;
 
-    if (!isAddress(inputValue)) {
+    if (!isAddress(address)) {
       setDisplayError('Invalid address');
       return;
     }
-    queryClient.removeQueries({ queryKey: ['abi', inputValue, selectedChainId] });
 
-    const isContract = await checkIfContract(inputValue as Address);
-    if (!isContract) return;
+    const isContract = contractValidityCache[address] ?? (await checkIfContract(address));
+    if (!isContract) {
+      setDisplayError('No contract found at this address');
+      return;
+    }
 
-    setContractAddress(inputValue as Address);
+    setContractAddress(address);
     setShowFunctions(true);
   };
 
