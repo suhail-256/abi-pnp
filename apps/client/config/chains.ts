@@ -1,14 +1,43 @@
 export {
+  // Ethereum
   mainnet,
   sepolia,
-  optimism,
-  optimismSepolia,
-  arbitrum,
-  arbitrumSepolia,
+
+  // Polygon
   polygon,
   polygonAmoy,
-  opBNB,
-  opBNBTestnet,
-  bsc,
-  bscTestnet,
-} from 'viem/chains';
+
+  // Arbitrum
+  arbitrum,
+  arbitrumSepolia,
+
+  // Linea
+  linea,
+  lineaSepolia,
+
+  // Blast
+  blast,
+  blastSepolia,
+
+  // Celo
+  celo,
+  celoSepoliaTestnet,
+
+  // Gnosis
+  gnosis,
+
+  // Moonbeam
+  moonbeam,
+
+  // Abstract
+  abstract,
+  abstractTestnet,
+
+  // Berachain
+  berachain,
+  berachainBepolia,
+
+  // Monad
+  monad,
+  monadTestnet,
+} from 'thirdweb/chains';
