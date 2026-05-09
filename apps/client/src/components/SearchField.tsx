@@ -10,9 +10,9 @@ function SearchField() {
   const [displayError, setDisplayError] = useState<string | null>(null);
   const { selectedChainId } = useContract();
 
-  const [contractValidityCache, setContractValidityCache] = useState<Record<Address, boolean>>(
-    {},
-  );
+  const [contractValidityCache, setContractValidityCache] = useState<
+    Record<number, Record<Address, boolean>>
+  >({});
 
   useEffect(() => {
     if (!displayError) return;
@@ -45,9 +45,15 @@ function SearchField() {
     const address = e.target.value as Address;
     setInputValue(address);
 
-    if (isAddress(address) && contractValidityCache[address] === undefined) {
+    if (
+      isAddress(address) &&
+      contractValidityCache[selectedChainId]?.[address] === undefined
+    ) {
       const isContract = await checkIfContract(address);
-      setContractValidityCache(prev => ({ ...prev, [address]: isContract }));
+      setContractValidityCache(prev => ({
+        ...prev,
+        [selectedChainId]: { ...prev[selectedChainId], [address]: isContract },
+      }));
 
       if (!isContract) {
         setDisplayError('No contract found at this address');
@@ -69,7 +75,8 @@ function SearchField() {
       return;
     }
 
-    const isContract = contractValidityCache[address] ?? (await checkIfContract(address));
+    const isContract =
+      contractValidityCache[selectedChainId]?.[address] ?? (await checkIfContract(address));
     if (!isContract) {
       setDisplayError('No contract found at this address');
       return;

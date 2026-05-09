@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { useSwitchActiveWalletChain } from 'thirdweb/react';
+import { useSwitchActiveWalletChain, useActiveAccount } from 'thirdweb/react';
 import { defineChain } from 'thirdweb';
 import { useContract } from '../context/ContractContext';
-import * as suuportedChains  from '../../config/chains';
+import * as suuportedChains from '../../config/chains';
 
 function ChainSelector() {
   const chains = Object.values(suuportedChains);
   const { selectedChainId, setSelectedChainId } = useContract();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
+  const account = useActiveAccount();
+  const isConnected = !!account;
   const switchChain = useSwitchActiveWalletChain();
 
   const selectedChain = chains.find(c => c.id === selectedChainId);
@@ -25,10 +26,12 @@ function ChainSelector() {
   const handleSelect = async (chainId: number) => {
     setSelectedChainId(chainId);
     setOpen(false);
+    if (!isConnected) return;
+
     try {
       await switchChain(defineChain(chainId));
     } catch (error) {
-      console.error("Failed to switch wallet network:", error);
+      console.error('Failed to switch wallet network:', error);
     }
   };
 
