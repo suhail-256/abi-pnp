@@ -2,7 +2,7 @@ import SearchField from './components/SearchField';
 import FunctionsList from './components/FunctionsList';
 import { useContract } from './context/ContractContext';
 import ChainSelector from './components/ChainSelector';
-import Connection from './components/Connection';
+import Connect from './components/Connect';
 
 function App() {
   const { showFunctions } = useContract();
@@ -10,7 +10,7 @@ function App() {
     <div className="app-container">
       <div className="top-bar">
         <ChainSelector />
-        <Connection />
+        <Connect />
       </div>
       <header className="hero">
         <h1 className="hero-title">ABI Plug & Play</h1>

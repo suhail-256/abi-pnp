@@ -1,12 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { useChains } from 'wagmi';
+import { useSwitchActiveWalletChain } from 'thirdweb/react';
+import { defineChain } from 'thirdweb';
 import { useContract } from '../context/ContractContext';
+import * as suuportedChains  from '../../config/chains';
 
 function ChainSelector() {
-  const chains = useChains();
+  const chains = Object.values(suuportedChains);
   const { selectedChainId, setSelectedChainId } = useContract();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const switchChain = useSwitchActiveWalletChain();
 
   const selectedChain = chains.find(c => c.id === selectedChainId);
 
@@ -18,10 +22,14 @@ function ChainSelector() {
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
 
-  const handleSelect = (chainId: number) => {
+  const handleSelect = async (chainId: number) => {
     setSelectedChainId(chainId);
     setOpen(false);
-    console.log(`Chain: ${chainId}`);
+    try {
+      await switchChain(defineChain(chainId));
+    } catch (error) {
+      console.error("Failed to switch wallet network:", error);
+    }
   };
 
   return (
@@ -44,19 +52,21 @@ function ChainSelector() {
           />
         </svg>
       </button>
-      {open && (
-        <ul className="chain-menu">
-          {chains.map(chain => (
-            <li
-              key={chain.id}
-              className={`chain-menu-item ${chain.id === selectedChainId ? 'chain-menu-item--active' : ''}`}
-              onClick={() => handleSelect(chain.id)}
-            >
-              {chain.name}
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className={`chain-menu-wrapper ${open ? 'chain-menu-wrapper--open' : ''}`}>
+        <div className="chain-menu-inner">
+          <ul className="chain-menu">
+            {chains.map(chain => (
+              <li
+                key={chain.id}
+                className={`chain-menu-item ${chain.id === selectedChainId ? 'chain-menu-item--active' : ''}`}
+                onClick={() => handleSelect(chain.id)}
+              >
+                {chain.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

@@ -5,7 +5,6 @@ import ReadButton from './contracts/ReadButton';
 import ArgsInput from './input/ArgsInput';
 import SendButton from './contracts/SendButton';
 import ValueField from './input/inputFields/ValueField';
-import { useContract } from '../context/ContractContext';
 import AiExplain from './AiExplain';
 
 function generateArgsStructure(param: AbiParameter): ArgValue {
@@ -63,8 +62,6 @@ enum State {
 
 function FunctionCard({ fnInfo }: FunctionCardProps) {
   const { inputs, name, stateMutability } = fnInfo;
-
-  const { contractSource } = useContract();
 
   const [functState, setFunctState] = useState<State>(State.READ);
   const [args, setArgs] = useState<ArgValue[]>(() => initArgs(inputs as AbiParameter[]));
@@ -137,7 +134,6 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
               {functState === State.PAYABLE && (
                 <div className="fn-inputs">
                   <ValueField
-                    input={{ name: 'value', type: 'value' }}
                     value={payableValue!}
                     onChange={v => setPayableValue(v as bigint)}
                   />

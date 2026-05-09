@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { useConfig } from 'wagmi';
-import { readContract } from 'wagmi/actions';
+import { useReadContract } from 'thirdweb/react';
 import { useContract } from '../../context/ContractContext';
 import { Address, type AbiFunction } from '../../types/contract';
 import Result from '../Result';
 import { ArgValue } from '../../types/argValue';
-import { Abi } from 'viem';
+import { Abi } from 'abitype';
+import { client } from '../Connect';
+
+import { defineChain, getContract } from 'thirdweb';
 
 interface ReadButtonProps {
   fn: AbiFunction;
@@ -16,22 +18,29 @@ function ReadButton({ fn, args }: ReadButtonProps) {
   const { contractAddress, abi, selectedChainId } = useContract();
   const [displayData, setDisplayData] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
+  const activeChain = defineChain(selectedChainId);
 
-  const config = useConfig();
+  const contract = getContract({
+    client,
+    address: contractAddress as Address,
+    chain: activeChain,
+    abi: abi as Abi,
+  });
+
+  const { refetch } = useReadContract({
+    contract,
+    method: fn.name,
+    params: args,
+    queryOptions: {
+      enabled: false,
+    },
+  });
 
   const handleRead = async () => {
     setIsFetching(true);
     try {
-      const result = await readContract(config, {
-        address: contractAddress as Address,
-        abi: abi as Abi,
-        chainId: selectedChainId,
-        functionName: fn.name,
-        args: args,
-      });
-
-      
-      setDisplayData(result);
+      const result = await refetch();
+      setDisplayData(result.data);
     } catch (error) {
       // TODO: Handle error properly
       console.error(error);
@@ -49,7 +58,7 @@ function ReadButton({ fn, args }: ReadButtonProps) {
       >
         {isFetching ? 'Reading...' : 'Read'}
       </button>
-      {(displayData !== null) && <Result data={displayData} />}
+      {displayData !== null && <Result data={displayData} />}
     </>
   );
 }

@@ -34,4 +34,3 @@ export type {
   TypedDataType,
 } from 'abitype';
 
-export type { Chain } from 'viem';

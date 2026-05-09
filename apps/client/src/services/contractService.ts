@@ -1,11 +1,11 @@
 import axios from 'axios';
-import type { Abi, Chain, Address } from '../types/contract';
+import type { Abi, Address } from '../types/contract';
 import errorHandler from '../utils/errorUtils';
 
 const baseUrl = import.meta.env.VITE_API_URL ?? '';
 
 const contractSource = async (
-  chainId: Chain['id'],
+  chainId: number,
   address: Address,
 ): Promise<{ source: string; abi: Abi }> => {
   try {
@@ -16,7 +16,7 @@ const contractSource = async (
   }
 };
 
-const isContract = async (chainId: Chain['id'], address: Address): Promise<boolean> => {
+const isContract = async (chainId: number, address: Address): Promise<boolean> => {
   try {
     const req = await axios.get(`${baseUrl}/api/is-contract/${chainId}/${address}`);
     return req.data.isContract;
