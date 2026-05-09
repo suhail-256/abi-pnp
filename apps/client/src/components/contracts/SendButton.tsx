@@ -99,7 +99,7 @@ function SendButton({ fn, args, payableValue }: SendButtonProps) {
       </TransactionButton>
       {(isConfirming || isConfirmed) && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
-          <Result data={`Tx: ${transactionHash}`} />
+          <Result data={transactionHash} isHash={true} />
           {isConfirmed && receipt && (
             <div className={`wrapper-card ${showReceipt ? 'wrapper-card--open' : ''}`}>
               <div className="wrapper-header" onClick={() => setShowReceipt(prev => !prev)}>
