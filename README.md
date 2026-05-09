@@ -50,7 +50,7 @@
 ## 🚀 Upcoming Roadmap
 
 ### Core Product Upgrades
-
+- **Enhanced Wallet Onboarding** — Integrate advanced connection models to provide robust multi-wallet support and seamless onboarding for users without existing wallets.
 - **Manual ABI input** — Paste a raw ABI for unverified contracts.
 - **Embedded Mini-LLM** — Replace external Gemini API dependency with an in-app mini-LLM flow for function explanations.
 - **Developer receipt detail toggle** — Add a dev-mode switch to choose between full transaction receipts and logs-only output.
