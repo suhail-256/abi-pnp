@@ -1,8 +1,6 @@
 import errorHandler from '../utils/errorUtils';
-
-interface ResultProps {
-  data: any;
-}
+import { EXPLORER_TX_URLS } from '../../config/explorerUrl';
+import { useContract } from '../context/ContractContext';
 
 const generateResult = (data: any, depth: number = 1, singular: boolean = false): any => {
   if (data === null) return <span className="result-item">null</span>;
@@ -43,10 +41,37 @@ const generateResult = (data: any, depth: number = 1, singular: boolean = false)
       </span>
     );
   }
-  return <span className="result-item">{String(data)}{!singular && ','}</span>;
+  return (
+    <span className="result-item">
+      {String(data)}
+      {!singular && ','}
+    </span>
+  );
 };
 
-function Result({ data }: ResultProps) {
+interface ResultProps {
+  data: any;
+  isHash?: boolean;
+}
+
+function Result({ data, isHash = false }: ResultProps) {
+  const { selectedChainId } = useContract();
+  if (isHash) {
+    return (
+      <span className="result-box">
+        Tx:&nbsp;
+        <a
+          href={`${EXPLORER_TX_URLS[selectedChainId]}${data}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="result-item result-item--hash"
+        >
+          {String(data)}
+        </a>
+      </span>
+    );
+  }
+
   try {
     return <div className="result-box">{generateResult(data, 1, true)}</div>;
   } catch (err) {

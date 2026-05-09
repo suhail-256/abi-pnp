@@ -927,6 +927,17 @@ body {
   padding: 2px 0;
 }
 
+.result-item--hash {
+  color: var(--accent-read);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.result-item--hash:hover {
+  color: var(--accent-read-hover);
+}
+
 .result-index {
   color: var(--text-muted);
   margin-right: 6px;

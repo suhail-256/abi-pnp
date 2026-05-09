@@ -35,9 +35,4 @@ export {
 
   // Berachain
   berachain,
-  berachainBepolia,
-
-  // Monad
-  monad,
-  monadTestnet,
 } from 'thirdweb/chains';
