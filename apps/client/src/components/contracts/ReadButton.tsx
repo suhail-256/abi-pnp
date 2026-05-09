@@ -4,7 +4,7 @@ import { useContract } from '../../context/ContractContext';
 import { Address, type AbiFunction } from '../../types/contract';
 import Result from '../Result';
 import { ArgValue } from '../../types/argValue';
-import { Abi } from 'viem';
+import { Abi } from 'abitype';
 import { client } from '../Connect';
 
 import { defineChain, getContract } from 'thirdweb';

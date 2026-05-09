@@ -1,7 +1,7 @@
 import { AbiParameter } from 'abitype';
 import { type ArgValue } from '../../../types/argValue';
-import { isHex, stringToHex, padHex, hexToBytes, size, hexToString } from 'viem';
-import { useEffect, useState } from 'react';
+import { isHex, stringToHex, padHex, hexToString } from 'thirdweb/utils';
+import { useState } from 'react';
 
 interface BytesFieldProps {
   input: AbiParameter;
@@ -60,7 +60,7 @@ export default function BytesField({
     let hex: `0x${string}`;
 
     if (isHex(rawValue)) {
-      hex = rawValue;
+      hex = rawValue as `0x${string}`;
     } else {
       hex = stringToHex(rawValue.trim());
     }
@@ -68,7 +68,7 @@ export default function BytesField({
     const byteSize: number | null = getByteSize(type);
 
     if (byteSize) {
-      if (size(hex) > byteSize) {
+      if (hexToString(hex).length > byteSize) {
         setDisplayError(`Input can not exceed byte size of ${byteSize}`);
         return;
       }
@@ -85,12 +85,12 @@ export default function BytesField({
 
   const handleToggleView = () => {
     if (isHex(inputValue)) {
-      const str = hexToString(removeHexPadding(inputValue)).trim();
+      const str = hexToString(removeHexPadding(inputValue as `0x${string}`)).trim();
       setInputValue(str);
     } else {
       const byteSize = getByteSize(type);
       const hex = stringToHex(inputValue.trim());
-      if (size(hex) > (byteSize ?? Infinity)) {
+      if (hexToString(hex).length > (byteSize ?? Infinity)) {
         setDisplayError(`Input can not exceed byte size of ${byteSize}`);
         return;
       }

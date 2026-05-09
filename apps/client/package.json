@@ -14,15 +14,12 @@
 		"react": "latest",
 		"react-dom": "latest",
 		"thirdweb": "^5.119.4",
-		"viem": "latest",
-		"wagmi": "latest",
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@types/react": "latest",
 		"@types/react-dom": "latest",
 		"@vitejs/plugin-react": "latest",
-		"@wagmi/cli": "latest",
 		"typescript": "latest",
 		"vite": "latest"
 	}

@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { useChains } from 'wagmi';
 import { useSwitchActiveWalletChain } from 'thirdweb/react';
 import { defineChain } from 'thirdweb';
 import { useContract } from '../context/ContractContext';
+import * as suuportedChains  from '../../config/chains';
 
 function ChainSelector() {
-  const chains = useChains();
+  const chains = Object.values(suuportedChains);
   const { selectedChainId, setSelectedChainId } = useContract();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
