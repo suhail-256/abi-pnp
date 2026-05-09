@@ -3,15 +3,15 @@ import { ArgValue } from '../../types/argValue';
 import { Abi, Address, type AbiFunction } from '../../types/contract';
 import Result from '../Result';
 import { useState } from 'react';
-import {
-  useConnection,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-  useConnect,
-} from 'wagmi';
-import { ConnectButtonProps, useConnectModal } from 'thirdweb/react';
 import { client, wallets, theme } from '../Connect';
-import { defineChain } from 'thirdweb';
+import {
+  ConnectButtonProps,
+  lightTheme,
+  TransactionButton,
+  useConnectModal,
+  useActiveAccount,
+} from 'thirdweb/react';
+import { defineChain, getContract, prepareContractCall } from 'thirdweb';
 
 interface SendButtonProps {
   fn: AbiFunction;
@@ -20,22 +20,19 @@ interface SendButtonProps {
 }
 
 function SendButton({ fn, args, payableValue }: SendButtonProps) {
-  const { isConnected } = useConnection();
   const { contractAddress, abi, selectedChainId } = useContract();
-  const { status } = useConnect();
+
+  const account = useActiveAccount();
+  const isConnected = !!account;
   const { connect } = useConnectModal();
 
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  const [isConfirming, setIsConfirming] = useState<boolean>(false);
+  const [receipt, setReceipt] = useState<any>(null);
   const [showReceipt, setShowReceipt] = useState<boolean>(false);
+  const [transactionHash, setTransactionHash] = useState<`0x${string}` | null>(null);
 
-  const writeContract = useWriteContract();
-
-  const {
-    isLoading: isConfirming,
-    isSuccess: isConfirmed,
-    data: receipt,
-  } = useWaitForTransactionReceipt({
-    hash: writeContract.data,
-  });
+  const activeChain = defineChain(selectedChainId);
 
   const handleConnect = async () => {
     await connect({
@@ -49,40 +46,60 @@ function SendButton({ fn, args, payableValue }: SendButtonProps) {
 
   if (!isConnected) {
     return (
-      <button
-        className="action-btn action-btn--write"
-        type="button"
-        onClick={handleConnect}
-        disabled={status === 'pending'}
-      >
-        {status === 'pending' ? 'Connecting...' : 'Connect Wallet'}
+      <button className="action-btn action-btn--write" type="button" onClick={handleConnect}>
+        Connect Wallet
       </button>
     );
   }
 
-  const handleWrite = async () => {
-    writeContract.mutate({
+  const handleSend = async () => {
+    const contract = getContract({
       address: contractAddress as Address,
       abi: abi as Abi,
-      functionName: fn.name,
-      args: args,
+      chain: activeChain,
+      client,
+    });
+
+    return prepareContractCall({
+      contract: contract,
+      method: fn.name,
+      params: args,
       value: payableValue,
     });
   };
 
   return (
     <>
-      <button
+      <TransactionButton
         className="action-btn action-btn--write"
-        type="button"
-        onClick={handleWrite}
-        disabled={isConfirming || writeContract.isPending}
+        theme={lightTheme()}
+        style={{
+          borderRadius: 'var(--radius-sm)',
+          width: '120px',
+          minWidth: '120px',
+          height: '31px',
+          fontSize: '13px',
+        }}
+        transaction={handleSend}
+        onTransactionSent={transactionResult => {
+          setTransactionHash(transactionResult.transactionHash);
+          setIsConfirming(true);
+        }}
+        onTransactionConfirmed={receipt => {
+          setReceipt(receipt);
+          setIsConfirmed(true);
+          setIsConfirming(false);
+        }}
+        onError={error => {
+          // TODO: better error handling
+          console.error('Transaction error:', error);
+        }}
       >
-        {isConfirming ? 'Confirming...' : writeContract.isPending ? 'Pending...' : 'Send'}
-      </button>
+        Send
+      </TransactionButton>
       {(isConfirming || isConfirmed) && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
-          <Result data={`Tx: ${writeContract.data}`} />
+          <Result data={`Tx: ${transactionHash}`} />
           {isConfirmed && receipt && (
             <div className={`wrapper-card ${showReceipt ? 'wrapper-card--open' : ''}`}>
               <div className="wrapper-header" onClick={() => setShowReceipt(prev => !prev)}>

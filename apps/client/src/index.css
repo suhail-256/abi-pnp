@@ -781,6 +781,7 @@ body {
 
 .action-btn {
   min-width: 120px;
+  min-height: 31px;
   border: none;
   border-radius: var(--radius-sm);
   padding: 8px 24px;
@@ -789,6 +790,7 @@ body {
   font-weight: 500;
   color: #fff;
   cursor: pointer;
+  content: justify;
   transition: background 0.2s;
 }
 
