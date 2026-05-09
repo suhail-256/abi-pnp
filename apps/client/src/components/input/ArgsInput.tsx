@@ -3,7 +3,6 @@ import ArrayInput from './ArrayInput';
 import PrimitiveInput from './PrimitiveInput';
 import TupleInput from './TupleInput';
 import { ArgValue } from '../../types/argValue';
-import ValueField from './inputFields/ValueField';
 
 interface ArgsInputProps {
   inputs?: AbiParameter[];

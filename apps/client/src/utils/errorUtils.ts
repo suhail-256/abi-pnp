@@ -1,17 +1,8 @@
-import { ContractFunctionExecutionError, ContractFunctionRevertedError } from 'viem';
 import axios from 'axios';
 
 const getErrorMessage = (error: unknown): string => {
-  if (error instanceof ContractFunctionExecutionError) {
-    if (error.cause instanceof ContractFunctionRevertedError) {
-      return (
-        error.cause.reason ?? // "revert reason string"
-        error.cause.data?.errorName ?? // custom error like "Unauthorized()"
-        error.shortMessage
-      );
-    }
-    return error.shortMessage;
-  }
+  // TODO: improve this function to handle different error types and extract meaningful messages
+  console.error('Error:', error);
   return 'Tx reverted';
 };
 

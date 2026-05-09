@@ -40,79 +40,79 @@ function ContractProvider({ children }: { children: React.ReactNode }) {
   const [showFunctions, setShowFunctions] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<number>(11155111); // default sepolia
   const [activeAiPanel, setActiveAiPanel] = useState<string | null>(null);
-  const test: Abi = [
-    {
-      name: 'submitProposal',
-      type: 'function',
-      stateMutability: 'payable',
-      inputs: [
-        {
-          name: 'id',
-          type: 'uint256',
-          internalType: 'uint256',
-        },
-        {
-          name: 'commitment',
-          type: 'bytes32',
-          internalType: 'bytes32',
-        },
-        {
-          name: 'metadata',
-          type: 'bytes',
-          internalType: 'bytes',
-        },
-        {
-          name: 'isActive',
-          type: 'bytes8',
-          internalType: 'bytes8',
-        },
-        {
-          name: 'fixedCoordinateMatrix',
-          type: 'uint256[10][4][2]',
-          internalType: 'uint256[10][4][2]',
-        },
-        {
-          name: 'dynamicDataCube',
-          type: 'uint256[][][]',
-          internalType: 'uint256[][][]',
-        },
-        {
-          name: 'proposer',
-          type: 'tuple',
-          internalType: 'struct Governance.ProposerProfile',
-          components: [
-            { name: 'uid', type: 'uint256', internalType: 'uint256' },
-            { name: 'wallet', type: 'address', internalType: 'address' },
-            {
-              name: 'flags',
-              type: 'bool[]',
-              internalType: 'bool[]',
-            },
-          ],
-        },
-        {
-          name: 'batches',
-          type: 'tuple[]',
-          internalType: 'struct Governance.ActionBatch[]',
-          components: [
-            {
-              name: 'identifier',
-              type: 'bytes32',
-              internalType: 'bytes32',
-            },
-            {
-              name: 'gridData',
-              type: 'bytes16[2][]',
-              internalType: 'bytes16[2][]',
-            },
-          ],
-        },
-      ],
-      outputs: [{ name: 'success', type: 'bool', internalType: 'bool' }],
-    },
-  ];
+  // const test: Abi = [
+  //   {
+  //     name: 'submitProposal',
+  //     type: 'function',
+  //     stateMutability: 'payable',
+  //     inputs: [
+  //       {
+  //         name: 'id',
+  //         type: 'uint256',
+  //         internalType: 'uint256',
+  //       },
+  //       {
+  //         name: 'commitment',
+  //         type: 'bytes32',
+  //         internalType: 'bytes32',
+  //       },
+  //       {
+  //         name: 'metadata',
+  //         type: 'bytes',
+  //         internalType: 'bytes',
+  //       },
+  //       {
+  //         name: 'isActive',
+  //         type: 'bytes8',
+  //         internalType: 'bytes8',
+  //       },
+  //       {
+  //         name: 'fixedCoordinateMatrix',
+  //         type: 'uint256[10][4][2]',
+  //         internalType: 'uint256[10][4][2]',
+  //       },
+  //       {
+  //         name: 'dynamicDataCube',
+  //         type: 'uint256[][][]',
+  //         internalType: 'uint256[][][]',
+  //       },
+  //       {
+  //         name: 'proposer',
+  //         type: 'tuple',
+  //         internalType: 'struct Governance.ProposerProfile',
+  //         components: [
+  //           { name: 'uid', type: 'uint256', internalType: 'uint256' },
+  //           { name: 'wallet', type: 'address', internalType: 'address' },
+  //           {
+  //             name: 'flags',
+  //             type: 'bool[]',
+  //             internalType: 'bool[]',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         name: 'batches',
+  //         type: 'tuple[]',
+  //         internalType: 'struct Governance.ActionBatch[]',
+  //         components: [
+  //           {
+  //             name: 'identifier',
+  //             type: 'bytes32',
+  //             internalType: 'bytes32',
+  //           },
+  //           {
+  //             name: 'gridData',
+  //             type: 'bytes16[2][]',
+  //             internalType: 'bytes16[2][]',
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //     outputs: [{ name: 'success', type: 'bool', internalType: 'bool' }],
+  //   },
+  // ];
   const extractFunctions = (abi: Abi): AbiFunction[] => {
-    return test.filter((item): item is AbiFunction => item.type === 'function');
+    return abi.filter((item): item is AbiFunction => item.type === 'function');
   };
 
   const {

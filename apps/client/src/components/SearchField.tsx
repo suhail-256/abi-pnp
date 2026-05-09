@@ -1,6 +1,6 @@
 import { type Address } from '../types/contract';
 import { useContract } from '../context/ContractContext';
-import { isAddress } from 'viem';
+import { isAddress } from 'thirdweb/utils';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import contractService from '../services/contractService';
 

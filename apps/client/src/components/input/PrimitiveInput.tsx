@@ -1,7 +1,5 @@
-import { AbiParameter, SolidityAddress } from 'abitype';
+import { AbiParameter} from 'abitype';
 import { type ArgValue } from '../../types/argValue';
-// import { toBytes, stringToHex } from 'viem'
-import { isHex, stringToHex, padHex, hexToBytes, size, hexToString } from 'viem';
 import BytesField from './inputFields/BytesField';
 import BoolField from './inputFields/BoolField';
 import RegularField from './inputFields/RegularField';

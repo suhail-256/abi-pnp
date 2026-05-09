@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { ConnectButton } from 'thirdweb/react';
 import { createThirdwebClient, defineChain } from 'thirdweb';
 import { createWallet } from 'thirdweb/wallets';

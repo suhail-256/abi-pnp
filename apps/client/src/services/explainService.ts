@@ -1,6 +1,5 @@
 import axios from 'axios';
 import errorHandler from '../utils/errorUtils';
-import { useContract } from '../context/ContractContext';
 
 const baseUrl = import.meta.env.VITE_API_URL ?? '';
 

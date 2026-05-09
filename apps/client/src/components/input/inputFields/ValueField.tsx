@@ -1,17 +1,14 @@
-// value field component for entering the amount of ether to send with a transaction
-import { AbiParameter } from 'abitype';
 import { type ArgValue } from '../../../types/argValue';
-import { parseEther } from 'viem';
+import { toWei } from 'thirdweb/utils';
 import { isValidEtherInput, isValidWeiInput } from '../../../utils/inputValidation';
 import { useState } from 'react';
 
 interface ValueFieldProps {
-  input: AbiParameter;
   value: bigint | '';
   onChange: (values: ArgValue) => void;
 }
 
-export default function ValueField({ input, value, onChange }: ValueFieldProps) {
+export default function ValueField({ value, onChange }: ValueFieldProps) {
   const [inWei, setInWei] = useState(true);
   const [displayValue, setDisplayValue] = useState<string>(value.toString());
 
@@ -31,7 +28,7 @@ export default function ValueField({ input, value, onChange }: ValueFieldProps) 
     } else {
       // Ether can have decimals
       if (!isValidEtherInput(rawValue)) return;
-      onChange(parseEther(rawValue as `${number}`));
+      onChange(toWei(rawValue as `${number}`));
     }
     setDisplayValue(rawValue);
   };
