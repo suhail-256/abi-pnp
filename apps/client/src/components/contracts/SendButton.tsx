@@ -5,11 +5,13 @@ import Result from '../Result';
 import { useState } from 'react';
 import {
   useConnection,
-  useConnectors,
   useWaitForTransactionReceipt,
   useWriteContract,
   useConnect,
 } from 'wagmi';
+import { ConnectButtonProps, useConnectModal } from 'thirdweb/react';
+import { client, wallets, theme } from '../Connect';
+import { defineChain } from 'thirdweb';
 
 interface SendButtonProps {
   fn: AbiFunction;
@@ -19,9 +21,10 @@ interface SendButtonProps {
 
 function SendButton({ fn, args, payableValue }: SendButtonProps) {
   const { isConnected } = useConnection();
-  const { contractAddress, abi } = useContract();
-  const connectors = useConnectors();
-  const { connect, status } = useConnect();
+  const { contractAddress, abi, selectedChainId } = useContract();
+  const { status } = useConnect();
+  const { connect } = useConnectModal();
+
   const [showReceipt, setShowReceipt] = useState<boolean>(false);
 
   const writeContract = useWriteContract();
@@ -34,8 +37,14 @@ function SendButton({ fn, args, payableValue }: SendButtonProps) {
     hash: writeContract.data,
   });
 
-  const handleConnect = () => {
-    connect({ connector: connectors[0] });
+  const handleConnect = async () => {
+    await connect({
+      client: client,
+      wallets: wallets,
+      theme: theme,
+      size: 'compact',
+      chain: defineChain(selectedChainId),
+    } as ConnectButtonProps);
   };
 
   if (!isConnected) {

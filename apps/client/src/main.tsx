@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { WagmiProvider } from 'wagmi';
 import App from './App.tsx';
 import { config } from '../config/wagmi.ts';
+import { ThirdwebProvider } from 'thirdweb/react';
 
 import './index.css';
 import ContractProvider from './context/ContractContext.tsx';
@@ -18,9 +19,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ContractProvider>
-          <App />
-        </ContractProvider>
+        <ThirdwebProvider>
+          <ContractProvider>
+            <App />
+          </ContractProvider>
+        </ThirdwebProvider>
       </QueryClientProvider>
     </WagmiProvider>
   </React.StrictMode>,

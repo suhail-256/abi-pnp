@@ -21,7 +21,6 @@ function ChainSelector() {
   const handleSelect = (chainId: number) => {
     setSelectedChainId(chainId);
     setOpen(false);
-    console.log(`Chain: ${chainId}`);
   };
 
   return (

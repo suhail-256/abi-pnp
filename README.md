@@ -59,7 +59,6 @@
 
 - **Etherscan deep links on transaction hash** — Make each tx hash clickable to open its transaction page on Etherscan.
 
-
 ## Stack
 
 | Layer      | Tech Stack                                     |
