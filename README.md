@@ -64,9 +64,9 @@
 ## Running Locally
 
 ```bash
-# install & run server
-cd apps/server && pnpm install && pnpm run dev
+# install dependencies
+pnpm install
 
-# install & run client (separate terminal)
-cd apps/client && pnpm install && pnpm run dev
+# run app
+pnpm run dev
 ```
