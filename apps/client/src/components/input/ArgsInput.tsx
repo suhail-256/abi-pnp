@@ -3,6 +3,7 @@ import ArrayInput from './ArrayInput';
 import PrimitiveInput from './PrimitiveInput';
 import TupleInput from './TupleInput';
 import { ArgValue } from '../../types/argValue';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 interface ArgsInputProps {
   inputs?: AbiParameter[];
@@ -10,34 +11,44 @@ interface ArgsInputProps {
   onChange: (values: ArgValue[]) => void;
 }
 
-function ArgsInput({
-  inputs,
-  values,
-  onChange,
-}: ArgsInputProps) {
-  const handleChange = (idx: number, newValue: ArgValue) => {
-    const updatedArgs = [...values];
-    updatedArgs[idx] = newValue;
-    onChange(updatedArgs);
-  };
+const EMPTY_ARRAY: ArgValue[] = [];
+const EMPTY_OBJECT: Record<string, ArgValue> = {};
 
-  const isArray = (type: string): boolean => {
-    return type.endsWith(']');
-  };
+const isArrayType = (type: string): boolean => type.endsWith(']');
+
+function ArgsInput({ inputs, values, onChange }: ArgsInputProps) {
+  if (!inputs) throw new Error('Inputs undefined');
+
+  const latest = useRef({ values, onChange });
+  useEffect(() => {
+    latest.current = { values, onChange };
+  });
+
+  const handleChange = useCallback((idx: number, newValue: ArgValue) => {
+    const { values: currentValues, onChange: currentOnChange } = latest.current;
+    const updated = currentValues.slice();
+    updated[idx] = newValue;
+    currentOnChange(updated);
+  }, []);
+
+  const handlers = useMemo(
+    () => inputs.map((_, idx) => (v: ArgValue) => handleChange(idx, v)),
+    [inputs.length, handleChange],
+  );
 
   return (
     <>
-      {inputs?.map((input, index) => {
+      {inputs.map((input, index) => {
         const { type } = input;
 
         //* Array
-        if (isArray(type)) {
+        if (isArrayType(type)) {
           return (
             <ArrayInput
               key={index}
               input={input}
-              value={(values[index] || []) as ArgValue[]}
-              onChange={(v: ArgValue) => handleChange(index, v)}
+              value={(values[index] as ArgValue[]) ?? EMPTY_ARRAY}
+              onChange={handlers[index]}
             />
           );
         }
@@ -52,8 +63,8 @@ function ArgsInput({
               key={index}
               input={input}
               components={input.components}
-              value={(values[index] || {}) as Record<string, ArgValue>}
-              onChange={v => handleChange(index, v)}
+              value={(values[index] as Record<string, ArgValue>) ?? EMPTY_OBJECT}
+              onChange={handlers[index]}
             />
           );
         }
@@ -63,8 +74,8 @@ function ArgsInput({
             <PrimitiveInput
               key={index}
               input={input}
-              value={(values[index] || '') as string}
-              onChange={v => handleChange(index, v)}
+              value={(values[index] as string) ?? ''}
+              onChange={handlers[index]}
             />
           );
         }

@@ -1,10 +1,10 @@
-import { AbiParameter} from 'abitype';
+import { AbiParameter } from 'abitype';
 import { type ArgValue } from '../../types/argValue';
 import BytesField from './inputFields/BytesField';
 import BoolField from './inputFields/BoolField';
 import RegularField from './inputFields/RegularField';
 import NumberField from './inputFields/NumberField';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 
 interface PrimitiveInputProps {
   input: AbiParameter;
@@ -79,4 +79,4 @@ function PrimitiveInput({ input, value, onChange }: PrimitiveInputProps) {
   );
 }
 
-export default PrimitiveInput;
+export default memo(PrimitiveInput);

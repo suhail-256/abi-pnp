@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, memo, useMemo } from 'react';
 import { AbiParameter } from '../../types/contract';
 import ArgsInput from './ArgsInput';
 import { type ArgValue } from '../../types/argValue';
@@ -36,23 +36,31 @@ interface ArrayInputProps {
   onChange: (values: ArgValue[]) => void;
 }
 
+const stripLastDimension = (type: string): string => type.substring(0, type.lastIndexOf('['));
+
 function ArrayInput({ input, value, onChange }: ArrayInputProps) {
-  const [isDynamic, setIsDynamic] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  // Determine if the array is dynamic (e.g., uint256[]) or fixed (e.g., uint256[3]) on mount
-  useEffect(() => {
+  const isDynamic = useMemo(() => {
     const openBracket = input.type.lastIndexOf('[');
     const closeBracket = input.type.lastIndexOf(']');
-    setIsDynamic(closeBracket - openBracket === 1);
-  }, []);
+    return closeBracket - openBracket === 1;
+  }, [input.type]);
 
-  /**
-   * Removes one dimension from the array type string. For example, converts 'uint256[2][3][4]' to 'uint256[2][3]'.
-   * It handles both fixed-length (e.g., [2]) and dynamic-length (e.g., []) arrays.
-   */
-  const stripLastDimension = (type: string): string =>
-    type.substring(0, type.lastIndexOf('['));
+  // Memoized per-slot AbiParameters
+  const slotInputs = useMemo(() => {
+    const strippedType = stripLastDimension(input.type);
+    const strippedInternalType = input.internalType
+      ? stripLastDimension(input.internalType)
+      : undefined;
+
+    return Array.from({ length: value.length }, (_, slotIndex) => ({
+      ...input,
+      name: `${input.name ?? 'item'}[${slotIndex}]`,
+      type: strippedType,
+      internalType: strippedInternalType,
+    }));
+  }, [input, value.length]);
 
   const addField = () => {
     const strippedInputType = stripLastDimension(input.type);
@@ -65,19 +73,8 @@ function ArrayInput({ input, value, onChange }: ArrayInputProps) {
     onChange(value.slice(0, -1));
   };
 
-  /**
-   * Builds a synthetic AbiParameter for one slot of the array.
-   * e.g. for input `balances uint256[3]`, slot 1 becomes `balances[1] uint256`.
-   */
-  const slotInput = (slotIndex: number): AbiParameter => ({
-    ...input,
-    name: `${input.name ?? 'item'}[${slotIndex}]`,
-    type: stripLastDimension(input.type),
-    internalType: input.internalType ? stripLastDimension(input.internalType) : undefined,
-  });
-
   const handleSlotChange = (slotIndex: number, newSlotValue: ArgValue) => {
-    const next = [...value];
+    const next = value.slice();
     next[slotIndex] = newSlotValue;
     onChange(next);
   };
@@ -109,10 +106,9 @@ function ArrayInput({ input, value, onChange }: ArrayInputProps) {
               {value.map((item, index) => (
                 <div key={index}>
                   <ArgsInput
-                    inputs={[slotInput(index)]}
+                    inputs={[slotInputs[index]]}
                     values={[item]}
                     onChange={([newSlotValue]) => handleSlotChange(index, newSlotValue)}
-                    // buttonRef={null}
                   />
                 </div>
               ))}
@@ -134,4 +130,4 @@ function ArrayInput({ input, value, onChange }: ArrayInputProps) {
   );
 }
 
-export default ArrayInput;
+export default memo(ArrayInput);

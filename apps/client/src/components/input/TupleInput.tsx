@@ -1,7 +1,7 @@
 import { AbiParameter } from 'abitype';
 import { type ArgValue } from '../../types/argValue';
 import ArgsInput from './ArgsInput';
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { generateValueStructure } from './ArrayInput';
 
 interface TupleInputProps {
@@ -43,4 +43,4 @@ function TupleInput({ input, components, value, onChange }: TupleInputProps) {
   );
 }
 
-export default TupleInput;
+export default memo(TupleInput);
