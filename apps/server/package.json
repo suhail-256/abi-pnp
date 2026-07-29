@@ -19,7 +19,6 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.6.0",
     "eslint-js": "github:eslint/js",
-    "genai": "link:@types/@google/genai",
     "globals": "^17.4.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.1"

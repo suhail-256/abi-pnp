@@ -94,9 +94,6 @@ importers:
       eslint-js:
         specifier: github:eslint/js
         version: https://codeload.github.com/eslint/js/tar.gz/e8427a3c2a9e66b19e8a9d971bf2d1779b8ec163
-      genai:
-        specifier: link:@types/@google/genai
-        version: link:@types/@google/genai
       globals:
         specifier: ^17.4.0
         version: 17.5.0
