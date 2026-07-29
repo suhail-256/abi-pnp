@@ -1,4 +1,4 @@
-import { useState, useEffect, memo, useMemo } from 'react';
+import { useState, memo, useMemo } from 'react';
 import { AbiParameter } from '../../types/contract';
 import ArgsInput from './ArgsInput';
 import { type ArgValue } from '../../types/argValue';
