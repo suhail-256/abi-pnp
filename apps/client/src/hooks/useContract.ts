@@ -17,12 +17,14 @@ function useContract() {
     isLoading,
     error: AbiError,
   } = useQuery({
-    queryKey: ['contracts'],
+    queryKey: ['contracts', contractAddress, chainId],
     queryFn: async (): Promise<{
       contractSource: string;
       abi: Abi;
       functions: AbiFunction[];
     }> => {
+      console.log(`addresss: ${contractAddress}`);
+      
       const contract = await contractService.contractSource(chainId, contractAddress!);
       if (!contract) {
         throw new Error(
