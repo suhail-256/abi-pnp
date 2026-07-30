@@ -2,7 +2,7 @@ import { ConnectButton } from 'thirdweb/react';
 import { createThirdwebClient, defineChain } from 'thirdweb';
 import { createWallet } from 'thirdweb/wallets';
 import { lightTheme } from 'thirdweb/react';
-import { useContract } from '../context/ContractContext';
+import { useChainId } from '../stores/useContractStore';
 
 const clientId = import.meta.env.VITE_THIRDWEB_CLIENT_ID;
 if (!clientId) {
@@ -67,7 +67,7 @@ const buttonStyles = {
 };
 
 function Connect() {
-  const { selectedChainId } = useContract();
+  const chainId  = useChainId();
 
   return (
     <ConnectButton
@@ -89,7 +89,7 @@ function Connect() {
       connectModal={{ size: 'compact' }}
       client={client}
       wallets={wallets}
-      chain={defineChain(selectedChainId)}
+      chain={defineChain(chainId)}
     />
   );}
 

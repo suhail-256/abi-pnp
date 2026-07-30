@@ -1,6 +1,6 @@
 import errorHandler from '../utils/errorUtils';
 import { EXPLORER_TX_URLS } from '../../config/explorerUrl';
-import { useContract } from '../context/ContractContext';
+import { useChainId } from '../stores/useContractStore';
 
 const generateResult = (data: any, depth: number = 1, singular: boolean = false): any => {
   if (data === null) return <span className="result-item">null</span>;
@@ -55,13 +55,14 @@ interface ResultProps {
 }
 
 function Result({ data, isHash = false }: ResultProps) {
-  const { selectedChainId } = useContract();
+  const chainId = useChainId();
+
   if (isHash) {
     return (
       <span className="result-box">
         Tx:&nbsp;
         <a
-          href={`${EXPLORER_TX_URLS[selectedChainId]}${data}`}
+          href={`${EXPLORER_TX_URLS[chainId]}${data}`}
           target="_blank"
           rel="noopener noreferrer"
           className="result-item result-item--hash"

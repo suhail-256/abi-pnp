@@ -39,6 +39,7 @@ function PrimitiveInput({ input, value, onChange }: PrimitiveInputProps) {
 
   let inputField = <></>;
 
+  // FIXME: include minus sign `-` for int types (except uint)
   if (type.includes('int')) {
     inputField = <NumberField input={input} value={value} onChange={onChange} />;
   } else if (type.startsWith('bytes')) {

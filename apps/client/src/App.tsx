@@ -1,11 +1,11 @@
 import SearchField from './components/SearchField';
 import FunctionsList from './components/FunctionsList';
-import { useContract } from './context/ContractContext';
 import ChainSelector from './components/ChainSelector';
 import Connect from './components/Connect';
+import { useShowFunctions } from './stores/useUiPanelStore';
 
 function App() {
-  const { showFunctions } = useContract();
+  const showFunctions = useShowFunctions();
   return (
     <div className="app-container">
       <div className="top-bar">

@@ -1,4 +1,3 @@
-import { useContract } from '../../context/ContractContext';
 import { ArgValue } from '../../types/argValue';
 import { Abi, Address, type AbiFunction } from '../../types/contract';
 import Result from '../Result';
@@ -12,6 +11,8 @@ import {
   useActiveAccount,
 } from 'thirdweb/react';
 import { defineChain, getContract, prepareContractCall } from 'thirdweb';
+import useContract from '../../hooks/useContract';
+import { useChainId, useContractAddress } from '../../stores/useContractStore';
 
 interface SendButtonProps {
   fn: AbiFunction;
@@ -20,8 +21,9 @@ interface SendButtonProps {
 }
 
 function SendButton({ fn, args, payableValue }: SendButtonProps) {
-  const { contractAddress, abi, selectedChainId } = useContract();
-
+  const { abi } = useContract();
+  const contractAddress = useContractAddress();
+  const chainId = useChainId();
   const account = useActiveAccount();
   const isConnected = !!account;
   const { connect } = useConnectModal();
@@ -32,7 +34,7 @@ function SendButton({ fn, args, payableValue }: SendButtonProps) {
   const [showReceipt, setShowReceipt] = useState<boolean>(false);
   const [transactionHash, setTransactionHash] = useState<`0x${string}` | null>(null);
 
-  const activeChain = defineChain(selectedChainId);
+  const activeChain = defineChain(chainId);
 
   const handleConnect = async () => {
     await connect({
@@ -40,7 +42,7 @@ function SendButton({ fn, args, payableValue }: SendButtonProps) {
       wallets: wallets,
       theme: theme,
       size: 'compact',
-      chain: defineChain(selectedChainId),
+      chain: defineChain(chainId),
     } as ConnectButtonProps);
   };
 

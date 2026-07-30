@@ -19,5 +19,8 @@
   "packageManager": "pnpm@11.0.9",
   "devDependencies": {
     "turbo": "^2.10.7"
+  },
+  "dependencies": {
+    "zustand": "^5.0.14"
   }
 }

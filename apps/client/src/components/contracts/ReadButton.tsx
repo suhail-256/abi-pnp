@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useReadContract } from 'thirdweb/react';
-import { useContract } from '../../context/ContractContext';
 import { Address, type AbiFunction } from '../../types/contract';
 import Result from '../Result';
 import { ArgValue } from '../../types/argValue';
 import { Abi } from 'abitype';
 import { client } from '../Connect';
-
 import { defineChain, getContract } from 'thirdweb';
+import useContract from '../../hooks/useContract';
+import { useChainId, useContractAddress } from '../../stores/useContractStore';
 
 interface ReadButtonProps {
   fn: AbiFunction;
@@ -15,10 +15,12 @@ interface ReadButtonProps {
 }
 
 function ReadButton({ fn, args }: ReadButtonProps) {
-  const { contractAddress, abi, selectedChainId } = useContract();
+  const { abi } = useContract();
+  const contractAddress = useContractAddress();
+  const chainId = useChainId();
   const [displayData, setDisplayData] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
-  const activeChain = defineChain(selectedChainId);
+  const activeChain = defineChain(chainId);
 
   const contract = getContract({
     client,

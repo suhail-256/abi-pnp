@@ -1,19 +1,22 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSwitchActiveWalletChain, useActiveAccount } from 'thirdweb/react';
 import { defineChain } from 'thirdweb';
-import { useContract } from '../context/ContractContext';
+// import { useContract } from '../context/ContractContext';
+import { useChainId } from '../stores/useContractStore';
+import { useContractLocationActions } from '../stores/useContractStore';
 import * as suuportedChains from '../../config/chains';
 
 function ChainSelector() {
   const chains = Object.values(suuportedChains);
-  const { selectedChainId, setSelectedChainId } = useContract();
+  const chainId  = useChainId();
+  const { setChainId } = useContractLocationActions();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const account = useActiveAccount();
   const isConnected = !!account;
   const switchChain = useSwitchActiveWalletChain();
 
-  const selectedChain = chains.find(c => c.id === selectedChainId);
+  const selectedChain = chains.find(c => c.id === chainId);
 
   useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
@@ -24,7 +27,7 @@ function ChainSelector() {
   }, []);
 
   const handleSelect = async (chainId: number) => {
-    setSelectedChainId(chainId);
+    setChainId(chainId);
     setOpen(false);
     if (!isConnected) return;
 
@@ -61,7 +64,7 @@ function ChainSelector() {
             {chains.map(chain => (
               <li
                 key={chain.id}
-                className={`chain-menu-item ${chain.id === selectedChainId ? 'chain-menu-item--active' : ''}`}
+                className={`chain-menu-item ${chain.id === chainId ? 'chain-menu-item--active' : ''}`}
                 onClick={() => handleSelect(chain.id)}
               >
                 {chain.name}

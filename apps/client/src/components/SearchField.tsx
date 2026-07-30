@@ -1,14 +1,21 @@
 import { type Address } from '../types/contract';
-import { useContract } from '../context/ContractContext';
+import useContract from '../hooks/useContract';
+import { useChainId } from '../stores/useContractStore';
+import { useContractLocationActions } from '../stores/useContractStore';
+import { useShowFunctions } from '../stores/useUiPanelStore';
+import { useUiPanelActions } from '../stores/useUiPanelStore';
 import { isAddress } from 'thirdweb/utils';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import contractService from '../services/contractService';
 
 function SearchField() {
   const [inputValue, setInputValue] = useState('');
-  const { setContractAddress, showFunctions, setShowFunctions, AbiError } = useContract();
+  const { AbiError } = useContract();
+  const { setContractAddress } = useContractLocationActions();
+  const showFunctions = useShowFunctions();
+  const { setShowFunctions } = useUiPanelActions();
   const [displayError, setDisplayError] = useState<string | null>(null);
-  const { selectedChainId } = useContract();
+  const chainId = useChainId();
 
   const [contractValidityCache, setContractValidityCache] = useState<
     Record<number, Record<Address, boolean>>
@@ -33,7 +40,7 @@ function SearchField() {
 
   const checkIfContract = async (address: Address) => {
     try {
-      return await contractService.isContract(selectedChainId, address);
+      return await contractService.isContract(chainId, address);
     } catch (err) {
       setDisplayError((err as Error).message);
       return false;
@@ -45,14 +52,11 @@ function SearchField() {
     const address = e.target.value as Address;
     setInputValue(address);
 
-    if (
-      isAddress(address) &&
-      contractValidityCache[selectedChainId]?.[address] === undefined
-    ) {
+    if (isAddress(address) && contractValidityCache[chainId]?.[address] === undefined) {
       const isContract = await checkIfContract(address);
       setContractValidityCache(prev => ({
         ...prev,
-        [selectedChainId]: { ...prev[selectedChainId], [address]: isContract },
+        [chainId]: { ...prev[chainId], [address]: isContract },
       }));
 
       if (!isContract) {
@@ -76,7 +80,7 @@ function SearchField() {
     }
 
     const isContract =
-      contractValidityCache[selectedChainId]?.[address] ?? (await checkIfContract(address));
+      contractValidityCache[chainId]?.[address] ?? (await checkIfContract(address));
     if (!isContract) {
       setDisplayError('No contract found at this address');
       return;

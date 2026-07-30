@@ -1,10 +1,14 @@
 import { useId, useState } from 'react';
 import explainService from '../services/explainService';
-import { useContract } from '../context/ContractContext';
+import useContract from '../hooks/useContract';
+import { useActiveAiPanel } from '../stores/useUiPanelStore';
+import { useUiPanelActions } from '../stores/useUiPanelStore';
 import { AbiFunction } from '../types/contract';
 
 export default function AiExplain({ fnInfo }: { fnInfo: AbiFunction }) {
-  const { contractSource, activeAiPanel, setActiveAiPanel } = useContract();
+  const { contractSource } = useContract();
+  const activeAiPanel = useActiveAiPanel();
+  const { setActiveAiPanel } = useUiPanelActions();
   const panelId = useId();
   const showAiExplain = activeAiPanel === panelId;
   const [explanation, setExplanation] = useState<{
