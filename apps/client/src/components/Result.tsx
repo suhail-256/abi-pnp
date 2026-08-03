@@ -1,6 +1,7 @@
 import errorHandler from '../utils/errorUtils';
 import { EXPLORER_TX_URLS } from '../../config/explorerUrl';
 import { useChainId } from '../stores/useContractStore';
+import { useNotificationActions } from '../stores/useNotifications';
 
 const generateResult = (data: any, depth: number = 1, singular: boolean = false): any => {
   if (data === null) return <span className="result-item">null</span>;
@@ -56,6 +57,7 @@ interface ResultProps {
 
 function Result({ data, isHash = false }: ResultProps) {
   const chainId = useChainId();
+  const { pushNotification } = useNotificationActions();
 
   if (isHash) {
     return (
@@ -77,15 +79,8 @@ function Result({ data, isHash = false }: ResultProps) {
     return <div className="result-box">{generateResult(data, 1, true)}</div>;
   } catch (err) {
     console.log(err);
-
-    return (
-      <div className="result-box result-box--error">
-        <span className="error-alert-icon" aria-hidden="true">
-          !
-        </span>
-        <span>{errorHandler.getErrorMessage(err)}</span>
-      </div>
-    );
+    pushNotification({ msg: errorHandler.getErrorMessage(err), type: 'error' });
+    return null;
   }
 }
 

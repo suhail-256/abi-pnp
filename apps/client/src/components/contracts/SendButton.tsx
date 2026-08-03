@@ -13,6 +13,7 @@ import {
 import { defineChain, getContract, prepareContractCall } from 'thirdweb';
 import useContract from '../../hooks/useContract';
 import { useChainId, useContractAddress } from '../../stores/useContractStore';
+import { useNotificationActions } from '../../stores/useNotifications';
 
 interface SendButtonProps {
   fn: AbiFunction;
@@ -27,6 +28,7 @@ function SendButton({ fn, args, payableValue }: SendButtonProps) {
   const account = useActiveAccount();
   const isConnected = !!account;
   const { connect } = useConnectModal();
+  const { pushNotification } = useNotificationActions();
 
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
@@ -91,9 +93,10 @@ function SendButton({ fn, args, payableValue }: SendButtonProps) {
           setReceipt(receipt);
           setIsConfirmed(true);
           setIsConfirming(false);
+          pushNotification({ msg: 'Transaction confirmed!', type: 'success' });
         }}
         onError={error => {
-          // TODO: better error handling
+          pushNotification({ msg: error.message || 'Transaction failed', type: 'error' });
           console.error('Transaction error:', error);
         }}
       >

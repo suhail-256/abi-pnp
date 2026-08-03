@@ -4,7 +4,7 @@ import BytesField from './inputFields/BytesField';
 import BoolField from './inputFields/BoolField';
 import RegularField from './inputFields/RegularField';
 import NumberField from './inputFields/NumberField';
-import { useEffect, useState, memo } from 'react';
+import { memo } from 'react';
 
 interface PrimitiveInputProps {
   input: AbiParameter;
@@ -13,30 +13,8 @@ interface PrimitiveInputProps {
 }
 
 function PrimitiveInput({ input, value, onChange }: PrimitiveInputProps) {
-  const [displayError, setDisplayError] = useState<string | null>(null);
-  const [isExiting, setIsExiting] = useState(false);
   const { type } = input;
-
-  useEffect(() => {
-    if (!displayError) return;
-
-    let exitTimer: any;
-
-    const hideTimer = setTimeout(() => {
-      setIsExiting(true);
-      exitTimer = setTimeout(() => {
-        setDisplayError(null);
-        setIsExiting(false);
-      }, 300);
-    }, 2700);
-
-    return () => {
-      clearTimeout(hideTimer);
-      if (exitTimer) clearTimeout(exitTimer);
-      setIsExiting(false);
-    };
-  }, [displayError]);
-
+  
   let inputField = <></>;
 
   // FIXME: include minus sign `-` for int types (except uint)
@@ -48,7 +26,6 @@ function PrimitiveInput({ input, value, onChange }: PrimitiveInputProps) {
         input={input}
         value={value}
         onChange={onChange}
-        setDisplayError={setDisplayError}
       />
     );
   } else if (type === 'bool') {
@@ -66,16 +43,6 @@ function PrimitiveInput({ input, value, onChange }: PrimitiveInputProps) {
         </label>
         {inputField}
       </span>
-      {displayError && (
-        <div className={`error-box ${isExiting ? 'exiting' : ''}`}>
-          <div className="error-alert search-error" role="alert">
-            <span className="error-alert-icon" aria-hidden="true">
-              !
-            </span>
-            <span>{displayError}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

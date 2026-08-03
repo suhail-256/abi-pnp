@@ -7,6 +7,7 @@ import { useUiPanelActions } from '../stores/useUiPanelStore';
 import { isAddress } from 'thirdweb/utils';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import contractService from '../services/contractService';
+import { useNotificationActions } from '../stores/useNotifications';
 
 function SearchField() {
   const [inputValue, setInputValue] = useState('');
@@ -14,31 +15,19 @@ function SearchField() {
   const { setContractAddress } = useContractLocationActions();
   const showFunctions = useShowFunctions();
   const { setShowFunctions } = useUiPanelActions();
-  const [displayError, setDisplayError] = useState<string | null>(null);
+  const { pushNotification } = useNotificationActions();
   const chainId = useChainId();
 
   useEffect(() => {
-    if (!displayError) return;
-    setShowFunctions(false);
-
-    const timer = setTimeout(() => setDisplayError(null), 3000);
-    return () => clearTimeout(timer);
-  }, [displayError]);
-
-  useEffect(() => {
     if (!AbiError) return;
-    setDisplayError((AbiError as Error).message);
+    pushNotification({ msg: (AbiError as Error).message, type: 'error' });
   }, [AbiError]);
-
-  useEffect(() => {
-    if (showFunctions) setDisplayError(null);
-  }, [showFunctions]);
 
   const checkIfContract = async (address: Address) => {
     try {
       return await contractService.isContract(chainId, address);
     } catch (err) {
-      setDisplayError((err as Error).message);
+      pushNotification({ msg: (err as Error).message, type: 'error' });
       return false;
     }
   };
@@ -52,7 +41,7 @@ function SearchField() {
       const isContract = await checkIfContract(address);
 
       if (!isContract) {
-        setDisplayError('No contract found at this address');
+        pushNotification({ msg: 'No contract found at this address', type: 'error' });
         return;
       }
 
@@ -67,13 +56,13 @@ function SearchField() {
     const address = inputValue as Address;
 
     if (!isAddress(address)) {
-      setDisplayError('Invalid address');
+      pushNotification({ msg: 'Invalid address', type: 'error' });
       return;
     }
 
     const isContract = await checkIfContract(address);
     if (!isContract) {
-      setDisplayError('No contract found at this address');
+      pushNotification({ msg: 'No contract found at this address', type: 'error' });
       return;
     }
 
@@ -105,14 +94,7 @@ function SearchField() {
           </svg>
         </button>
       </form>
-      {displayError && (
-        <div className="error-alert search-error">
-          <span className="error-alert-icon" aria-hidden="true">
-            !
-          </span>
-          <span>{displayError}</span>
-        </div>
-      )}
+      
     </div>
   );
 }

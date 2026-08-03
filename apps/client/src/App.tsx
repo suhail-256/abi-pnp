@@ -3,9 +3,12 @@ import FunctionsList from './components/FunctionsList';
 import ChainSelector from './components/ChainSelector';
 import Connect from './components/Connect';
 import { useShowFunctions } from './stores/useUiPanelStore';
+import Notification from './components/Notification';
+
 
 function App() {
   const showFunctions = useShowFunctions();
+
   return (
     <div className="app-container">
       <div className="top-bar">
@@ -13,6 +16,7 @@ function App() {
         <Connect />
       </div>
       <header className="hero">
+        <Notification />
         <h1 className="hero-title">ABI Plug & Play</h1>
         <div className="hero-search">
           <SearchField />
