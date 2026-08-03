@@ -7,15 +7,16 @@ interface BytesFieldProps {
   input: AbiParameter;
   value: string;
   onChange: (values: ArgValue) => void;
-  setDisplayError: (error: string | null) => void;
 }
+
+import { useNotificationActions } from '../../../stores/useNotifications';
 
 export default function BytesField({
   input,
   value,
   onChange,
-  setDisplayError,
 }: BytesFieldProps) {
+  const { pushNotification } = useNotificationActions();
   const [inputValue, setInputValue] = useState('');
 
   const { type } = input;
@@ -69,7 +70,7 @@ export default function BytesField({
 
     if (byteSize) {
       if (hexToString(hex).length > byteSize) {
-        setDisplayError(`Input can not exceed byte size of ${byteSize}`);
+        pushNotification({ msg: `Input can not exceed byte size of ${byteSize}`, type: 'error' });
         return;
       }
 
@@ -91,7 +92,7 @@ export default function BytesField({
       const byteSize = getByteSize(type);
       const hex = stringToHex(inputValue.trim());
       if (hexToString(hex).length > (byteSize ?? Infinity)) {
-        setDisplayError(`Input can not exceed byte size of ${byteSize}`);
+        pushNotification({ msg: `Input can not exceed byte size of ${byteSize}`, type: 'error' });
         return;
       }
       const paddedHex = padHexToByteSize(hex, byteSize);

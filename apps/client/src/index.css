@@ -156,7 +156,9 @@ body {
   z-index: 50;
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.25s ease, opacity 0.25s ease;
+  transition:
+    grid-template-rows 0.25s ease,
+    opacity 0.25s ease;
   opacity: 0;
   pointer-events: none;
 }
@@ -216,7 +218,6 @@ body {
   border-color: var(--border-focus) !important;
   box-shadow: 0 0 0 3px rgba(138, 126, 107, 0.12) !important;
 }
-
 
 /* ===== SEARCH FIELD ===== */
 
@@ -979,32 +980,113 @@ body {
     transform: translateY(-10px);
   }
 }
+/* Add these new animation classes */
+.animate-enter {
+  animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
-.error-alert {
+.animate-exit {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+/* Keep your container styles */
+.notification-container {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+/* Base Alert Styles (Removed the animation from here) */
+.error,
+.success,
+.info {
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--error);
-  background: rgba(196, 64, 64, 0.06);
-  border: 1px solid rgba(196, 64, 64, 0.22);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
+  border-radius: var(--radius-sm, 6px);
+  padding: 8px 12px;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.error-alert-icon {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
+/* The rest of your styles remain identical... */
+.error-alert-icon,
+.success-alert-icon,
+.info-alert-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(196, 64, 64, 0.14);
-  border: 1px solid rgba(196, 64, 64, 0.28);
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
   flex-shrink: 0;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.error {
+  color: var(--error);
+  background-color: #fcebeb;
+  border-color: rgba(196, 64, 64, 0.22);
+}
+.error-alert-icon {
+  background-color: rgba(196, 64, 64, 0.14);
+  border-color: rgba(196, 64, 64, 0.28);
+}
+
+.success {
+  color: var(--success);
+  background-color: #ebf4ed;
+  border-color: rgba(46, 133, 64, 0.22);
+}
+.success-alert-icon {
+  background-color: rgba(46, 133, 64, 0.14);
+  border-color: rgba(46, 133, 64, 0.28);
+}
+
+.info {
+  color: var(--info);
+  background-color: #ebf3f8;
+  border-color: rgba(41, 128, 185, 0.22);
+}
+.info-alert-icon {
+  background-color: rgba(41, 128, 185, 0.14);
+  border-color: rgba(41, 128, 185, 0.28);
 }
 
 /* ===== LOADING SHIMMER ===== */

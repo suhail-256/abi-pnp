@@ -11,3 +11,9 @@ export type ArgValue = string | boolean | bigint | ArgValue[] | { [key: string]:
 export interface AbiFunctionWithId extends AbiFunction {
   id: string;
 }
+
+export interface NotificationType {
+  msg: string;
+  type: 'success' | 'error' | 'info';
+  id: string;
+}
