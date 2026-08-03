@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Abi, Address } from '../types/contract';
+import type { Abi, Address } from 'abitype';
 import errorHandler from '../utils/errorUtils';
 
 const baseUrl = import.meta.env.VITE_API_URL ?? '';

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useReadContract } from 'thirdweb/react';
-import { Address, type AbiFunction } from '../../types/contract';
+import { Address, type AbiFunction } from 'abitype';
 import Result from '../Result';
-import { ArgValue } from '../../types/argValue';
+import { ArgValue } from '../../types';
 import { Abi } from 'abitype';
 import { client } from '../Connect';
 import { defineChain, getContract } from 'thirdweb';

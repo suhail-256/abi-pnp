@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["react", "react-dom"],
     "useDefineForClassFields": true,
     "allowImportingTsExtensions": true,
-    "jsx": "react-jsx",
     // "noUnusedLocals": true,
     // "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true

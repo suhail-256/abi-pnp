@@ -1,4 +1,4 @@
-import { type Address } from '../types/contract';
+import { type Address } from 'abitype';
 import useContract from '../hooks/useContract';
 import { useChainId } from '../stores/useContractStore';
 import { useContractLocationActions } from '../stores/useContractStore';

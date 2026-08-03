@@ -1,12 +1,12 @@
-import { type AbiParameter } from '../../types/contract';
+import { type AbiParameter } from 'abitype';
 import ArrayInput from './ArrayInput';
 import PrimitiveInput from './PrimitiveInput';
 import TupleInput from './TupleInput';
-import { ArgValue } from '../../types/argValue';
+import { ArgValue } from '../../types';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 interface ArgsInputProps {
-  inputs?: AbiParameter[];
+  inputs: AbiParameter[];
   values: ArgValue[];
   onChange: (values: ArgValue[]) => void;
 }
@@ -17,7 +17,6 @@ const EMPTY_OBJECT: Record<string, ArgValue> = {};
 const isArrayType = (type: string): boolean => type.endsWith(']');
 
 function ArgsInput({ inputs, values, onChange }: ArgsInputProps) {
-  if (!inputs) throw new Error('Inputs undefined');
 
   const latest = useRef({ values, onChange });
   useEffect(() => {
@@ -30,6 +29,7 @@ function ArgsInput({ inputs, values, onChange }: ArgsInputProps) {
     updated[idx] = newValue;
     currentOnChange(updated);
   }, []);
+  
 
   const handlers = useMemo(
     () => inputs.map((_, idx) => (v: ArgValue) => handleChange(idx, v)),

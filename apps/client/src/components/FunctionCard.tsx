@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { AbiParameter, type AbiFunction } from '../types/contract';
-import { type ArgValue } from '../types/argValue';
+import { AbiParameter,  AbiFunction } from 'abitype';
+import { type ArgValue } from '../types/index';
 import ReadButton from './contracts/ReadButton';
 import ArgsInput from './input/ArgsInput';
 import SendButton from './contracts/SendButton';
@@ -69,8 +69,10 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
   const [hasInputs, setHasInputs] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
+  if (!inputs) throw new Error('Inputs undefined');
+
   useEffect(() => {
-    setHasInputs(!!inputs?.length);
+    setHasInputs(!!inputs.length);
     let fnState: State;
     switch (stateMutability) {
       case 'view':
@@ -98,7 +100,7 @@ function FunctionCard({ fnInfo }: FunctionCardProps) {
             {hasInputs && (
               <span className="fn-params">
                 (
-                {inputs?.map((param, index) => (
+                {inputs.map((param, index) => (
                   <span key={index}>
                     {param.name || 'input'}
                     {index < inputs.length - 1 ? ', ' : ''}

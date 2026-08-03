@@ -1,6 +1,6 @@
 import RegularField from './RegularField';
 import { AbiParameter } from 'abitype';
-import { ArgValue } from '../../../types/argValue';
+import { ArgValue } from '../../../types';
 import { isValidIntegerInput } from '../../../utils/inputValidation';
 
 interface NumberFieldProps {

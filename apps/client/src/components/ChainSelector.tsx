@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSwitchActiveWalletChain, useActiveAccount } from 'thirdweb/react';
 import { defineChain } from 'thirdweb';
-// import { useContract } from '../context/ContractContext';
 import { useChainId } from '../stores/useContractStore';
 import { useContractLocationActions } from '../stores/useContractStore';
 import * as suuportedChains from '../../config/chains';

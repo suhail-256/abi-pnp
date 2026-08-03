@@ -1,5 +1,5 @@
 import { AbiParameter } from 'abitype';
-import { type ArgValue } from '../../types/argValue';
+import { type ArgValue } from '../../types';
 import ArgsInput from './ArgsInput';
 import { useEffect, memo } from 'react';
 import { generateValueStructure } from './ArrayInput';

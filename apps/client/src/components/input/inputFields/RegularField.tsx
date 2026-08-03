@@ -1,5 +1,5 @@
 import { AbiParameter } from 'abitype';
-import { ArgValue } from '../../../types/argValue';
+import { ArgValue } from '../../../types';
 
 interface RegularFieldProps {
   input: AbiParameter;

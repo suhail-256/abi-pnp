@@ -1,4 +1,4 @@
-import { type ArgValue } from '../../../types/argValue';
+import { type ArgValue } from '../../../types';
 import { toWei } from 'thirdweb/utils';
 import { isValidEtherInput, isValidWeiInput } from '../../../utils/inputValidation';
 import { useState } from 'react';

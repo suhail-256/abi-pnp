@@ -1,5 +1,5 @@
-import { ArgValue } from '../../types/argValue';
-import { Abi, Address, type AbiFunction } from '../../types/contract';
+import { ArgValue } from '../../types';
+import { Abi, Address, type AbiFunction } from 'abitype';
 import Result from '../Result';
 import { useState } from 'react';
 import { client, wallets, theme } from '../Connect';

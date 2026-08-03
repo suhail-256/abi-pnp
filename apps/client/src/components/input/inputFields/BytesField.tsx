@@ -1,5 +1,5 @@
 import { AbiParameter } from 'abitype';
-import { type ArgValue } from '../../../types/argValue';
+import { type ArgValue } from '../../../types';
 import { isHex, stringToHex, padHex, hexToString } from 'thirdweb/utils';
 import { useState } from 'react';
 

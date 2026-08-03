@@ -1,7 +1,7 @@
 import { useState, memo, useMemo } from 'react';
-import { AbiParameter } from '../../types/contract';
+import { AbiParameter } from 'abitype';
 import ArgsInput from './ArgsInput';
-import { type ArgValue } from '../../types/argValue';
+import { type ArgValue } from '../../types';
 
 export const generateValueStructure = (type: string): ArgValue => {
   // Array

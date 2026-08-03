@@ -3,7 +3,7 @@ import explainService from '../services/explainService';
 import useContract from '../hooks/useContract';
 import { useActiveAiPanel } from '../stores/useUiPanelStore';
 import { useUiPanelActions } from '../stores/useUiPanelStore';
-import { AbiFunction } from '../types/contract';
+import { AbiFunction } from 'abitype';
 
 export default function AiExplain({ fnInfo }: { fnInfo: AbiFunction }) {
   const { contractSource } = useContract();
