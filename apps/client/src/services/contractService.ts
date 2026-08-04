@@ -16,13 +16,5 @@ const contractSource = async (
   }
 };
 
-const isContract = async (chainId: number, address: Address): Promise<boolean> => {
-  try {
-    const req = await axios.get(`${baseUrl}/api/is-contract/${chainId}/${address}`);
-    return req.data.isContract;
-  } catch (err) {
-    return errorHandler.handleApiError(err);
-  }
-};
 
-export default { contractSource, isContract };
+export default { contractSource };

@@ -13,11 +13,19 @@ const getContractSource = async (
   next: express.NextFunction,
 ) => {
   const chainId = req.params.chainId as string;
-  const address = req.params.address as string;
+  const contractAddres = req.params.address as string;
 
   try {
+    // check if the address is contract or not
+    if (!await isContract(chainId, contractAddres)) {
+      return res.status(404).json({ error: 'No contract found at this address' });
+    }
+
     const response = await fetch(
-      ETHERSCAN_CONTRACT_API_URL.replace('{chainId}', chainId).replace('{address}', address),
+      ETHERSCAN_CONTRACT_API_URL.replace('{chainId}', chainId).replace(
+        '{address}',
+        contractAddres,
+      ),
     );
     const data = await response.json();
 
@@ -33,14 +41,7 @@ const getContractSource = async (
   }
 };
 
-const isContract = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) => {
-  const chainId = req.params.chainId as string;
-  const address = req.params.address as string;
-
+const isContract = async (chainId: string, contractAddress: string) => {
   const chain =
     chainId === '1'
       ? supportedChains.mainnet
@@ -50,15 +51,13 @@ const isContract = async (
     chain: chain as Chain,
     transport: http(),
   });
-  try {
-    const bytecode = await publicClient.getCode({ address: address as Address });
-    if (!bytecode || bytecode === '0x') {
-      return res.status(404).json({ error: 'No contract found at this address' });
-    }
-    res.json({ isContract: true });
-  } catch (err) {
-    next(err);
+
+  const bytecode = await publicClient.getCode({ address: contractAddress as Address });
+  if (!bytecode || bytecode === '0x') {
+    return false;
   }
+
+  return true;
 };
 
-export { getContractSource, isContract };
+export { getContractSource };
