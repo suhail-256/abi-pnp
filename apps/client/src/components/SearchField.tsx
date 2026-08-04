@@ -1,13 +1,13 @@
 import { type Address } from 'abitype';
 import useContract from '../hooks/useContract';
-import { useChainId } from '../stores/useContractStore';
 import { useContractLocationActions } from '../stores/useContractStore';
 import { useShowFunctions } from '../stores/useUiPanelStore';
 import { useUiPanelActions } from '../stores/useUiPanelStore';
 import { isAddress } from 'thirdweb/utils';
 import { type ChangeEvent, useEffect, useState } from 'react';
-import contractService from '../services/contractService';
 import { useNotificationActions } from '../stores/useNotifications';
+import { useQueryClient } from '@tanstack/react-query';
+
 
 function SearchField() {
   const [inputValue, setInputValue] = useState('');
@@ -16,20 +16,12 @@ function SearchField() {
   const showFunctions = useShowFunctions();
   const { setShowFunctions } = useUiPanelActions();
   const { pushNotification } = useNotificationActions();
-  const chainId = useChainId();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!AbiError) return;
     pushNotification({ msg: (AbiError as Error).message, type: 'error' });
   }, [AbiError]);
-
-  const checkIfContract = async (address: Address) => {
-    try {
-      return await contractService.isContract(chainId, address);
-    } catch (err) {
-      return false;
-    }
-  };
 
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -37,13 +29,6 @@ function SearchField() {
     setInputValue(address);
 
     if (isAddress(address)) {
-      const isContract = await checkIfContract(address);
-
-      if (!isContract) {
-        pushNotification({ msg: 'No contract found at this address', type: 'error' });
-        return;
-      }
-
       if (!showFunctions) {
         setContractAddress(address);
       }
@@ -59,13 +44,8 @@ function SearchField() {
       return;
     }
 
-    const isContract = await checkIfContract(address);
-    if (!isContract) {
-      pushNotification({ msg: 'No contract found at this address', type: 'error' });
-      return;
-    }
-
     setContractAddress(address);
+    queryClient.invalidateQueries({ queryKey: ['contracts']});
     setShowFunctions(true);
   };
 
@@ -93,7 +73,6 @@ function SearchField() {
           </svg>
         </button>
       </form>
-      
     </div>
   );
 }
