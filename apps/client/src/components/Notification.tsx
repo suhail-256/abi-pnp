@@ -37,7 +37,7 @@ function NotificationItem({ n, removeNotification }: NotificationitemProps) {
       setIsExiting(true);
     }, 4500);
 
-    // Remove the notification from the state 0.5s later (after animation finishes)
+    // Remove the notification from the state 0.5s later (after animation finishes) 
     const removeTimer = setTimeout(() => {
       removeNotification(n.id);
     }, 5000);

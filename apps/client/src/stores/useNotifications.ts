@@ -13,10 +13,16 @@ interface NotificationState {
 const useNotificationStore = create<NotificationState>(set => ({
   notifications: [],
   actions: {
-    pushNotification: (notification: Omit<NotificationType, 'id'>) =>
-      set(state => ({
-        notifications: state.notifications.concat({ ...notification, id: uuidv4() }),
-      })),
+    pushNotification: (notification: Omit<NotificationType, 'id'>) => {
+      set(state => {
+        if (state.notifications.at(-1) && state.notifications.at(-1)!.msg === notification.msg)
+          return { notifications: state.notifications };
+        
+        return {
+          notifications: state.notifications.concat({ ...notification, id: uuidv4() }),
+        };
+      });
+    },
     removeNotification: (id: string) =>
       set(state => ({ notifications: state.notifications.filter(n => n.id !== id) })),
   },

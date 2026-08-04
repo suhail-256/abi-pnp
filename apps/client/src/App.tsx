@@ -8,7 +8,7 @@ import Notification from './components/Notification';
 
 function App() {
   const showFunctions = useShowFunctions();
-
+  // [TODO] how about let's go
   return (
     <div className="app-container">
       <div className="top-bar">

@@ -27,7 +27,6 @@ function SearchField() {
     try {
       return await contractService.isContract(chainId, address);
     } catch (err) {
-      pushNotification({ msg: (err as Error).message, type: 'error' });
       return false;
     }
   };
