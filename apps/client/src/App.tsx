@@ -2,13 +2,11 @@ import SearchField from './components/SearchField';
 import FunctionsList from './components/FunctionsList';
 import ChainSelector from './components/ChainSelector';
 import Connect from './components/Connect';
-import { useShowFunctions } from './stores/useUiPanelStore';
 import Notification from './components/Notification';
-
+import { Route, Routes, Link } from 'react-router-dom';
+import UnkownRoutesHandler from './components/UnkownRoutesHandler';
 
 function App() {
-  const showFunctions = useShowFunctions();
-  // [TODO] how about let's go
   return (
     <div className="app-container">
       <div className="top-bar">
@@ -17,12 +15,18 @@ function App() {
       </div>
       <header className="hero">
         <Notification />
-        <h1 className="hero-title">ABI Plug & Play</h1>
+        <Link to={'/'} style={{ textDecoration: 'none' }}>
+          <h1 className="hero-title">ABI Plug & Play</h1>
+        </Link>
         <div className="hero-search">
           <SearchField />
         </div>
       </header>
-      {showFunctions && <FunctionsList />}
+      <Routes>
+        <Route path={'/'} element={(<></>)} />
+        <Route path={'/:chainId/:contractAddress'} element={<FunctionsList />} />
+        <Route path={'*'} element={<UnkownRoutesHandler />} />
+      </Routes>
     </div>
   );
 }

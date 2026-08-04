@@ -1,56 +1,44 @@
 import { type Address } from 'abitype';
 import useContract from '../hooks/useContract';
-import { useContractLocationActions } from '../stores/useContractStore';
-import { useShowFunctions } from '../stores/useUiPanelStore';
-import { useUiPanelActions } from '../stores/useUiPanelStore';
-import { isAddress } from 'thirdweb/utils';
+import { useChainId } from '../stores/useContractStore';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useNotificationActions } from '../stores/useNotifications';
 import { useQueryClient } from '@tanstack/react-query';
-
+import { useNavigate } from 'react-router-dom';
+import { validateContract } from '../utils/addressValidation';
 
 function SearchField() {
   const [inputValue, setInputValue] = useState('');
   const { AbiError } = useContract();
-  const { setContractAddress } = useContractLocationActions();
-  const showFunctions = useShowFunctions();
-  const { setShowFunctions } = useUiPanelActions();
   const { pushNotification } = useNotificationActions();
   const queryClient = useQueryClient();
+  const chainId = useChainId();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!AbiError) return;
     pushNotification({ msg: (AbiError as Error).message, type: 'error' });
   }, [AbiError]);
 
-  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const address = e.target.value as Address;
-    setInputValue(address);
-
-    if (isAddress(address)) {
-      if (!showFunctions) {
-        setContractAddress(address);
-      }
-    }
-  };
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) =>
+    setInputValue(e.target.value as Address);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const address = inputValue as Address;
 
-    if (!isAddress(address)) {
-      pushNotification({ msg: 'Invalid address', type: 'error' });
+    const { success, msg } = await validateContract(chainId, address);
+    if (!success) {
+      pushNotification({ msg: msg!, type: 'error' });
+      navigate('/')
       return;
     }
-
-    setContractAddress(address);
-    queryClient.invalidateQueries({ queryKey: ['contracts']});
-    setShowFunctions(true);
+    queryClient.invalidateQueries({ queryKey: ['contracts'] });
+    navigate(`/${chainId}/${address}`);
   };
 
   return (
-    <div>
+    <>
       <form className="search-form" onSubmit={handleSubmit}>
         <input
           className="search-input"
@@ -73,7 +61,7 @@ function SearchField() {
           </svg>
         </button>
       </form>
-    </div>
+    </>
   );
 }
 

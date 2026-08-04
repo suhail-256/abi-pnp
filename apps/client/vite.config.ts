@@ -4,6 +4,9 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
   // connect with backend server running on port 3001
   server: {
     proxy: {
