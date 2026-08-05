@@ -68,5 +68,5 @@
 pnpm install
 
 # run app
-pnpm run dev
+vercel dev
 ```

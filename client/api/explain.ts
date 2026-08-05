@@ -1,6 +1,5 @@
-import express from 'express';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenAI } from '@google/genai';
-
 
 const systemInstruction = `You are a smart contract interpreter. Your job is to explain Solidity functions 
 to users who may not be familiar with blockchain development.
@@ -32,12 +31,16 @@ Rules:
 
 const ai = new GoogleGenAI({});
 
-export const explainFunction = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) => {
-  const { contractSource, functionABI } = req.body;
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const { contractSource, functionABI } = req.body ?? {};
+
+  if (!contractSource || !functionABI) {
+    return res.status(400).json({ error: 'contractSource and functionABI are required' });
+  }
 
   try {
     const response = await ai.models.generateContent({
@@ -52,6 +55,6 @@ export const explainFunction = async (
 
     return res.status(201).json(JSON.parse(raw));
   } catch (err) {
-    next(err);
+    return res.status(500).json({ error: 'Internal server error' });
   }
-};
+}

@@ -1,4 +1,4 @@
-import errorHandler from '../utils/errorUtils';
+import errorHandler from '../utils/apiUtils';
 import { EXPLORER_TX_URLS } from '../../config/explorerUrl';
 import { useChainId } from '../stores/useContractStore';
 import { useNotificationActions } from '../stores/useNotificationsStore';
