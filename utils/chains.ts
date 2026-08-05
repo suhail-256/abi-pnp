@@ -1,0 +1,40 @@
+import {
+  mainnet,
+  sepolia,
+  polygon,
+  polygonAmoy,
+  arbitrum,
+  arbitrumSepolia,
+  linea,
+  lineaSepolia,
+  blast,
+  blastSepolia,
+  celo,
+  celoSepolia as celoSepoliaTestnet, // Aliasing happens inside the braces
+  gnosis,
+  moonbeam,
+  abstract,
+  abstractTestnet,
+  berachain,
+} from 'viem/chains';
+
+// Bundle them into your custom object
+export const supportedChains = {
+  mainnet,
+  sepolia,
+  polygon,
+  polygonAmoy,
+  arbitrum,
+  arbitrumSepolia,
+  linea,
+  lineaSepolia,
+  blast,
+  blastSepolia,
+  celo,
+  celoSepoliaTestnet,
+  gnosis,
+  moonbeam,
+  abstract,
+  abstractTestnet,
+  berachain,
+};

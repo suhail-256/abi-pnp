@@ -1,26 +1,33 @@
 {
-  "name": "abi-pnp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "test": "turbo run test"
-  },
-  "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "packageManager": "pnpm@11.0.9",
-  "devDependencies": {
-    "turbo": "^2.10.7"
-  },
-  "dependencies": {
-    "zustand": "^5.0.14"
-  }
+	"name": "pnp",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc --noEmit && vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@google/genai": "^2.15.0",
+		"@tanstack/react-query": "latest",
+		"abitype": "^1.2.3",
+		"react": "19.2.5",
+		"react-dom": "19.2.5",
+		"react-router-dom": "^7.18.2",
+		"thirdweb": "^5.119.4",
+		"uuid": "^14.0.1",
+		"viem": "^2.55.10",
+		"zod": "^4.3.6",
+		"zustand": "^5.0.14"
+	},
+	"devDependencies": {
+		"@types/node": "^26.1.2",
+		"@types/react": "latest",
+		"@types/react-dom": "latest",
+		"@vercel/node": "^5.9.5",
+		"@vitejs/plugin-react": "5.0.4",
+		"typescript": "6.0.3",
+		"vercel": "^58.5.1",
+		"vite": "7.1.7"
+	}
 }

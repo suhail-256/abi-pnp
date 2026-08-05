@@ -1,32 +1,36 @@
-import express from 'express';
-import config from '../utils/config';
 import { createPublicClient, http, type Address, type Chain } from 'viem';
-import * as supportedChains from '../utils/chains';
+import { supportedChains } from '../../utils/chains.js';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const ETHERSCAN_CONTRACT_API_URL =
-  `https://api.etherscan.io/v2/api?apikey=${config.ETHERSCAN_SECRET_KEY}` +
+  `https://api.etherscan.io/v2/api?apikey=${process.env.ETHERSCAN_SECRET_KEY}` +
   `&chainid={chainId}&address={address}&module=contract&action=getsourcecode`;
 
-const getContractSource = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) => {
-  const chainId = req.params.chainId as string;
-  const contractAddres = req.params.address as string;
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const chainId = req.query.chainId as string;
+  const contractAddress = req.query.contractAddress as Address;
 
   try {
-    // check if the address is contract or not
-    if (!await isContract(chainId, contractAddres)) {
+    const chain = getChain(chainId);
+    if (!chain) {
+      return res.status(400).json({ error: 'Unsupported chain' });
+    }
+
+    if (!(await isContract(chain, contractAddress))) {
       return res.status(404).json({ error: 'No contract found at this address' });
     }
 
     const response = await fetch(
       ETHERSCAN_CONTRACT_API_URL.replace('{chainId}', chainId).replace(
         '{address}',
-        contractAddres,
+        contractAddress,
       ),
     );
+
     const data = await response.json();
 
     if (data.message === 'NOTOK') {
@@ -37,18 +41,16 @@ const getContractSource = async (
 
     res.json({ source: data.result[0].SourceCode, abi: JSON.parse(data.result[0].ABI) });
   } catch (err) {
-    next(err);
+    return res.status(500).json({ error: 'Internal server error' });
   }
-};
+}
 
-const isContract = async (chainId: string, contractAddress: string) => {
-  const chain =
-    chainId === '1'
-      ? supportedChains.mainnet
-      : (Object.values(supportedChains).find(c => c.id === Number(chainId)) as Chain);
+const getChain = (chainId: string): Chain | undefined =>
+  Object.values(supportedChains).find(c => c.id === Number(chainId)) as Chain | undefined;
 
+const isContract = async (chain: Chain, contractAddress: string) => {
   const publicClient = createPublicClient({
-    chain: chain as Chain,
+    chain,
     transport: http(),
   });
 
@@ -59,5 +61,3 @@ const isContract = async (chainId: string, contractAddress: string) => {
 
   return true;
 };
-
-export { getContractSource };
