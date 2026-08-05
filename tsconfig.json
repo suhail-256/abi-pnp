@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
+    "moduleResolution": "bundler",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "strict": true,
     "esModuleInterop": true,
@@ -13,11 +14,10 @@
     "noUnusedParameters": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["react", "react-dom"],
+    "types": ["react", "react-dom", "node"],
     "useDefineForClassFields": true,
     "allowImportingTsExtensions": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
+    "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src", "api", "utils", "config"],

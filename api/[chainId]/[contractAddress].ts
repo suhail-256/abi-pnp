@@ -1,7 +1,6 @@
 import { createPublicClient, http, type Address, type Chain } from 'viem';
 import * as supportedChains from '../../utils/chains';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import "dotenv/config";
 
 const ETHERSCAN_CONTRACT_API_URL =
   `https://api.etherscan.io/v2/api?apikey=${process.env.ETHERSCAN_SECRET_KEY}` +
