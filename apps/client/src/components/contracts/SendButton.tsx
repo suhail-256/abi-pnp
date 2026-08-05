@@ -13,7 +13,7 @@ import {
 import { defineChain, getContract, prepareContractCall } from 'thirdweb';
 import useContract from '../../hooks/useContract';
 import { useChainId, useContractAddress } from '../../stores/useContractStore';
-import { useNotificationActions } from '../../stores/useNotifications';
+import { useNotificationActions } from '../../stores/useNotificationsStore';
 
 interface SendButtonProps {
   fn: AbiFunction;

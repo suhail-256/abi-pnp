@@ -1,7 +1,7 @@
 import errorHandler from '../utils/errorUtils';
 import { EXPLORER_TX_URLS } from '../../config/explorerUrl';
 import { useChainId } from '../stores/useContractStore';
-import { useNotificationActions } from '../stores/useNotifications';
+import { useNotificationActions } from '../stores/useNotificationsStore';
 
 const generateResult = (data: any, depth: number = 1, singular: boolean = false): any => {
   if (data === null) return <span className="result-item">null</span>;

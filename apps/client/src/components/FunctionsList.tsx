@@ -5,7 +5,7 @@ import { useContractLocationActions } from '../stores/useContractStore';
 import { useEffect } from 'react';
 import { Address } from 'abitype';
 import { validateContract } from '../utils/addressValidation';
-import { useNotificationActions } from '../stores/useNotifications';
+import { useNotificationActions } from '../stores/useNotificationsStore';
 
 function FunctionsList() {
   const { contractFunctions, isPending, AbiError } = useContract();

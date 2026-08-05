@@ -2,7 +2,7 @@ import { type Address } from 'abitype';
 import useContract from '../hooks/useContract';
 import { useChainId } from '../stores/useContractStore';
 import { type ChangeEvent, useEffect, useState } from 'react';
-import { useNotificationActions } from '../stores/useNotifications';
+import { useNotificationActions } from '../stores/useNotificationsStore';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { validateContract } from '../utils/addressValidation';

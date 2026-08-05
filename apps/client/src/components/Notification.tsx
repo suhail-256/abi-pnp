@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNotifications, useNotificationActions } from '../stores/useNotifications';
+import { useNotifications, useNotificationActions } from '../stores/useNotificationsStore';
 import { NotificationType } from '../types';
 
 const notificationIcon = {

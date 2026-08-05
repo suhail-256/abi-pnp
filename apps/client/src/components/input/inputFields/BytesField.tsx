@@ -9,7 +9,7 @@ interface BytesFieldProps {
   onChange: (values: ArgValue) => void;
 }
 
-import { useNotificationActions } from '../../../stores/useNotifications';
+import { useNotificationActions } from '../../../stores/useNotificationsStore';
 
 export default function BytesField({
   input,
