@@ -2,7 +2,7 @@ import { createPublicClient, http, type Address, type Chain } from 'viem';
 import { supportedChains } from '../../utils/chains.js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const ETHERSCAN_CONTRACT_API_URL =
+const ETHERSCAN_API_URL =
   `https://api.etherscan.io/v2/api?apikey=${process.env.ETHERSCAN_SECRET_KEY}` +
   `&chainid={chainId}&address={address}&module=contract&action=getsourcecode`;
 
@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     console.log('start etherscan fetch', Date.now());
     const response = await fetch(
-      ETHERSCAN_CONTRACT_API_URL.replace('{chainId}', chainId).replace(
+      ETHERSCAN_API_URL.replace('{chainId}', chainId).replace(
         '{address}',
         contractAddress,
       ),
@@ -38,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (data.message === 'NOTOK') {
       return res.status(400).json({ error: data.result });
     } else if (data.result[0].ABI === 'Contract source code not verified') {
-      return res.status(400).json({ error: 'Contract source code not verified' });
+      return res.status(400).json({ error: data.result[0].ABI });
     }
 
     res.json({ source: data.result[0].SourceCode, abi: JSON.parse(data.result[0].ABI) });
