@@ -67,6 +67,9 @@
 # install dependencies
 pnpm install
 
+# install Vercel CLI (if you don't have it)
+pnpm add -g vercel
+
 # run app
 vercel dev
 ```

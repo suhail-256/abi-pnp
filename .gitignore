@@ -25,6 +25,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.env
-.vercel
 .env*
+.vercel
+!.env_sample
