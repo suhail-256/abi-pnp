@@ -48,9 +48,7 @@
   </tr>
 </table> -->
 
-## 🚀 Upcoming Roadmap
-
-### Core Product Upgrades
+## Upcoming Changes
 - **Manual ABI input** — Paste a raw ABI for unverified contracts.
 - **Embedded Mini-LLM** — Replace external Gemini API dependency with an in-app mini-LLM flow for function explanations.
 
