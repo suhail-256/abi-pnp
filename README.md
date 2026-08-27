@@ -4,8 +4,6 @@
   <p>Paste any verified contract address, select a chain, and interact with its functions directly from the browser.</p>
 </div>
 
----
-
 ## Features
 
 - **Auto ABI Fetching** — Fetches verified ABIs from block explorers automatically.
@@ -34,20 +32,6 @@
   </tr>
 </table>
 
-<!-- ### Transaction Execution & Receipts
-
-<table>
-  <hr/>
-  <tr>
-    <th>Pending Confirmation</th>
-    <th>Transaction Confirmed</th>
-  </tr>
-  <tr>
-    <td><img src="./images/confirming-write.png" /></td>
-    <td><img src="./images/confrimed-write.png" /></td>
-  </tr>
-</table> -->
-
 ## Upcoming Changes
 - **Manual ABI input** — Paste a raw ABI for unverified contracts.
 - **Embedded Mini-LLM** — Replace external Gemini API dependency with an in-app mini-LLM flow for function explanations.
@@ -56,7 +40,7 @@
 
 | Layer      | Tech Stack                                     |
 | ---------- | ---------------------------------------------- |
-| **Client** | React, TypeScript, Wagmi, Viem, TanStack Query |
+| **Client** | React.js, TypeScript, Wagmi, Viem, TanStack Query |
 | **Server** | Node.js, Express, TypeScript, Viem             |
 
 ## Running Locally
@@ -65,9 +49,6 @@
 # install dependencies
 pnpm install
 
-# install Vercel CLI (if you don't have it)
-pnpm add -g vercel
-
 # run app
-vercel dev
+npx vercel dev
 ```
